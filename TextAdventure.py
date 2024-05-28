@@ -56,9 +56,9 @@ def tutorial_prompt():
 def inventory(player_inventory):
     player_inventory.sort()
     print('You are carrying the following: ')
-    for item in player_inventory:
-        print(item, end=' ')
-        if player_inventory.index(item) != len(player_inventory)-1:
+    for item in player_inventory: #Prints inventory without list formatting
+        print(item, end=' ') #Prevents new lines
+        if player_inventory.index(item) != len(player_inventory)-1: #Prints a comma after every item but the last
             print(', ', end='')
     print("\n\n-------------------------\n")
 
@@ -69,20 +69,76 @@ def game():
     inventory(player_inventory) #Displays Inventory
     while True:
         time.sleep(.5)
-        player_input = input('\nWhat do you do next?\n\n').strip().lower() #Requests player input, removes leading/trailing whitespace, sets lowercase
+        player_input = input('What do you do next?\n\n').strip().lower() #Requests player input, removes leading/trailing whitespace, sets lowercase
         player_input_list = player_input.split() #Breaks player input into list of words
-        if player_input_list[0] in ['help', 'h']: #Displays Help screen
-            help()
-        elif player_input_list[0] in ['look', 'l']: #Provides general info about surroundings
-            look()
-        elif player_input_list[0] in ['check', 'c']:
-            check(player_input_list[1])
-        elif player_input_list[0] in ['end', 'e', 'r', 'restart', 'reboot']: #Ends game
-            return 'end'
-        elif player_input_list[0] in ['quit', 'q', 'qq']: #Closes program
-            return 'quit'
+               
+        #Look - Provides general info about surroundings [0 Modifiers]
+        if player_input_list[0] in ['look', 'l']: 
+            if len(player_input_list) != 1:
+                print('The "Look" command cannot be modified\n')
+            else:look()
+        
+        #Check - Provides information about an object [1 Modifier]
+        elif player_input_list[0] in ['check', 'c']: 
+            if len(player_input_list) != 2:
+                print('The "Check" command requires one modifier\n')
+            else:check(player_input_list[1])
+        
+        #Take - Moves an item into player inventory [1 Modifier]
+        elif player_input_list[0] in ['take', 't']:
+            if len(player_input_list) != 2:
+                    print('The "Take" command requires one modifier\n')
+            else:take(player_input_list[1])
+        
+        #Use - Use the first object on the second object [2 modifiers]
+        elif player_input_list[0] in ['use', 'u']: 
+            if len(player_input_list) != 3:
+                    print('The "Use" command requires two modifiers\n')
+            else:use(player_input_list[1],player_input_list[2])
+            
+        #Move - Move an object to a nearby location [2 modifiers]
+        elif player_input_list[0] in ['move', 'm']: 
+            if len(player_input_list) != 3:
+                    print('The "Move" command requires two modifiers\n')
+            else:move(player_input_list[1],player_input_list[2])
+                
+        #Place - Remove an object from Inventory, place in nearby location [2 modifiers]
+        elif player_input_list[0] in ['place', 'p']: 
+            if len(player_input_list) != 3:
+                    print('The "Take" command requires two modifiers\n')
+            else:place(player_input_list[1],player_input_list[2])
+            
+        # Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
+        elif player_input_list[0] in ['walk', 'w']: 
+            if len(player_input_list) != 2:
+                    print('The "Take" command requires one modifier\n')
+            else:walk(player_input_list[1])
+            
+        #Speak - Talk to someone [1 Modifier]
+        elif player_input_list[0] in ['speak', 's']: 
+            if len(player_input_list) != 2:
+                    print('The "Take" command requires one modifier\n')
+            else:speak(player_input_list[1])
+            
+        #Help - Displays Help screen [0 modifiers]
+        elif player_input_list[0] in ['help', 'h']:
+            if len(player_input_list) != 1:
+                print('The "Help" command cannot be modified\n')
+            else:help()
+    
+        #End & Quit [0 Modifiers]
+        elif player_input_list[0] in ['end', 'e', 'r', 'restart', 'reboot']:
+            if len(player_input_list) != 1:
+                print('The "End" command cannot be modified\n')
+            else:
+                return 'end'
+        elif player_input_list[0] in ['quit', 'q', 'qq']:
+            if len(player_input_list) != 1:
+                print('The "Quit" command cannot be modified\n')
+            else:
+                return 'quit'
         else:
-            print('\nSorry, "',player_input,'" is an invalid response.') 
+            print('\nSorry, "',player_input,'" is an invalid response.\n') 
 
 
 #Asks if player wants to play again
@@ -106,35 +162,72 @@ def replay():
 ########################
 ### Player Functions ###
 ########################
+    
+#Look - Provides general info about surroundings [0 Modifiers]
+def look():
+    title_bar()
+    inventory(player_inventory)
+    print('Look command goes here\n')
+
+#Check - Provides information about an object [1 Modifier]
+def check(object):
+    title_bar()
+    inventory(player_inventory)
+    file_path = 'assets/'+object+'.md' #Creates filepath from provided string
+    if os.path.isfile(file_path): #Checks if file exists
+        file = open(file_path, 'r') 
+        file_contents = file.read()
+        print(file_contents,'\n')
+        file.close()
+    else:
+        print('I am not sure what you are trying to investigate')
+        print('Please try something else\n')
+
+#Take - Moves an item into player inventory [1 Modifier]
+def take(object):
+    player_inventory.append(object)
+    title_bar()
+    inventory(player_inventory)
+    print('You add the',object,'to your inventory\n')
+
+#Use - Use the first object on the second object [2 modifiers]
+def use(object1,object2):
+    title_bar()
+    inventory(player_inventory)
+    print('You use the',object1,'on the',object2,'\n')
+
+#Move - Move an object to a nearby location [2 modifiers]
+def move(object,location):
+    title_bar()
+    inventory(player_inventory)
+    print('You move the',object,'to the',location,'\n')
+
+#Place - Remove an object from Inventory, place in nearby location [2 modifiers]
+def place(object,location):
+    title_bar()
+    inventory(player_inventory)
+    print('You place the',object,'on the',location,'\n')
+
+# Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
+def walk(location):
+    title_bar()
+    inventory(player_inventory)
+    print('Walk function goes here\n')
+
+#Speak - Talk to someone [1 Modifier]
+def speak(person):
+    title_bar()
+    inventory(player_inventory)
+    print('You speak with',person,'\n')
 
 #Displays Help
 def help():
     title_bar()
     inventory(player_inventory)
     file = open('assets/help.md', 'r')
-    help_txt = file.read()
-    print(help_txt)
+    file_contents = file.read()
+    print(file_contents,'\n')
     file.close()
-    
-#Provides general info about surroundings
-def look():
-    title_bar()
-    inventory(player_inventory)
-    print('Look command goes here')
-
-def check(object):
-    title_bar()
-    inventory(player_inventory)
-    description_file = 'assets/'+object+'.md'
-    if os.path.isfile(description_file):
-        file = open(description_file, 'r')
-        check_object = file.read()
-        print(check_object)
-        file.close()
-    else:
-        print('I am not sure what you are trying to investigate')
-        print('Please try something else')
-
 
 
 #################
