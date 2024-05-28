@@ -3,14 +3,14 @@ Unnamed Text Adventure - PlayerCommands
 Written by Canahedo and WingusInbound
 Python3
 2024
+
+This file contains functions which execute the player commands
 '''
 
 #Imports
-import os #Used in clear() to erase the board
-import time #Used in sleep() to create a delay
 import os.path #Used to check if a file exists before opening
-from Main import title_bar, inventory, player_inventory
-
+from UI_Elements import title_bar, inventory
+from Inventories import player_inventory
 
 #Look - Provides general info about surroundings [0 Modifiers]
 def look():
