@@ -1,7 +1,7 @@
 
 '''
-Unnamed Text Adventure
-Written by Canahedo
+Unnamed Text Adventure - Main
+Written by Canahedo and WingusInbound
 Python3
 2024
 '''
@@ -10,6 +10,7 @@ Python3
 import os #Used in clear() to erase the board
 import time #Used in sleep() to create a delay
 import os.path #Used to check if a file exists before opening
+from PlayerCommands import *
 
 #Creates clear() to erase the board
 clear = lambda: os.system('cls')
@@ -63,7 +64,7 @@ def inventory(player_inventory):
     print("\n\n-------------------------\n")
 
     
-#Game goes here
+#Accepts player input, determines which command to run, passes parameters
 def game():
     title_bar() #Displays Title Bar
     inventory(player_inventory) #Displays Inventory
@@ -108,7 +109,7 @@ def game():
                     print('The "Take" command requires two modifiers\n')
             else:place(player_input_list[1],player_input_list[2])
             
-        # Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
+        #Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
         elif player_input_list[0] in ['walk', 'w']: 
             if len(player_input_list) != 2:
                     print('The "Take" command requires one modifier\n')
@@ -159,87 +160,20 @@ def replay():
     return converted_response
 
 
-########################
-### Player Functions ###
-########################
-    
-#Look - Provides general info about surroundings [0 Modifiers]
-def look():
-    title_bar()
-    inventory(player_inventory)
-    print('Look command goes here\n')
 
-#Check - Provides information about an object [1 Modifier]
-def check(object):
-    title_bar()
-    inventory(player_inventory)
-    file_path = 'assets/'+object+'.md' #Creates filepath from provided string
-    if os.path.isfile(file_path): #Checks if file exists
-        file = open(file_path, 'r') 
-        file_contents = file.read()
-        print(file_contents,'\n')
-        file.close()
-    else:
-        print('I am not sure what you are trying to investigate')
-        print('Please try something else\n')
-
-#Take - Moves an item into player inventory [1 Modifier]
-def take(object):
-    player_inventory.append(object)
-    title_bar()
-    inventory(player_inventory)
-    print('You add the',object,'to your inventory\n')
-
-#Use - Use the first object on the second object [2 modifiers]
-def use(object1,object2):
-    title_bar()
-    inventory(player_inventory)
-    print('You use the',object1,'on the',object2,'\n')
-
-#Move - Move an object to a nearby location [2 modifiers]
-def move(object,location):
-    title_bar()
-    inventory(player_inventory)
-    print('You move the',object,'to the',location,'\n')
-
-#Place - Remove an object from Inventory, place in nearby location [2 modifiers]
-def place(object,location):
-    title_bar()
-    inventory(player_inventory)
-    print('You place the',object,'on the',location,'\n')
-
-# Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
-def walk(location):
-    title_bar()
-    inventory(player_inventory)
-    print('Walk function goes here\n')
-
-#Speak - Talk to someone [1 Modifier]
-def speak(person):
-    title_bar()
-    inventory(player_inventory)
-    print('You speak with',person,'\n')
-
-#Displays Help
-def help():
-    title_bar()
-    inventory(player_inventory)
-    file = open('assets/help.md', 'r')
-    file_contents = file.read()
-    print(file_contents,'\n')
-    file.close()
 
 
 #################
 ### Main Code ###
 #################
 
-clear()                         #This is just here because VSCode terminal starts with junk in it
-player_interest = True          #Assume player wants to play. If not, why did they run the program?
-tutorial_prompt()               #Offers tutorial on first play
-while player_interest:          #As long as player wants to play, keep looping the game
-    result = game()                      #Runs game
-    if result == 'end':
-        player_interest = replay()  #Checks if player still wants to keep playing after each game
-    elif result == 'quit':
-        break
+if __name__ == '__main__':
+    clear()                         #This is just here because VSCode terminal starts with junk in it
+    player_interest = True          #Assume player wants to play. If not, why did they run the program?
+    tutorial_prompt()               #Offers tutorial on first play
+    while player_interest:          #As long as player wants to play, keep looping the game
+        result = game()                      #Runs game
+        if result == 'end':
+            player_interest = replay()  #Checks if player still wants to keep playing after each game
+        elif result == 'quit':
+            break
