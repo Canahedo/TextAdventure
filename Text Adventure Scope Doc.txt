@@ -1,0 +1,15 @@
+Text Adventure Scope Doc
+
+Keywords:
+    Look
+    Move
+    Take
+    Use
+    Place
+    Inv
+        Help
+    
+
+
+
+
