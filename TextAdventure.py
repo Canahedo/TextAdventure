@@ -9,6 +9,7 @@ Python3
 #Imports
 import os #Used in clear() to erase the board
 import time #Used in sleep() to create a delay
+import os.path #Used to check if a file exists before opening
 
 #Creates clear() to erase the board
 clear = lambda: os.system('cls')
@@ -26,7 +27,7 @@ player_inventory = ['letter'] #Initializes player inventory, which contains held
 #Displays title bar at top of screen
 def title_bar():
     clear()
-    print("Untitled Text Adventure","\nCreated by Canahedo, 2024","\nWritten in Python 3")
+    print("Untitled Text Adventure","\nCreated by Canahedo and WingusInbound, 2024","\nWritten in Python 3")
     print("-------------------------\n")
 
 
@@ -59,24 +60,29 @@ def inventory(player_inventory):
         print(item, end=' ')
         if player_inventory.index(item) != len(player_inventory)-1:
             print(', ', end='')
-    print("\n\n-------------------------")
+    print("\n\n-------------------------\n")
 
     
 #Game goes here
 def game():
-    title_bar()
-    inventory(player_inventory)
+    title_bar() #Displays Title Bar
+    inventory(player_inventory) #Displays Inventory
     while True:
         time.sleep(.5)
-        player_input = input('\nWhat do you do next?\n\n').lower()
-        if player_input in ['help', 'h']:
+        player_input = input('\nWhat do you do next?\n\n').strip().lower() #Requests player input, removes leading/trailing whitespace, sets lowercase
+        player_input_list = player_input.split() #Breaks player input into list of words
+        if player_input_list[0] in ['help', 'h']: #Displays Help screen
             help()
-        elif player_input in ['end', 'e', 'r', 'restart', 'reboot']:
+        elif player_input_list[0] in ['look', 'l']: #Provides general info about surroundings
+            look()
+        elif player_input_list[0] in ['check', 'c']:
+            check(player_input_list[1])
+        elif player_input_list[0] in ['end', 'e', 'r', 'restart', 'reboot']: #Ends game
             return 'end'
-        elif player_input in ['quit', 'q', 'qq']:
+        elif player_input_list[0] in ['quit', 'q', 'qq']: #Closes program
             return 'quit'
         else:
-            print('\nSorry, "',player_input,'" is an invalid response.')
+            print('\nSorry, "',player_input,'" is an invalid response.') 
 
 
 #Asks if player wants to play again
@@ -110,6 +116,24 @@ def help():
     print(help_txt)
     file.close()
     
+#Provides general info about surroundings
+def look():
+    title_bar()
+    inventory(player_inventory)
+    print('Look command goes here')
+
+def check(object):
+    title_bar()
+    inventory(player_inventory)
+    description_file = 'assets/'+object+'.md'
+    if os.path.isfile(description_file):
+        file = open(description_file, 'r')
+        check_object = file.read()
+        print(check_object)
+        file.close()
+    else:
+        print('I am not sure what you are trying to investigate')
+        print('Please try something else')
 
 
 
