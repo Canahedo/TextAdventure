@@ -15,7 +15,7 @@ if __name__ == '__main__':
     player_interest = True          #Assume player wants to play. If not, why did they run the program?
     tutorial_prompt()               #Offers tutorial on first play
     while player_interest:          #As long as player wants to play, keep looping the game
-        result = game()                      #Runs game
+        result = game()             #Runs game
         if result == 'end':
             player_interest = replay()  #Checks if player still wants to keep playing after each game
         elif result == 'quit':

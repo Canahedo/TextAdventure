@@ -16,7 +16,8 @@ from Inventories import player_inventory
 def look():
     title_bar()
     inventory(player_inventory)
-    print('Look command goes here\n')
+    print('You look around')
+    print('There isn\'t anything to see yet\n')
 
 #Check - Provides information about an object [1 Modifier]
 def check(object):
@@ -61,7 +62,7 @@ def place(object,location):
 def walk(location):
     title_bar()
     inventory(player_inventory)
-    print('Walk function goes here\n')
+    print('You walk to the',location)
 
 #Speak - Talk to someone [1 Modifier]
 def speak(person):

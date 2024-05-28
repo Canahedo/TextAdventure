@@ -15,12 +15,8 @@ from Inventories import player_inventory
 from PlayerCommands import look, check, take, use, place, speak, help, move, walk
 
 #Creates clear() to erase the board
-#clear = lambda: os.system('cls')
 def clear():
      os.system('cls')
-
-
-
 
 #Offers to show Help screen at start of first game
 def tutorial_prompt():
@@ -28,24 +24,21 @@ def tutorial_prompt():
     while True:
         time.sleep(.5)
         print("Welcome to my game","\nThank you for playing\n")
-        tutorial = input('Enter "T" to view the Tutorial, or "S" to skip\n\n')
-        if tutorial in ['Tutorial', 'tutorial', 'TUTORIAL', 't', 'T']:
+        tutorial = input('Enter "T" to view the Tutorial, or "S" to skip\n\n').strip().lower() #Requests player input, removes leading/trailing whitespace, sets lowercase
+        if tutorial in ['tutorial', 't']:
             title_bar()
             print('Welcome to the Tutorial!')
             print('Enter "Help" while in game to return to this page\n')
             help()
             input('\nPress Enter to Continue\n\n')
             break
-        elif tutorial in ['Start', 'start', 'START', 's', 'S']:
+        elif tutorial in ['start', 's']:
             break
         else: 
             clear()
             title_bar()
             print('Sorry, "',tutorial,'" is an invalid response\n')
-
-
-
-    
+   
 #Accepts player input, determines which command to run, passes parameters
 def game():
     title_bar() #Displays Title Bar
