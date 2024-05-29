@@ -1,0 +1,1 @@
+The rocks are piled in a crude mound.

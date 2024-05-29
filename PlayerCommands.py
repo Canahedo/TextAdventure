@@ -53,10 +53,11 @@ def check(mods):
         file_contents = file.read()
         print(file_contents,'\n')
         file.close()
+        check_triggers(object, player_stats)
     else:
         print('I am not sure what you are trying to investigate')
         print('Please try something else\n')
-    check_triggers(object)
+    
 
 ##############
 ###  TAKE  ###

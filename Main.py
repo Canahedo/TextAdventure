@@ -10,7 +10,7 @@ This is the main file for the game
 #Imports
 from GameFunctions import clear, tutorial_prompt, game, replay
 
-if __name__ == '__main__':
+def main():
     clear()                         #This is just here because VSCode terminal starts with junk in it
     player_interest = True          #Assume player wants to play. If not, why did they run the program?
     tutorial_prompt()               #Offers tutorial on first play
@@ -20,3 +20,6 @@ if __name__ == '__main__':
             player_interest = replay()  #Checks if player still wants to keep playing after each game
         elif result == 'quit':
             break
+
+if __name__ == '__main__':
+    main()
