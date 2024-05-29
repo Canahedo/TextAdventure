@@ -12,9 +12,9 @@ import os #Used in clear() to erase the board
 from Inventories import player_inventory
 
 #Creates clear() to erase the board
-#clear = lambda: os.system('cls')
-def clear():
-     os.system('cls')
+clear = lambda: os.system('cls')
+#def clear():
+#     os.system('cls')
 
 #Displays title bar at top of screen
 def title_bar():

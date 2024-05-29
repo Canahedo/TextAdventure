@@ -7,4 +7,4 @@ Python3
 This file contains the inventories of the player as well as various NPCs and containers
 '''
 
-player_inventory = ['letter'] #Initializes player inventory, which contains held items
+player_inventory = ['key','letter'] #Initializes player inventory, which contains held items

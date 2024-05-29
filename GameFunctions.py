@@ -23,14 +23,13 @@ def tutorial_prompt():
     title_bar()
     while True:
         time.sleep(.5)
-        print("Welcome to my game","\nThank you for playing\n")
-        tutorial = input('Enter "T" to view the Tutorial, or "S" to skip\n\n').strip().lower() #Requests player input, removes leading/trailing whitespace, sets lowercase
-        if tutorial in ['tutorial', 't']:
-            title_bar()
-            print('Welcome to the Tutorial!')
-            print('Enter "Help" while in game to return to this page\n')
+        print("Welcome to our game","\nThank you for playing\n")
+        print('Enter "H" to view the Help Screen, or "S" to skip\n')
+        print('You can ask for help at any time in-game\n')
+        tutorial = input().strip().lower() #Requests player input, removes leading/trailing whitespace, sets lowercase
+        if tutorial in ['tutorial', 't', 'help', 'h']:
             help()
-            input('\nPress Enter to Continue\n\n')
+            input('Press Enter to Continue\n\n')
             break
         elif tutorial in ['start', 's']:
             break
@@ -38,6 +37,12 @@ def tutorial_prompt():
             clear()
             title_bar()
             print('Sorry, "',tutorial,'" is an invalid response\n')
+
+def init_game():
+    file = open('assets/opening_crawl.md', 'r') 
+    file_contents = file.read()
+    print(file_contents,'\n')
+    file.close()
 
 #Processes player input into useable form, or throws error when input is invalid   
 def input_handler(raw_input):
@@ -66,50 +71,31 @@ def input_handler(raw_input):
 def game():
     title_bar() #Displays Title Bar
     inventory(player_inventory) #Displays Inventory
+    init_game() #Presents start of game text
     while True:
         time.sleep(.5)
         command = input_handler(input('What do you do next?\n\n')) #Requests player input, sends to input_handler
-
-        if command[0] == -1: #If input_handler errors, display error and return to start of loop, requesting new input
-            print(command[1])
-
-        elif command[0] in ['look', 'l']: #Look - Provides general info about surroundings [0 Modifiers]
-            look()
-        
-        elif command[0] in ['check', 'c']: #Check - Provides information about an object [1 Modifier]
-            check(command[1])
-        
-        elif command[0] in ['take', 't']: #Take - Moves an item into player inventory [1 Modifier]
-            take(command[1])
-        
-        elif command[0] in ['use', 'u']: #Use - Use the first object on the second object [2 modifiers]
-            use(command[1])
-            
-        elif command[0] in ['move', 'm']: #Move - Move an object to a nearby location [2 modifiers]
-            move(command[1])       
-        
-        elif command[0] in ['place', 'p']: #Place - Remove an object from Inventory, place in nearby location [2 modifiers]
-            place(command[1])
-            
-        elif command[0] in ['walk', 'w']: #Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
-            walk(command[1])
-            
-        elif command[0] in ['speak', 's']: #Speak - Talk to someone [1 Modifier]
-            speak(command[1]) 
-        
-        elif command[0] in ['help', 'h']: #Help - Displays Help screen [0 modifiers]
-            help()
-    
-        elif command[0] in ['end', 'e', 'r', 'restart', 'reboot']: #End & Quit [0 Modifiers]
+        if command[0] == -1: print(command[1])                  #If input_handler errors, display error and return to start of loop, requesting new input
+        elif command[0] in ['look', 'l']: look()                #Look - Provides general info about surroundings [0 Modifiers]
+        elif command[0] in ['check', 'c']: check(command[1])    #Check - Provides information about an object [1 Modifier]
+        elif command[0] in ['take', 't']: take(command[1])      #Take - Moves an item into player inventory [1 Modifier]
+        elif command[0] in ['use', 'u']: use(command[1])        #Use - Use the first object on the second object [2 modifiers] 
+        elif command[0] in ['move', 'm']: move(command[1])      #Move - Move an object to a nearby location [2 modifiers]
+        elif command[0] in ['place', 'p']: place(command[1])    #Place - Remove an object from Inventory, place in nearby location [2 modifiers]
+        elif command[0] in ['walk', 'w']: walk(command[1])      #Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
+        elif command[0] in ['speak', 's']: speak(command[1])    #Speak - Talk to someone [1 Modifier]
+        elif command[0] in ['help', 'h']: help()                #Help - Displays Help screen [0 modifiers]
+        elif command[0] in ['end', 'e', 'r', 'restart', 'reboot']: 
+            title_bar()
+            inventory(player_inventory)
             return 'end'
-        elif command[0] in ['quit', 'q', 'qq']:
-            return 'quit'
+        elif command[0] in ['quit', 'q', 'qq']: return 'quit'
 
 #Asks if player wants to play again
 def replay():
     while True:
         time.sleep(.5)
-        response = input('\nWould you like to play again? y/n\n\n')
+        response = input('Would you like to play again? y/n\n\n')
         if response in ['y', 'Y', 'yes', 'YES', 'Yes']:
             converted_response = True
             break
