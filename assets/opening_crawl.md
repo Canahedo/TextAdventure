@@ -1,10 +1,11 @@
 You find yourself standing in front of a house, long since abandoned,
 and nudge a pile of rolled up newspapers with your foot. 
-They stopped delivering about 10 years ago.
+They stopped delivering about a year ago.
 
-In your hand you hold the letter, and a key.
+In your hand you hold a letter. Fancy stationary, the kind
+lawyers use to give bad news.
 
-You never met Great-Uncle Henry. Your mother didn't
+You never met Great-Uncle Henry, and your father didn't
 talk about him much, but as his only living relative,
 everything he had is now yours.
 

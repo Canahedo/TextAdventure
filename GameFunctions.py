@@ -10,14 +10,17 @@ This file holds internal functions used by the game
 #Imports
 import os #Used in clear() to erase the board
 import time #Used in sleep() to create a delay
-from UI_Elements import title_bar, inventory
-from Inventories import player_inventory
+from UI_Elements import title_bar, ui
+from Inventories import *
 from PlayerCommands import look, check, take, use, place, speak, help, move, walk
 
 #Creates clear() to erase the board
-def clear():
-     os.system('cls')
+#clear = lambda: os.system('cls')
+def clear(): os.system('cls')
 
+##################
+###  TUTORIAL  ###
+##################
 #Offers to show Help screen at start of first game
 def tutorial_prompt():
     title_bar()
@@ -38,12 +41,19 @@ def tutorial_prompt():
             title_bar()
             print('Sorry, "',tutorial,'" is an invalid response\n')
 
+###################
+###  INIT GAME  ###
+###################
+#Displays opening_crawl
 def init_game():
     file = open('assets/opening_crawl.md', 'r') 
     file_contents = file.read()
     print(file_contents,'\n')
     file.close()
 
+#######################
+###  INPUT HANDLER  ###
+#######################
 #Processes player input into useable form, or throws error when input is invalid   
 def input_handler(raw_input):
     
@@ -67,10 +77,12 @@ def input_handler(raw_input):
             else: return (-1, 'That command requires exactly '+str(i)+' modifiers')
     return (-1, str(command)+' is an unrecognized command')
 
+##############
+###  GAME  ###
+##############
 #Requests player input, determines which command to run, passes parameters to PlayerCommands
 def game():
-    title_bar() #Displays Title Bar
-    inventory(player_inventory) #Displays Inventory
+    ui(player_inventory)
     init_game() #Presents start of game text
     while True:
         time.sleep(.5)
@@ -86,11 +98,13 @@ def game():
         elif command[0] in ['speak', 's']: speak(command[1])    #Speak - Talk to someone [1 Modifier]
         elif command[0] in ['help', 'h']: help()                #Help - Displays Help screen [0 modifiers]
         elif command[0] in ['end', 'e', 'r', 'restart', 'reboot']: 
-            title_bar()
-            inventory(player_inventory)
+            ui(player_inventory)
             return 'end'
         elif command[0] in ['quit', 'q', 'qq']: return 'quit'
 
+################
+###  REPLAY  ###
+################
 #Asks if player wants to play again
 def replay():
     while True:

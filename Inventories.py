@@ -4,7 +4,12 @@ Written by Canahedo and WingusInbound
 Python3
 2024
 
-This file contains the inventories of the player as well as various NPCs and containers
+This file contains the inventories and location of the player
+as well as various NPCs and containers
 '''
 
-player_inventory = ['key','letter'] #Initializes player inventory, which contains held items
+player_location = 'driveway' #Initializes player tracker
+player_inventory = ['letter'] #Initializes player inventory
+player_stats = {'inv': player_inventory, 'room': player_location}
+
+rooms_full_list = ['driveway', 'porch']

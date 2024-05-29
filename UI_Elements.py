@@ -1,5 +1,5 @@
 '''
-Unnamed Text Adventure - Main
+Unnamed Text Adventure - UI_Elements
 Written by Canahedo and WingusInbound
 Python3
 2024
@@ -12,9 +12,8 @@ import os #Used in clear() to erase the board
 from Inventories import player_inventory
 
 #Creates clear() to erase the board
-clear = lambda: os.system('cls')
-#def clear():
-#     os.system('cls')
+#clear = lambda: os.system('cls')
+def clear(): os.system('cls')
 
 #Displays title bar at top of screen
 def title_bar():
@@ -31,3 +30,8 @@ def inventory(player_inventory):
         if player_inventory.index(item) != len(player_inventory)-1: #Prints a comma after every item but the last
             print(', ', end='')
     print("\n\n-------------------------\n")
+
+#Displays complete UI
+def ui(player_inventory):
+    title_bar()
+    inventory(player_inventory)
