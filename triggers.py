@@ -7,28 +7,44 @@ Python3
 This file tracks and executes various triggers for the game
 '''
 
+#Imports
+from Inventories import *
+
 ##########################
 ### TRACKING VARIABLES ###
 ##########################
 
-driveway = {'rocks': 'stacked'}
+driveway = {}
+
+
+####################
+### INIT TRIGGERS###
+####################player_location
+#Initialize starting positions for a new game
+def init_triggers():
+    driveway.update({'rock': 'stacked'})
 
 
 
-'''
+
+
 
 ##############
 ###  LOOK  ###
 ##############
-def look_triggers(player_location):
-    if player_location == 'driveway' and driveway(rocks) == 'stacked':
+def look_triggers():
+    if player_stats['room'] == 'driveway' and driveway['rock'] == 'stacked':
         print('You see a small pile of rocks at the edge of the driveway.\n')
+
 
 ###############
 ###  CHECK  ###
 ###############
-def check_triggers():
-    ...
-
-    
-'''
+def check_triggers(object):
+    if object == 'rock' and player_stats['room'] == 'driveway' and driveway['rock'] == 'stacked':
+        driveway.update({'rock': 'toppled'})
+        player_inventory.append('key')
+        return 1
+    if object == 'rock' and player_stats['room'] == 'driveway' and driveway['rock'] == 'toppled':
+        return 0
+    else: return -1
