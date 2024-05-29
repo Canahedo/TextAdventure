@@ -9,7 +9,7 @@ This file defines the UI elements such as the title bar and the player inventory
 
 #Imports
 import os #Used in clear() to erase the board
-from Inventories import player_inventory
+from Inventories import *
 
 #Creates clear() to erase the board
 #clear = lambda: os.system('cls')
@@ -22,7 +22,7 @@ def title_bar():
     print("-------------------------\n")
 
 #Lists objects in player inventory
-def inventory(player_inventory):
+def inventory():
     player_inventory.sort()
     print('You are carrying the following: ')
     for item in player_inventory: #Prints inventory without list formatting
@@ -32,6 +32,6 @@ def inventory(player_inventory):
     print("\n\n-------------------------\n")
 
 #Displays complete UI
-def ui(player_inventory):
+def ui():
     title_bar()
-    inventory(player_inventory)
+    inventory()

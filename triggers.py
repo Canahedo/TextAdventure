@@ -14,7 +14,16 @@ from Inventories import *
 ### TRACKING VARIABLES ###
 ##########################
 
-driveway = {'rock': 'stacked'}
+driveway = {}
+
+
+####################
+### INIT TRIGGERS###
+####################player_location
+#Initialize starting positions for a new game
+def init_triggers():
+    driveway.update({'rock': 'stacked'})
+
 
 
 
@@ -24,7 +33,7 @@ driveway = {'rock': 'stacked'}
 ###  LOOK  ###
 ##############
 def look_triggers():
-    if player_location == 'driveway' and driveway['rock'] == 'stacked':
+    if player_stats['room'] == 'driveway' and driveway['rock'] == 'stacked':
         print('You see a small pile of rocks at the edge of the driveway.\n')
 
 
@@ -34,6 +43,8 @@ def look_triggers():
 def check_triggers(object):
     if object == 'rock' and player_stats['room'] == 'driveway' and driveway['rock'] == 'stacked':
         driveway.update({'rock': 'toppled'})
-        return 'You knock over the rocks and find a key.\nHow long has it been here?'
+        player_inventory.append('key')
+        return 1
     if object == 'rock' and player_stats['room'] == 'driveway' and driveway['rock'] == 'toppled':
         return 0
+    else: return -1

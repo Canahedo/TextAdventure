@@ -32,9 +32,9 @@ def file_reader(file_name):
 ##############
 #Look - Provides general info about surroundings [0 Modifiers]
 def look():
-    ui(player_inventory)
-    print('You are in the',player_location)
-    text = file_reader('look/'+player_location) #Loads location description
+    ui()
+    print('You are in the',player_stats['room'])
+    text = file_reader('look/'+player_stats['room']) #Loads location description
     if text == -1: print('There isn\'t much to look at right now') #In case of missing desc
     else: print(text) #Displays location description
     look_triggers() #Checks for look triggers
@@ -49,15 +49,15 @@ def check(mods):
     triggers = check_triggers(object)
     if triggers == 0:
         print('There is nothing more to do here')
-    else:
-        ui(player_inventory)
+    if triggers != 0:
+        ui()
         file_path = 'assets/check/'+object+'.md' #Creates filepath from provided string
         if os.path.isfile(file_path): #Checks if file exists
             file = open(file_path, 'r') 
             file_contents = file.read()
             print(file_contents,'\n')
             file.close()
-            print(triggers)
+            if triggers not in [-1,0,1]: print(triggers)
         else:
             print('I am not sure what you are trying to investigate')
             print('Please try something else\n')
@@ -69,7 +69,7 @@ def check(mods):
 #Take - Moves an item into player inventory [1 Modifier]
 def take(mods):
     player_inventory.append(str(mods[0]))
-    ui(player_inventory)
+    ui()
     print('You add the',str(mods[0]),'to your inventory\n')
 
 #############
@@ -77,7 +77,7 @@ def take(mods):
 #############
 #Use - Use the first object on the second object [2 modifiers]
 def use(mods):
-    ui(player_inventory)
+    ui()
     print('You use the',str(mods[0]),'on the',str(mods[1]),'\n')
 
 ##############
@@ -85,7 +85,7 @@ def use(mods):
 ##############
 #Move - Move an object to a nearby location [2 modifiers]
 def move(mods):
-    ui(player_inventory)
+    ui()
     print('You move the',str(mods[0]),'to the',str(mods[1]),'\n')
 
 ###############
@@ -93,7 +93,7 @@ def move(mods):
 ###############
 #Place - Remove an object from Inventory, place in nearby location [2 modifiers]
 def place(mods):
-    ui(player_inventory)
+    ui()
     print('You place the',str(mods[0]),'on the',str(mods[1]),'\n')
 
 ##############
@@ -101,7 +101,7 @@ def place(mods):
 ##############
 # Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
 def walk(mods):
-    ui(player_inventory)
+    ui()
     print('You walk to the',str(mods[0]))
 
 ###############
@@ -109,7 +109,7 @@ def walk(mods):
 ###############
 #Speak - Talk to someone [1 Modifier]
 def speak(mods):
-    ui(player_inventory)
+    ui()
     print('You speak with',str(mods[0]),'\n')
 
 ##############
@@ -117,8 +117,9 @@ def speak(mods):
 ##############
 #Displays Help
 def help():
-    ui(player_inventory)
+    ui()
     file = open('assets/help.md', 'r')
     file_contents = file.read()
     print(file_contents,'\n')
     file.close()
+    

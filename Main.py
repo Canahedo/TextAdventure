@@ -9,9 +9,11 @@ This is the main file for the game
 
 #Imports
 from GameFunctions import clear, tutorial_prompt, game, replay
+#from Triggers import init_triggers
+#from Inventories import init_inventories
 
 def main():
-    clear()                         #This is just here because VSCode terminal starts with junk in it
+    clear() #This is just here because VSCode terminal starts with junk in it
     player_interest = True          #Assume player wants to play. If not, why did they run the program?
     tutorial_prompt()               #Offers tutorial on first play
     while player_interest:          #As long as player wants to play, keep looping the game

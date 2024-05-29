@@ -8,8 +8,16 @@ This file contains the inventories and location of the player
 as well as various NPCs and containers
 '''
 
-player_location = 'driveway' #Initializes player tracker
-player_inventory = ['letter'] #Initializes player inventory
-player_stats = {'inv': player_inventory, 'room': player_location}
+player_inventory = []
+player_stats = {'room': 'None'}
 
 rooms_full_list = ['driveway', 'porch']
+
+
+
+def init_inventories():
+    player_stats.update({'room': 'driveway'})
+    player_inventory.clear()
+    player_inventory.append('letter')
+
+

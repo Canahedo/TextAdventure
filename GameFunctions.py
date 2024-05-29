@@ -12,6 +12,7 @@ import os #Used in clear() to erase the board
 import time #Used in sleep() to create a delay
 from UI_Elements import title_bar, ui
 from Inventories import *
+from Triggers import init_triggers
 from PlayerCommands import look, check, take, use, place, speak, help, move, walk
 
 #Creates clear() to erase the board
@@ -23,6 +24,8 @@ def clear(): os.system('cls')
 ##################
 #Offers to show Help screen at start of first game
 def tutorial_prompt():
+    init_triggers()
+    init_inventories()  
     title_bar()
     while True:
         time.sleep(.5)
@@ -34,7 +37,7 @@ def tutorial_prompt():
             help()
             input('Press Enter to Continue\n\n')
             break
-        elif tutorial in ['start', 's']:
+        elif tutorial in ['start', 's', '']:
             break
         else: 
             clear()
@@ -82,7 +85,7 @@ def input_handler(raw_input):
 ##############
 #Requests player input, determines which command to run, passes parameters to PlayerCommands
 def game():
-    ui(player_inventory)
+    ui()
     init_game() #Presents start of game text
     while True:
         time.sleep(.5)
@@ -98,7 +101,8 @@ def game():
         elif command[0] in ['speak', 's']: speak(command[1])    #Speak - Talk to someone [1 Modifier]
         elif command[0] in ['help', 'h']: help()                #Help - Displays Help screen [0 modifiers]
         elif command[0] in ['end', 'e', 'r', 'restart', 'reboot']: 
-            ui(player_inventory)
+            init_triggers()
+            init_inventories()
             return 'end'
         elif command[0] in ['quit', 'q', 'qq']: return 'quit'
 
