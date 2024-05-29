@@ -15,13 +15,13 @@ driveway = {'rocks': 'stacked'}
 
 
 
-'''
+
 
 ##############
 ###  LOOK  ###
 ##############
 def look_triggers(player_location):
-    if player_location == 'driveway' and driveway(rocks) == 'stacked':
+    if player_location == 'driveway' and driveway.get('rocks') == 'stacked':
         print('You see a small pile of rocks at the edge of the driveway.\n')
 
 ###############
@@ -31,4 +31,3 @@ def check_triggers():
     ...
 
     
-'''

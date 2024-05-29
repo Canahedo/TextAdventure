@@ -12,6 +12,7 @@ If a command accepts modifiers, the funtion will require a list argument of 1 or
 import os.path #Used to check if a file exists before opening
 from UI_Elements import ui
 from Inventories import *
+from Triggers import *
 
 #####################
 ###  FILE READER  ###
@@ -36,7 +37,7 @@ def look():
     text = file_reader('look/'+player_location) #Loads location description
     if text == -1: print('There isn\'t much to look at right now') #In case of missing desc
     else: print(text) #Displays location description
-    #try: look_triggers(player_location) #Checks for look triggers
+    look_triggers(player_location) #Checks for look triggers
 
 
 ###############
@@ -55,7 +56,7 @@ def check(mods):
     else:
         print('I am not sure what you are trying to investigate')
         print('Please try something else\n')
-    #check_triggers(object)
+    check_triggers(object)
 
 ##############
 ###  TAKE  ###
