@@ -37,7 +37,7 @@ def look():
     text = file_reader('look/'+player_location) #Loads location description
     if text == -1: print('There isn\'t much to look at right now') #In case of missing desc
     else: print(text) #Displays location description
-    look_triggers(player_location) #Checks for look triggers
+    look_triggers() #Checks for look triggers
 
 
 ###############
@@ -46,17 +46,21 @@ def look():
 #Check - Provides information about an object [1 Modifier]
 def check(mods):
     object = str(mods[0])
-    ui(player_inventory)
-    file_path = 'assets/check/'+object+'.md' #Creates filepath from provided string
-    if os.path.isfile(file_path): #Checks if file exists
-        file = open(file_path, 'r') 
-        file_contents = file.read()
-        print(file_contents,'\n')
-        file.close()
-        check_triggers(object, player_stats)
+    triggers = check_triggers(object)
+    if triggers == 0:
+        print('There is nothing more to do here')
     else:
-        print('I am not sure what you are trying to investigate')
-        print('Please try something else\n')
+        ui(player_inventory)
+        file_path = 'assets/check/'+object+'.md' #Creates filepath from provided string
+        if os.path.isfile(file_path): #Checks if file exists
+            file = open(file_path, 'r') 
+            file_contents = file.read()
+            print(file_contents,'\n')
+            file.close()
+            print(triggers)
+        else:
+            print('I am not sure what you are trying to investigate')
+            print('Please try something else\n')
     
 
 ##############
