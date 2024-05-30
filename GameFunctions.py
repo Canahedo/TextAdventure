@@ -111,7 +111,8 @@ def game():
             print(player_input[1])  
         elif player_input[0] in ["end", "quit"]:
             return player_input[0]
-        else: globals()[player_input[0]](player_input[1]) # Calls player_input[0] as a function, with player_input[1] as a parameter
+        else: 
+            globals()[player_input[0]](player_input[1]) # Calls player_input[0] as a function, with player_input[1] as a parameter #! Broken
 
 
 ################

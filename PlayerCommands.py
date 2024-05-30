@@ -5,7 +5,7 @@ Python3
 2024
 
 This file contains functions which represent the player commands
-If a command accepts modifiers, the funtion will require a list argument of 1 or 2 items
+args will be a list of 0-2 strings
 """
 
 # Imports
@@ -49,20 +49,22 @@ def look(*args):
 ###  CHECK  ###
 ###############
 # Check - Provides information about an object [1 Modifier]
-def check(mods):
-    object = str(mods[0])
+def check(*args):
+    object = str(args[0][0])
     triggers = check_triggers(object)
     if triggers == 0:
         print("There is nothing more to do here")
     if triggers != 0:
-        ui()
-        file_path = ("assets/check/" + object + ".md")  # Creates filepath from provided string
+        print(str(object))
+        file_path = ("assets/check/" + str(object) + ".md")  # Creates filepath from provided string
+        print(file_path)
         if os.path.isfile(file_path):  # Checks if file exists
             file = open(file_path, "r")
             file_contents = file.read()
+            ui()
             print(file_contents, "\n")
             file.close()
-            if triggers not in [-1, 0, 1]:
+            if triggers not in [-1, 1]:
                 print(triggers)
         else:
             print("I am not sure what you are trying to investigate")
@@ -73,55 +75,55 @@ def check(mods):
 ###  TAKE  ###
 ##############
 # Take - Moves an item into player inventory [1 Modifier]
-def take(mods):
-    player_inventory.append(str(mods[0]))
+def take(*args):
+    player_inventory.append(str(args[0]))
     ui()
-    print("You add the", str(mods[0]), "to your inventory\n")
+    print("You add the", str(args[0]), "to your inventory\n")
 
 
 #############
 ###  USE  ###
 #############
 # Use - Use the first object on the second object [2 modifiers]
-def use(mods):
+def use(*args):
     ui()
-    print("You use the", str(mods[0]), "on the", str(mods[1]), "\n")
+    print("You use the", str(args[0]), "on the", str(args[1]), "\n")
 
 
 ##############
 ###  MOVE  ###
 ##############
 # Move - Move an object to a nearby location [2 modifiers]
-def move(mods):
+def move(*args):
     ui()
-    print("You move the", str(mods[0]), "to the", str(mods[1]), "\n")
+    print("You move the", str(args[0]), "to the", str(args[1]), "\n")
 
 
 ###############
 ###  PLACE  ###
 ###############
 # Place - Remove an object from Inventory, place in nearby location [2 modifiers]
-def place(mods):
+def place(*args):
     ui()
-    print("You place the", str(mods[0]), "on the", str(mods[1]), "\n")
+    print("You place the", str(args[0]), "on the", str(args[1]), "\n")
 
 
 ##############
 ###  WALK  ###
 ##############
 # Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
-def walk(mods):
+def walk(*args):
     ui()
-    print("You walk to the", str(mods[0]))
+    print("You walk to the", str(args[0]))
 
 
 ###############
 ###  SPEAK  ###
 ###############
 # Speak - Talk to someone [1 Modifier]
-def speak(mods):
+def speak(*args):
     ui()
-    print("You speak with", str(mods[0]), "\n")
+    print("You speak with", str(args[0]), "\n")
 
 
 ##############

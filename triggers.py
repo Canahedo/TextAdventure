@@ -19,7 +19,7 @@ driveway = {}
 
 ####################
 ### INIT TRIGGERS###
-####################player_location
+####################
 # Initialize starting positions for a new game
 def init_triggers():
     driveway.update({"rock": "stacked"})
@@ -41,17 +41,13 @@ def look_triggers():
 def check_triggers(object):
     if (
         object == "rock"
-        and player_stats["room"] == "driveway"
-        and driveway["rock"] == "stacked"
-        ):
-            driveway.update({"rock": "toppled"})
-            player_inventory.append("key")
-            return 1
-    if (
-        object == "rock"
-        and player_stats["room"] == "driveway"
-        and driveway["rock"] == "toppled"
-        ):
-            return 0
+        and player_stats["room"] == "driveway"):
+            if driveway["rock"] == "stacked":
+                driveway.update({"rock": "toppled"})
+                player_inventory.append("key")
+                return 1
+            if driveway["rock"] == "toppled":
+                return 0
     else:
-        return -1
+        return -1       
+     
