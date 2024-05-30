@@ -1,127 +1,177 @@
-'''
+"""
 Unnamed Text Adventure - GameFunctions
 Written by Canahedo and WingusInbound
 Python3
 2024
 
 This file holds internal functions used by the game
-'''
+"""
 
-#Imports
-import os #Used in clear() to erase the board
-import time #Used in sleep() to create a delay
+# Imports
+import os  # Used in clear() to erase the board
+import time  # Used in sleep() to create a delay
 from UI_Elements import title_bar, ui
 from Inventories import *
 from Triggers import init_triggers
 from PlayerCommands import look, check, take, use, place, speak, help, move, walk
 
-#Creates clear() to erase the board
-#clear = lambda: os.system('cls')
-def clear(): os.system('cls')
+
+# Creates clear() to erase the board
+# clear = lambda: os.system('cls')
+def clear():
+    os.system("cls")
+
 
 ##################
 ###  TUTORIAL  ###
 ##################
-#Offers to show Help screen at start of first game
+# Offers to show Help screen at start of first game
 def tutorial_prompt():
     init_triggers()
-    init_inventories()  
+    init_inventories()
     title_bar()
     while True:
-        time.sleep(.5)
-        print("Welcome to our game","\nThank you for playing\n")
+        time.sleep(0.5)
+        print("Welcome to our game", "\nThank you for playing\n")
         print('Enter "H" to view the Help Screen, or "S" to skip\n')
-        print('You can ask for help at any time in-game\n')
-        tutorial = input().strip().lower() #Requests player input, removes leading/trailing whitespace, sets lowercase
-        if tutorial in ['tutorial', 't', 'help', 'h']:
+        print("You can ask for help at any time in-game\n")
+        tutorial = (
+            input().strip().lower()
+        )  # Requests player input, removes leading/trailing whitespace, sets lowercase
+        if tutorial in ["tutorial", "t", "help", "h"]:
             help()
-            input('Press Enter to Continue\n\n')
+            input("Press Enter to Continue\n\n")
             break
-        elif tutorial in ['start', 's', '']:
+        elif tutorial in ["start", "s", ""]:
             break
-        else: 
+        else:
             clear()
             title_bar()
-            print('Sorry, "',tutorial,'" is an invalid response\n')
+            print('Sorry, "', tutorial, '" is an invalid response\n')
+
 
 ###################
 ###  INIT GAME  ###
 ###################
-#Displays opening_crawl
+# Displays opening_crawl
 def init_game():
-    file = open('assets/opening_crawl.md', 'r') 
+    file = open("assets/opening_crawl.md", "r")
     file_contents = file.read()
-    print(file_contents,'\n')
+    print(file_contents, "\n")
     file.close()
+
 
 #######################
 ###  INPUT HANDLER  ###
 #######################
-#Processes player input into useable form, or throws error when input is invalid   
+# Processes player input into useable form, or throws error when input is invalid
 def input_handler(raw_input):
-    
-    mods = raw_input.strip().lower().split() #Turns player input into list of words
-    command = mods.pop(0) #Turns first word into command, leaves rest as mods
-    
-    #Bundles all the recognized commands by number of mods
-    zero_mods = ['look', 'l', 'help', 'h', 'end', 'e', 'quit', 'q']
-    one_mod = ['check', 'c', 'take', 't', 'walk', 'w', 'speak', 's']
-    two_mods = ['use', 'u', 'move', 'm', 'place', 'p']
-    bundle = (zero_mods, one_mod, two_mods)
+    mods = raw_input.strip().lower().split()  # Turns player input into list of words
+    command = mods.pop(0)  # Turns first word into command, leaves rest as mods
 
-    #Checks each item in bundle to see if command is present, and if number of mods is correct
-    #Returns (command, [mods]) if success
-    #Returns (-1, error message) if fail
-    for i in range(3):
-        if command in bundle[i] and len(mods) == i:
-            return (command, mods)
-        elif command in bundle[i] and len(mods) != i:
-            if i == 1: return (-1, 'That command requires exactly 1 modifier')
-            else: return (-1, 'That command requires exactly '+str(i)+' modifiers')
-    return (-1, str(command)+' is an unrecognized command')
+    command_parcer = {
+        "look": [0, "look", "l"],
+        "help": [0, "help", "h"],
+        "end": [0, "end", "e"],
+        "quit": [0, "quit", "q"],
+        "check": [1, "check", "c"],
+        "take": [1, "take", "t"],
+        "walk": [1, "walk", "w"],
+        "speak": [1, "speak", "s"],
+        "use": [2, "use", "u"],
+        "move": [2, "move", "m"],
+        "place": [2, "place", "p"],
+    }
+
+    for item in command_parcer:
+        # If command is valid and number of mods correct, return both
+        if command in command_parcer[item] and len(mods) == command_parcer[item][0]:
+            return (item, mods)
+        # If command valid but wrong number of mods, return error
+        elif command in command_parcer[item] and len(mods) != command_parcer[item][0]:
+            if command_parcer[item][0] == 1:
+                return (-1, "That command requires exactly 1 modifier")
+            else:
+                return (
+                    -1,
+                    "That command requires exactly "
+                    + str(command_parcer[item][0])
+                    + " modifiers",
+                )
+    # If command invalid, return error
+    return (-1, command + " is an unrecognized command")
+
 
 ##############
 ###  GAME  ###
 ##############
-#Requests player input, determines which command to run, passes parameters to PlayerCommands
+# Requests player input, determines which command to run, passes parameters to PlayerCommands
 def game():
     ui()
-    init_game() #Presents start of game text
+    init_game()  # Presents start of game text
     while True:
-        time.sleep(.5)
-        command = input_handler(input('What do you do next?\n\n')) #Requests player input, sends to input_handler
-        if command[0] == -1: print(command[1])                  #If input_handler errors, display error and return to start of loop, requesting new input
-        elif command[0] in ['look', 'l']: look()                #Look - Provides general info about surroundings [0 Modifiers]
-        elif command[0] in ['check', 'c']: check(command[1])    #Check - Provides information about an object [1 Modifier]
-        elif command[0] in ['take', 't']: take(command[1])      #Take - Moves an item into player inventory [1 Modifier]
-        elif command[0] in ['use', 'u']: use(command[1])        #Use - Use the first object on the second object [2 modifiers] 
-        elif command[0] in ['move', 'm']: move(command[1])      #Move - Move an object to a nearby location [2 modifiers]
-        elif command[0] in ['place', 'p']: place(command[1])    #Place - Remove an object from Inventory, place in nearby location [2 modifiers]
-        elif command[0] in ['walk', 'w']: walk(command[1])      #Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
-        elif command[0] in ['speak', 's']: speak(command[1])    #Speak - Talk to someone [1 Modifier]
-        elif command[0] in ['help', 'h']: help()                #Help - Displays Help screen [0 modifiers]
-        elif command[0] in ['end', 'e', 'r', 'restart', 'reboot']: 
+        time.sleep(0.5)
+        command = input_handler(
+            input("What do you do next?\n\n")
+        )  # Requests player input, sends to input_handler
+        if command[0] == -1:
+            print(
+                command[1]
+            )  # If input_handler errors, display error and return to start of loop, requesting new input
+
+        # todo: globals()[command[0]](command[1]) # Runs command[0] as a command, with command[1] as a parameter
+        # todo: Requires sanitization of command[0] by input_handler
+
+        elif command[0] in ["look", "l"]:
+            look()  # Look - Provides general info about surroundings [0 Modifiers]
+        elif command[0] in ["check", "c"]:
+            check(
+                command[1]
+            )  # Check - Provides information about an object [1 Modifier]
+        elif command[0] in ["take", "t"]:
+            take(command[1])  # Take - Moves an item into player inventory [1 Modifier]
+        elif command[0] in ["use", "u"]:
+            use(
+                command[1]
+            )  # Use - Use the first object on the second object [2 modifiers]
+        elif command[0] in ["move", "m"]:
+            move(command[1])  # Move - Move an object to a nearby location [2 modifiers]
+        elif command[0] in ["place", "p"]:
+            place(
+                command[1]
+            )  # Place - Remove an object from Inventory, place in nearby location [2 modifiers]
+        elif command[0] in ["walk", "w"]:
+            walk(
+                command[1]
+            )  # Walk - Move player to a location. Accepts cardinal directions of room name [1 Modifier]
+        elif command[0] in ["speak", "s"]:
+            speak(command[1])  # Speak - Talk to someone [1 Modifier]
+        elif command[0] in ["help", "h"]:
+            help()  # Help - Displays Help screen [0 modifiers]
+        elif command[0] in ["end", "e", "r", "restart", "reboot"]:
             init_triggers()
             init_inventories()
-            return 'end'
-        elif command[0] in ['quit', 'q', 'qq']: return 'quit'
+            return "end"
+        elif command[0] in ["quit", "q", "qq"]:
+            return "quit"
+
 
 ################
 ###  REPLAY  ###
 ################
-#Asks if player wants to play again
+# Asks if player wants to play again
 def replay():
     while True:
-        time.sleep(.5)
-        response = input('Would you like to play again? y/n\n\n')
-        if response in ['y', 'Y', 'yes', 'YES', 'Yes']:
+        time.sleep(0.5)
+        response = input("Would you like to play again? y/n\n\n")
+        if response in ["y", "Y", "yes", "YES", "Yes"]:
             converted_response = True
             break
-        elif response in ['n', 'N', 'no', 'NO', 'No']:
+        elif response in ["n", "N", "no", "NO", "No"]:
             converted_response = False
             break
-        else: 
+        else:
             clear()
-            print('Sorry, "',response,'" is an invalid response.')
+            print('Sorry, "', response, '" is an invalid response.')
     clear()
     return converted_response
