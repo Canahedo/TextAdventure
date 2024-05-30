@@ -34,7 +34,7 @@ def file_reader(file_name):
 ###  LOOK  ###
 ##############
 # Look - Provides general info about surroundings [0 Modifiers]
-def look():
+def look(*args):
     ui()
     print("You are in the", player_stats["room"])
     text = file_reader("look/" + player_stats["room"])  # Loads location description
@@ -56,9 +56,7 @@ def check(mods):
         print("There is nothing more to do here")
     if triggers != 0:
         ui()
-        file_path = (
-            "assets/check/" + object + ".md"
-        )  # Creates filepath from provided string
+        file_path = ("assets/check/" + object + ".md")  # Creates filepath from provided string
         if os.path.isfile(file_path):  # Checks if file exists
             file = open(file_path, "r")
             file_contents = file.read()
@@ -130,7 +128,7 @@ def speak(mods):
 ###  HELP  ###
 ##############
 # Displays Help
-def help():
+def help(*args):
     ui()
     file = open("assets/help.md", "r")
     file_contents = file.read()

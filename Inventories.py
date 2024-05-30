@@ -14,7 +14,7 @@ player_stats = {"room": "None"}
 rooms_full_list = ["driveway", "porch"]
 
 
-def init_inventories():
+def init_inventories(): #Sets starting inventories for new game
     player_stats.update({"room": "driveway"})
     player_inventory.clear()
     player_inventory.append("letter")
