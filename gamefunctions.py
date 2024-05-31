@@ -11,10 +11,9 @@ This file contains the primary functions which run the game
 import os  # Used in clear() to erase the board
 import time  # Used in sleep() to create a delay
 from player import *
-from items import *
-from chests import *
+from gameobjects import *
 from rooms import *
-from text import *
+from gametext import *
 from commands import *
 
 # Creates clear() to erase the board
@@ -62,7 +61,7 @@ def draw_ui():
 #####################
 # Converts player input into usable form
 # Returns (command, [mods]) if input accepter or (-1, error) if not
-def player_input(raw_input):
+def input_handler(raw_input):
     mods = raw_input.strip().lower().split()  # Turns player input into list of words
     if len(mods) == 0: # Prevents error if no text entered
         return (-1,"Enter a valid command")
@@ -70,8 +69,8 @@ def player_input(raw_input):
     for command in command_list: # Compare input to list of accepted commands
         if player_command in command.alias:
             if len(mods) != command.num_mods: # Error if command accepted but wrong number of mods
-                num_error = str(command.name)+" requires exactly "+str(command.num_mods)+" modifier"
-                if command.num_mods != 1: num_error = num_error+'s' # Adds an 's' for 0 or 2
+                num_error = str(command.name)+" requires exactly "+str(command.num_mods)+" modifier" # Creates error message
+                if command.num_mods != 1: num_error = num_error + 's' # Adds an 's' to end of error if num_mods == 0 or 2
                 return (-1, num_error.capitalize())
             return (command.name, mods) # * Success Condition
         
@@ -86,9 +85,30 @@ def game():
     print(opening_crawl_text)
     while True:
         time.sleep(1)
-        player_command = player_input(input("What do you do next?\n"))
-        print(player_command)  # ('speak', ['d'])      
+        player_input = input_handler(input("What do you do next?\n")) # Request input, convert to (command, ["mods"])
+        print("DEBUG: ",str(player_input))  # ('speak', ['d'])
+        player_command: str = player_input[0]
+        player_mods: list = player_input[1]
+        print("DEBUG command = ",str(player_command))
+        print("DEBUG object =",str(player_mods[0]))
+        if len(player_mods) == 0:
+            if player_command == "help": help()
+            if player_command == "look": player.look()
+            if player_command == "end": game_end()
+            if player_command == "quit": game_quit()
+        if len(player_mods) == 1:
+                for obj in object_list:
+                    if obj.name == player_mods[0]:
+                        if player_command == "check": obj.check()
+                        if player_command == "take": obj.take()
+                        if player_command == "walk": obj.walk()
+                        if player_command == "speak": obj.speak()
+                            
+                            
+                        
+                        
+                        
         
-    
-    
-    
+        
+        
+        

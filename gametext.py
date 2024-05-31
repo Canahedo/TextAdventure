@@ -1,12 +1,13 @@
 """
-Unnamed Text Adventure - Text
+Unnamed Text Adventure - Game Text
 Written by Canahedo and WingusInbound
 Python3
 2024
 
-This file contains all misc text not associated with an object covered by another file
+This file contains all game text not associated with an object covered by another file
 """
 
+'''
 # Displayed at start of game
 opening_crawl_text = """
 You find yourself standing in front of a house, long since abandoned,
@@ -25,3 +26,6 @@ and sigh to yourself as you continue up the path.
 
 Lucky you.
 """
+'''
+
+opening_crawl_text = "Opening Crawl Placeholder\n"

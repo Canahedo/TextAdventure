@@ -1,0 +1,44 @@
+[
+    {
+        "name": "template",
+        "chest_inventory": [""],
+        "checkable": false,
+        "key": {},
+        "initial state": "template",
+        "checktext_dict": {
+            "template": "This is a template"
+        },
+        "useable": false,
+        "moveable": false
+    },
+    {
+        "name": "rock",
+        "chest_inventory": ["key"],
+        "checkable": true,
+        "key": {
+            "check": "toppled"
+        },
+        "initial_state": "piled",
+        "checktext_dict": {
+            "piled": "Piled Rocks, contains key",
+            "toppled": "Toppled rocks, no key"
+        },
+        "useable": true,
+        "moveable": true
+    },
+    {
+        "name": "door",
+        "chest_inventory": [""],
+        "checkable": true,
+        "key": {
+            "key": "unlocked"
+        },
+        "initial_state": "locked",
+        "checktext_dict": {
+            "locked": "Piled Rocks, contains key",
+            "unlocked": "Toppled rocks, no key"
+        },
+        "useable": true,
+        "moveable": true
+    }
+]

@@ -7,7 +7,7 @@ Python3
 This is the main file for the program
 """
 
-from game_functions import *
+from gamefunctions import *
 
 def main():
     wants_to_play = True

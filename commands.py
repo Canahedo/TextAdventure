@@ -13,7 +13,9 @@ class Command:
         self.alias = alias
         self.num_mods = num_mods   
         self.type = type   
-        
+
+    def check(cls):
+        print("Checking...")        
         
 #Command = Command(name, alias, num_mods)
 command_list = [
@@ -29,3 +31,42 @@ Command("use", ["use", "u"], 2),
 Command("move", ["move", "m"], 2),
 Command("place", ["place", "p"], 2)
 ]
+
+
+def game_end():
+    pass
+
+
+def game_quit():
+    pass
+
+
+'''
+
+l - 0 = read player location, display text
+h - 0 = display text
+e/q - 0 = system command
+
+c - 1 = is in player.room or player.inv?
+        is checkable?
+        display text
+        triggers? > apply changes
+        
+        
+        
+t - 1
+w - 1
+s - 1
+
+u - 2
+m - 2
+p - 2
+
+
+
+
+
+
+
+
+'''

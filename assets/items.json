@@ -1,0 +1,28 @@
+[
+    {
+        "name": "itemtemplate",
+        "checkable": true,
+        "checktext": "",
+        "takeable": true,
+        "useable": true,
+        "moveable": true
+    },
+    {
+        "name": "key",
+        "checkable": true,
+        "checktext": "key_chktxt",
+        "takeable": true,
+        "useable": true,
+        "moveable": true
+    },
+    {
+        "name": "newspaper",
+        "checkable": true,
+        "checktext": "newspaper_chktxt",
+        "takeable": true,
+        "useable": true,
+        "moveable": true
+    }
+]
+
+
