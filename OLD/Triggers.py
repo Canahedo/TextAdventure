@@ -8,7 +8,7 @@ This file tracks and executes various triggers for the game
 """
 
 # Imports
-from Inventories import *
+from OLD.Inventories import *
 
 ##########################
 ### TRACKING VARIABLES ###

@@ -10,10 +10,10 @@ This file holds internal functions used by the game
 # Imports
 import os  # Used in clear() to erase the board
 import time  # Used in sleep() to create a delay
-from UI_Elements import title_bar, ui
-from Inventories import *
-from Triggers import init_triggers
-from PlayerCommands import look, check, take, use, place, speak, help, move, walk
+from OLD.UI_Elements import title_bar, ui
+from OLD.Inventories import *
+from OLD.Triggers import init_triggers
+from OLD.PlayerCommands import look, check, take, use, place, speak, help, move, walk
 
 
 # Creates clear() to erase the board

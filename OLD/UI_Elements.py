@@ -9,7 +9,7 @@ This file defines the UI elements such as the title bar and the player inventory
 
 # Imports
 import os  # Used in clear() to erase the board
-from Inventories import *
+from OLD.Inventories import *
 
 title = """
 Untitled Text Adventure

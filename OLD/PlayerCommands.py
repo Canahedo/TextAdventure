@@ -10,9 +10,9 @@ args will be a list of 0-2 strings
 
 # Imports
 import os.path  # Used to check if a file exists before opening
-from UI_Elements import ui
-from Inventories import *
-from Triggers import *
+from OLD.UI_Elements import ui
+from OLD.Inventories import *
+from OLD.Triggers import *
 
 
 #####################
