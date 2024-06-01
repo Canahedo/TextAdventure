@@ -2,26 +2,32 @@
     {
         "name": "itemtemplate",
         "checkable": true,
-        "checktext": "",
-        "takeable": true,
+        "key": "n",
+        "state": "n",
+        "checktext_dict": {},
         "useable": true,
-        "moveable": true
+        "moveable": true,
+        "takeable": true
     },
     {
         "name": "key",
         "checkable": true,
-        "checktext": "key_chktxt",
-        "takeable": true,
+        "key": "n",
+        "state": "n",
+        "checktext_dict": {"n": "Key Description"},
         "useable": true,
-        "moveable": true
+        "moveable": true,
+        "takeable": true
     },
     {
         "name": "newspaper",
         "checkable": true,
-        "checktext": "newspaper_chktxt",
-        "takeable": true,
-        "useable": true,
-        "moveable": true
+        "key": "n",
+        "state": "n",
+        "checktext_dict": {"n": "Newspaper Description"},
+        "useable": false,
+        "moveable": false,
+        "takeable": false
     }
 ]
 

@@ -12,7 +12,7 @@ from gamefunctions import *
 def main():
     wants_to_play = True
     while wants_to_play:
-        wants_to_play: bool = game()
+        wants_to_play: bool = run_game()
         
 if __name__ == "__main__":
     main()

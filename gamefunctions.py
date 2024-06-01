@@ -33,10 +33,11 @@ Written in Python 3
 ######################
 # Sets starting locations/stats
 def bootup():
-    init_player()
-    init_items()
+    game = Game([], [], [], [], [], "")
+    game.init_objects()
+    game.init_player()
     init_rooms()
-    init_chests()
+    return game  
     
 
 ###############
@@ -60,11 +61,10 @@ def draw_ui():
 ### Input Handler ###
 #####################
 # Converts player input into usable form
-# Returns (command, [mods]) if input accepter or (-1, error) if not
+# Returns (command, [mods]) if input accepted or (-1, error) if not
 def input_handler(raw_input):
     mods = raw_input.strip().lower().split()  # Turns player input into list of words
-    if len(mods) == 0: # Prevents error if no text entered
-        return (-1,"Enter a valid command")
+    if len(mods) == 0: return (-1,"Enter a valid command") # Prevents error if no text entered
     player_command = mods.pop(0)  # Turns first word into command, leaves rest as mods
     for command in command_list: # Compare input to list of accepted commands
         if player_command in command.alias:
@@ -72,6 +72,7 @@ def input_handler(raw_input):
                 num_error = str(command.name)+" requires exactly "+str(command.num_mods)+" modifier" # Creates error message
                 if command.num_mods != 1: num_error = num_error + 's' # Adds an 's' to end of error if num_mods == 0 or 2
                 return (-1, num_error.capitalize())
+            if len(mods) == 0: mods = [""] # Prevents error when command used with no mods
             return (command.name, mods) # * Success Condition
         
         
@@ -79,25 +80,22 @@ def input_handler(raw_input):
 ### Game Loop ###        
 #################      
 # Sets up game, prompts for input, directs functions
-def game():
-    bootup()
+def run_game():
+    game = bootup()
     draw_ui()
     print(opening_crawl_text)
     while True:
         time.sleep(1)
         player_input = input_handler(input("What do you do next?\n")) # Request input, convert to (command, ["mods"])
-        print("DEBUG: ",str(player_input))  # ('speak', ['d'])
         player_command: str = player_input[0]
         player_mods: list = player_input[1]
-        print("DEBUG command = ",str(player_command))
-        print("DEBUG object =",str(player_mods[0]))
         if len(player_mods) == 0:
             if player_command == "help": help()
             if player_command == "look": player.look()
             if player_command == "end": game_end()
             if player_command == "quit": game_quit()
         if len(player_mods) == 1:
-                for obj in object_list:
+                for obj in game.object_list:
                     if obj.name == player_mods[0]:
                         if player_command == "check": obj.check()
                         if player_command == "take": obj.take()
