@@ -18,7 +18,34 @@ from systemfunctions import *
 
 game = Game([], [], [], [], [], "")
 
- 
+
+#! Copied directly from OLD_DATA. Rework before using
+##################
+###  TUTORIAL  ###
+##################
+# Offers to show Help screen at start of first game
+# def tutorial_prompt():
+#     init_triggers()
+#     init_inventories()
+#     title_bar()
+#     while True:
+#         time.sleep(0.5)
+#         print("Welcome to our game", "\nThank you for playing\n")
+#         print('Enter "H" to view the Help Screen, or "S" to skip\n')
+#         print("You can ask for help at any time in-game\n")
+#         tutorial = (input().strip().lower())  # Requests player input, removes leading/trailing whitespace, sets lowercase
+#         if tutorial in ["tutorial", "t", "help", "h"]:
+#             help()
+#             input("Press Enter to Continue\n\n")
+#             break
+#         elif tutorial in ["start", "s", ""]:
+#             break
+#         else:
+#             clear()
+#             title_bar()
+#             print('Sorry, "', tutorial, '" is an invalid response\n')
+
+
 #*#####################
 #*### Input Handler ###
 #*#####################
@@ -34,7 +61,7 @@ def input_handler(raw_input):
                 num_error = str(command.name)+" requires exactly "+str(command.num_mods)+" modifier" # Creates error message
                 if command.num_mods != 1: num_error = num_error + 's' # Adds an 's' to end of error if num_mods == 0 or 2
                 return (-1, num_error.capitalize())
-            if len(mods) == 0: mods = [""] # Prevents error when command used with no mods
+            if len(mods) == 0: mods = [""] # Prevents error when command used correctly with no mods
             return (command.name, mods) # * Success Condition
         
         
