@@ -13,9 +13,7 @@ class Command:
         self.alias = alias
         self.num_mods = num_mods   
         self.type = type   
-
-    def check(cls):
-        print("Checking...")        
+     
         
 #Command = Command(name, alias, num_mods)
 command_list = [
@@ -31,14 +29,6 @@ Command("use", ["use", "u"], 2),
 Command("move", ["move", "m"], 2),
 Command("place", ["place", "p"], 2)
 ]
-
-
-def game_end():
-    pass
-
-
-def game_quit():
-    pass
 
 
 '''

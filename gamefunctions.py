@@ -8,58 +8,20 @@ This file contains the primary functions which run the game
 """
 
 # Imports
-import os  # Used in clear() to erase the board
 import time  # Used in sleep() to create a delay
-from player import *
+from icecream import ic
 from gameobjects import *
-from rooms import *
 from gametext import *
 from commands import *
-
-# Creates clear() to erase the board
-def clear():
-    os.system("cls")
-
-title = """
-Untitled Text Adventure
-Created by Canahedo and WingusInbound, 2024
-Written in Python 3
--------------------------
-"""
+from systemfunctions import *
 
 
-######################
-### Initialization ###
-######################
-# Sets starting locations/stats
-def bootup():
-    game = Game([], [], [], [], [], "")
-    game.init_objects()
-    game.init_player()
-    init_rooms()
-    return game  
-    
+game = Game([], [], [], [], [], "")
 
-###############
-### Draw UI ###
-###############
-# Displays header and formats/displays player inventory
-def draw_ui():
-    clear()
-    print(title)
-    print("You are carrying the following: ")
-    # Formats inventory
-    if len(player.inventory) is not 0:
-        for item in player.inventory:
-            print(str(item), end=" ")
-            if len(player.inventory) != player.inventory.index(item) + 1:
-                print(", ", end="")
-    print("\n\n-------------------------\n")
-    
-
-#####################
-### Input Handler ###
-#####################
+ 
+#*#####################
+#*### Input Handler ###
+#*#####################
 # Converts player input into usable form
 # Returns (command, [mods]) if input accepted or (-1, error) if not
 def input_handler(raw_input):
@@ -76,33 +38,49 @@ def input_handler(raw_input):
             return (command.name, mods) # * Success Condition
         
         
-#################        
-### Game Loop ###        
-#################      
+#*#################        
+#*### Run Game ###        
+#*#################      
 # Sets up game, prompts for input, directs functions
 def run_game():
-    game = bootup()
-    draw_ui()
+    game.new_game()
+    draw_ui(game)
     print(opening_crawl_text)
     while True:
         time.sleep(1)
         player_input = input_handler(input("What do you do next?\n")) # Request input, convert to (command, ["mods"])
         player_command: str = player_input[0]
         player_mods: list = player_input[1]
-        if len(player_mods) == 0:
+        if len(player_mods) == 0:    
+            if player_command in ["quit", "q"]: return False
+            if player_command in ["end", "e", "restart", "r"]: return replay()
             if player_command == "help": help()
-            if player_command == "look": player.look()
-            if player_command == "end": game_end()
-            if player_command == "quit": game_quit()
+            if player_command == "look": game.look()
         if len(player_mods) == 1:
                 for obj in game.object_list:
                     if obj.name == player_mods[0]:
-                        if player_command == "check": obj.check()
-                        if player_command == "take": obj.take()
-                        if player_command == "walk": obj.walk()
+                        if player_command == "check": obj.check(game)
+                        if player_command == "take": obj.take(game)
+                        if player_command == "walk": game.walk()
                         if player_command == "speak": obj.speak()
-                            
-                            
+
+
+#*##############
+#*### Replay ###
+#*##############                            
+# Asks the player if they want to play again
+def replay():
+    while True:
+        time.sleep(0.5)
+        response = input("Would you like to play again? y/n\n\n").lower()
+        if response in ['y', 'yes']:
+            return True
+        elif response in ['n', 'no']:
+            return False
+        else:
+            clear()
+            print('Sorry, "', response, '" is an invalid response.')            
+              
                         
                         
                         
