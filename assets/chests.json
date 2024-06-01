@@ -1,0 +1,52 @@
+[
+    {
+        "name": "chest_template",
+        "checkable": false,
+        "key": {},
+        "state": "state_template",
+        "checktext_dict": {
+            "template": "This is a template"
+        },
+        "trigger_dict": {},
+        "useable": false,
+        "moveable": false,
+        "chest_inventory": [""]
+    },
+    {
+        "name": "rock",
+        "checkable": true,
+        "key": {
+            "check": "toppled",
+            "hammer": "smashed"
+        },
+        "state": "piled",
+        "checktext_dict": {
+            "piled": "Piled Rocks, contains key",
+            "toppled": "Toppled rocks, no key"
+        },
+        "trigger_dict": {
+            "toppled": "The rocks fall over, revealing a key"
+        },
+        "useable": false,
+        "moveable": false,
+        "chest_inventory": ["key"]
+    },
+    {
+        "name": "door",
+        "checkable": true,
+        "key": {
+            "key": "unlocked"
+        },
+        "state": "locked",
+        "checktext_dict": {
+            "locked": "locked door",
+            "unlocked": "open door"
+        },
+        "trigger_dict": {
+            "unlocked": "The door is unlocked"
+        },
+        "useable": true,
+        "moveable": false,
+        "chest_inventory": [""]
+    }
+]

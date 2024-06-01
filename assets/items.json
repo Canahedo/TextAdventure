@@ -1,0 +1,34 @@
+[
+    {
+        "name": "itemtemplate",
+        "checkable": true,
+        "key": "n",
+        "state": "n",
+        "checktext_dict": {},
+        "useable": true,
+        "moveable": true,
+        "takeable": true
+    },
+    {
+        "name": "key",
+        "checkable": true,
+        "key": "n",
+        "state": "n",
+        "checktext_dict": {"n": "Key Description"},
+        "useable": true,
+        "moveable": true,
+        "takeable": true
+    },
+    {
+        "name": "newspaper",
+        "checkable": true,
+        "key": "n",
+        "state": "n",
+        "checktext_dict": {"n": "Newspaper Description"},
+        "useable": false,
+        "moveable": false,
+        "takeable": false
+    }
+]
+
+

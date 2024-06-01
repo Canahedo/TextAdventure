@@ -1,0 +1,14 @@
+[
+    {
+        "name": "room_template",
+        "look_text": "look_text template"
+    },
+    {
+        "name": "driveway",
+        "look_text": "You are in the driveway"
+    },
+    {
+        "name": "porch",
+        "look_text": "You are on the porch"
+    }
+]
