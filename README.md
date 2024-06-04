@@ -25,3 +25,25 @@ SPEAK [PERSON] - Talk to someone\
 HELP - Brings up this page\
 END - Ends the current game, with the option to restart\
 QUIT - Exits the game, closing the program
+
+
+DEV NOTES:
+
+DEBUG system utilizes icecream\
+pip3 install icecream
+
+Set DEBUG value on systemfunctions page
+
+
+File import structure is as follows\
+    main\
+    game functions\
+    commands\
+    gameobjects\
+    systemfunctions\
+    gametext
+
+Upper files can access all data and functions represented by lower files
+
+
+

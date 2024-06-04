@@ -8,7 +8,7 @@ LOOK
 CHECK WINDOW
 PLACE BOOK TABLE    
 
-Commands and modifiers can be lower or upper case, but will shown in upper case here
+Commands and modifiers can be lower or upper case, but will be shown in upper case here
 A command cannot be used without all of its modifiers, or accept additional modifiers
 
 A glossary of supported commands follows:

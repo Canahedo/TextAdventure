@@ -4,15 +4,20 @@ Written by Canahedo and WingusInbound
 Python3
 2024
 
-This file all game objects
+This file represents all game objects
 A game object is either an item or a chest
 An item can be moved around by the player or put in their inventory
 A chest is a location within a room which can hold items
 """
 
-import json
-from dataclasses import dataclass
-from icecream import ic
+# import os  # Used in clear() to erase the board
+# import time  # Used in sleep() to create a delay
+# import json
+# from icecream import ic
+# from dataclasses import dataclass
+
+# from gametext import *
+
 from systemfunctions import *
 
 
@@ -25,56 +30,29 @@ class Game:
     item_list: list # List of objects representing all items
     object_list: list # List of objects combined from chest_list and item_list
     room_list: list # List of objects representing all rooms
-    player_inventory: list # List representing the player inventory
+    player_inventory: list # List of strings representing the player inventory
     player_location: str # String representing which room the player is in
-        
+
     # Starts a new game
     def new_game(self):
-        self.init_player()
-        self.init_objects()
-        self.init_rooms()
-        return self
-    
-    #init_player - Sets initial inventory and location
-    def init_player(self):
+        
+        # Init Player - Sets initial inventory and location
         self.player_inventory.clear()
         self.player_inventory.append("letter")
         self.player_location = "driveway"
-    
-    # init_chests - Initializes list of chest objects
-    def init_chests(self):
-        chest_list = [] # Creates empty list
-        with open("assets/chests.json", "r") as file:
-            chest_data = json.load(file)
-            for chest in chest_data: # Iterates over each object in json, appends to chest_list
-                chest_list.append(Chest(**chest))
-        self.chest_list = chest_list # Ties chest_list to game object
-
-    # init_items - Initializes list of item objects
-    def init_items(self):
-        item_list = [] # Creates empty list
-        with open("assets/items.json", "r") as file:
-            item_data = json.load(file)
-            for item in item_data: # Iterates over each object in json, appends to item_list
-                item_list.append(Item(**item))       
-        self.item_list = item_list # Ties item_list to game object
-    
-    def init_objects(self): # Runs modules to init chests and items, combines chest_list and item_list, ties to game object
-        self.init_chests()
-        self.init_items()
+        self.room_list = init_game_lists("rooms") # Ties room_list to game object
+        self.chest_list = init_game_lists("chests") # Ties chest_list to game object   
+        self.item_list = init_game_lists("items") # Ties item_list to game object   
+        
+        # Init Objects - # Combines chest_list and item_list, ties to game object
         object_list = []
         for chest in self.chest_list: object_list.append(chest)
         for item in self.item_list:object_list.append(item)
         self.object_list = object_list
-        
-    def init_rooms(self):
-        room_list = [] # Creates empty list
-        with open("assets/rooms.json", "r") as file:
-            room_data = json.load(file)
-            for room in room_data: # Iterates over each object in json, appends to room_list
-                room_list.append(Room(**room))       
-        self.room_list = room_list # Ties room_list to game object
-        
+        return self
+
+
+
 #*############
 #*### Room ###
 #*############
@@ -87,7 +65,7 @@ class Room:
 #*####################
 #*### Game Objects ###
 #*####################
-#GameObject(name, checkable, key, state, checktext_dict, useable, moveable
+#GameObject(name, checkable, key, state, checktext_dict, useable, visible
 
 @dataclass(slots=True)
 class GameObject:
@@ -97,41 +75,42 @@ class GameObject:
     state: str # What state the object is in
     checktext_dict: dict # Contains all text which might be used for the check command
     useable: bool # Does the object respond to the use command
-    moveable: bool # Does the object respond to the move command
+    visible: bool # Is the object accessible to the player
    
-    def check(self, game): # Represents the player command "check"
-        draw_ui(game)
-        print(self.checktext_dict[self.state]) # Displays current checktext according to state
-        if ("gameobjects.Chest" in str(self.__class__) # Only considers triggers if object is a chest
-            and "check" in self.key # Check is a valid key for some chests
-            and self.key["check"] != self.state): # Prevent unlocking open doors, etc
-                self.state = self.key["check"] # Change object state per key
-                print(self.trigger_dict[self.state]) # Display any text for the trigger per state
+    
 
 
 #*##############
 #*### Chests ###
 #*##############
-#Chest(name, checkable, key, state, checktext_dict, trigger_dict, useable, moveable, chest_inventory)
+#Chest(name, checkable, key, state, checktext_dict, trigger_dict, useable, visible, chest_inventory)
 class Chest(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, trigger_dict, useable, moveable, chest_inventory) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, useable, moveable)
-        self.chest_inventory = chest_inventory # Items held in theis chest
+    def __init__(self, name, checkable, key, state, checktext_dict, trigger_dict, useable, visible, chest_inventory) -> None:
+        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
+        self.chest_inventory = chest_inventory # Items held in this chest
         self.trigger_dict = trigger_dict # Contains list of items which react with the object, and the state this reaction puts the object in
 
 
 #*#############
 #*### Items ###
 #*#############
-#Item(name, checkable, key, state, checktext_dict, useable, moveable, takeable)
+#Item(name, checkable, key, state, checktext_dict, useable, visible, takeable)
 class Item(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, useable, moveable, takeable) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, useable, moveable)
+    def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, takeable) -> None:
+        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
         self.takeable = takeable # Can the item be put in the player inventory
         
-    def take(self,game):
-        game.player_inventory.append(self.name)
-        draw_ui(game)
-        print(f"You take the",self.name)
-        
-        
+    
+
+
+
+#Initializes object and room lists
+def init_game_lists(target_list):
+    temp_list = []
+    with open("assets/"+str(target_list)+".json", "r") as file:
+        data = json.load(file)
+        for item in data: # Iterates over each object in json, appends to temp_list
+            if target_list == "items": temp_list.append(Item(**item))
+            if target_list == "chests": temp_list.append(Chest(**item))
+            if target_list == "rooms": temp_list.append(Room(**item))       
+    return temp_list

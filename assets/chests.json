@@ -9,15 +9,14 @@
         },
         "trigger_dict": {},
         "useable": false,
-        "moveable": false,
+        "visible": false,
         "chest_inventory": [""]
     },
     {
         "name": "rock",
         "checkable": true,
         "key": {
-            "check": "toppled",
-            "hammer": "smashed"
+            "check": "toppled"
         },
         "state": "piled",
         "checktext_dict": {
@@ -28,7 +27,7 @@
             "toppled": "The rocks fall over, revealing a key"
         },
         "useable": false,
-        "moveable": false,
+        "visible": true,
         "chest_inventory": ["key"]
     },
     {
@@ -46,7 +45,7 @@
             "unlocked": "The door is unlocked"
         },
         "useable": true,
-        "moveable": false,
+        "visible": true,
         "chest_inventory": [""]
     }
 ]

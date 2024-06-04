@@ -6,7 +6,7 @@
         "state": "n",
         "checktext_dict": {},
         "useable": true,
-        "moveable": true,
+        "visible": false,
         "takeable": true
     },
     {
@@ -16,7 +16,7 @@
         "state": "n",
         "checktext_dict": {"n": "Key Description"},
         "useable": true,
-        "moveable": true,
+        "visible": false,
         "takeable": true
     },
     {
@@ -26,7 +26,7 @@
         "state": "n",
         "checktext_dict": {"n": "Newspaper Description"},
         "useable": false,
-        "moveable": false,
+        "visible": false,
         "takeable": false
     }
 ]

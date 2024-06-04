@@ -8,6 +8,11 @@ This file contains the low level functions which are relied on by multiple files
 """
 
 import os  # Used in clear() to erase the board
+import time  # Used in sleep() to create a delay
+import json
+from icecream import ic
+from dataclasses import dataclass
+
 from gametext import *
 
 
@@ -16,18 +21,34 @@ def clear():
     os.system("cls")
 
 
-###############
-### Draw UI ###
-###############
+#*###################
+#*## DEBUG TOGGLE ###
+#*###################
+#* Set to False, True, or "verbose"
+DEBUG = False
+#DEBUG = True
+#DEBUG = "verbose"
+
+
+#*##############
+#*## Draw UI ###
+#*##############
 # Displays header and formats/displays player inventory
 def draw_ui(game):
-    clear()
-    print(game_title)
+    if DEBUG:
+        print("-------------------------")
+        print("-------------------------")
+        print("DEBUG MODE")
+        print(DEBUG)
+    if DEBUG != "verbose": #* DEBUG: Disables screen wipe when DEBUG     
+        clear() # Erases screen before redrawing UI, disabled in DEBUG
+        print(game_title)
     print("You are carrying the following: ")
-    # Formats inventory
+    # Formats inventory  
     if len(game.player_inventory) != 0:
         for item in game.player_inventory:
             print(str(item), end=" ")
             if len(game.player_inventory) != game.player_inventory.index(item) + 1:
                 print(", ", end="")
     print("\n\n-------------------------\n")
+    
