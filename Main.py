@@ -14,7 +14,7 @@ This is the main file for the program
 # from dataclasses import dataclass
 
 # from gametext import *
-# from systemfunctions import *
+# from systemfunctions import *t
 # from gameobjects import *
 # from commands import *
 
@@ -25,7 +25,8 @@ def main():
     clear()
     wants_to_play = True
     while wants_to_play:
-        wants_to_play = run_game()
+        game = Game()
+        wants_to_play = new_game(game)
         
 if __name__ == "__main__":
     main()

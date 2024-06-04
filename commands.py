@@ -25,30 +25,52 @@ from gameobjects import *
 #comamnd.move(obj, che, game)
 #comamnd.place(obj, che, game)
 
+
 class Command:
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         self.name = name
         self.alias = alias
-        self.num_mods = num_mods   
+        self.num_mods = num_mods
         
     def statebasedactions(): #check current status, make relevant changes, display update text 
         pass
         
-class look(Command):
+
+class Tutorial(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)
+        self.name = name
+        self.alias = alias
+        self.num_mods = num_mods
+        
+    def __call__(self, game, mod1, mod2):
+        with open("assets/tutorial.md", "r") as file:
+            file_contents = file.read()
+        print(file_contents, "\n")
         
 
+class Look(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
+        self.name = name
+        self.alias = alias
+        self.num_mods = num_mods     
         
-# Represents the player command "look"
-def look(game):
-    for room in game.room_list:
-        if game.player_location == room.name:
-            print(room.look_text)
-            break
-
-# Represents the player command "check"
-def check(obj): 
+    def __call__(self, game, mod1, mod2):
+        for room in game.room_list:
+            if game.player_location == room.name:
+                print(room.look_text)
+                break
+        
+        
+class Check(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
+    
+    def __call__(self, game, obj, mod2):
+        if obj == -1:
+            print("Unrecognized object")
+            return
         print(obj.checktext_dict[obj.state]) # Displays current checktext according to state
         if ("gameobjects.Chest" in str(obj.__class__) # Only considers triggers if obj is a chest
             and "check" in obj.key # Check is a valid key for some chests
@@ -56,32 +78,57 @@ def check(obj):
                 obj.state = obj.key["check"] # Change obj state per key
                 print(obj.trigger_dict[obj.state]) # Display any text for the trigger per state
 
-# Represents the player command "take"        
-def take(obj,game):
-    if obj.name in game.player_inventory:
-        print(f"You already have the",obj.name)
-        return
-    if obj.takeable == False:
-        print(f"You can't take the",obj.name)
-        return
-    game.player_inventory.append(obj.name)
-    draw_ui(game)
-    print(f"You take the",obj.name)
-    return
+
+class Take(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
         
+    def __call__(self, game, obj, mod2):
+        if obj == -1:
+            print("Unrecognized object")
+            return
+        if obj.name in game.player_inventory:
+            print(f"You already have the",obj.name)
+            return
+        if obj.takeable == False:
+            print(f"You can't take the",obj.name)
+            return
+        game.player_inventory.append(obj.name)
+        draw_ui(game)
+        print(f"You take the",obj.name)
+        return
 
 
+class Walk(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)        
+        
+    def __call__(self, game, dir, mod2):
+        pass
+            
 
+class Speak(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)  
+        
+    def __call__(self, game, targ, mod2):
+        pass  
+            
+        
+class Use(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)    
+        
+    def __call__(self, game, obj1, obj2):
+        pass    
+        
+        
+class Place(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)        
 
-
-
-
-
-
-
-
-
-
+    def __call__(self, game, obj1, obj2):
+        pass
 
 
 
@@ -89,17 +136,16 @@ def take(obj,game):
 
 #Command = Command(name, alias, num_mods)
 command_list = [
-Command("look", ["look", "l"], 0),
-Command("help", ["help", "h"], 0),
-Command("end", ["end", "e", "r", "restart", "reboot"], 0),
-Command("quit", ["quit", "q"], 0),
-Command("check", ["check", "c"], 1),
-Command("take", ["take", "t"], 1),
-Command("walk", ["walk", "w", "move", "m"], 1),
-Command("speak", ["speak", "s"], 1),
-Command("use", ["use", "u"], 2),
-Command("place", ["place", "p"], 2)
+Tutorial("help", ["help", "h", "tutorial"], 0),
+Look("look", ["look", "l"], 0),
+Check("check", ["check", "c"], 1),
+Take("take", ["take", "t"], 1),
+Walk("walk", ["walk", "w", "move", "m"], 1),
+Speak("speak", ["speak", "s"], 1),
+Use("use", ["use", "u"], 2),
+Place("place", ["place", "p"], 2)
 ]
+
 
 
 '''
@@ -184,19 +230,4 @@ p - 2 = (simliar to use. likely always iteom on chest)
             
         
              
-        # def help(self, game):
-        #     pass
-        # def look(self, object, game):
-        #     pass
-        # def check(self, object, game):
-        #     pass
-        # def take(self, object, game):
-        #     pass
-        # def walk(self, object, game):
-        #     pass
-        # def speak(self, object, game):
-        #     pass
-        # def use(self, object, game):
-        #     pass
-        # def place(self, object, game):
-        #     pass
+

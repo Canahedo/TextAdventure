@@ -27,6 +27,8 @@ from systemfunctions import *
 @dataclass(slots=True)
 class Game:
     #! Does object_list cause problems when making changes? Which list is being changed?
+    #? Does copying the lists to object_list mean they are tied together?
+    #? Do changes carry over?
     chest_list: list[str] = field(default_factory=list) # List of objects representing all chests
     item_list: list[str] = field(default_factory=list) # List of objects representing all items
     object_list: list[str] = field(default_factory=list) # List of objects combined from chest_list and item_list
@@ -53,11 +55,10 @@ class Game:
         return self
 
 
-
 #*############
 #*### Room ###
 #*############
-#Room(name)
+#Room(name, look_text)
 @dataclass
 class Room:
     name: str
@@ -67,7 +68,6 @@ class Room:
 #*### Game Objects ###
 #*####################
 #GameObject(name, checkable, key, state, checktext_dict, useable, visible
-
 @dataclass(slots=True)
 class GameObject:
     name: str # Name of the object
@@ -79,8 +79,6 @@ class GameObject:
     visible: bool # Is the object accessible to the player
    
     
-
-
 #*##############
 #*### Chests ###
 #*##############
@@ -104,7 +102,9 @@ class Item(GameObject):
     
 
 
-
+#*#######################
+#*### Init Game Lists ###
+#*#######################
 #Initializes object and room lists
 def init_game_lists(target_list):
     temp_list = []
