@@ -11,7 +11,7 @@ import os  # Used in clear() to erase the board
 import time  # Used in sleep() to create a delay
 import json
 from icecream import ic
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from gametext import *
 

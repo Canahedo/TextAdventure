@@ -26,12 +26,13 @@ from systemfunctions import *
 #*############
 @dataclass(slots=True)
 class Game:
-    chest_list: list # List of objects representing all chests
-    item_list: list # List of objects representing all items
-    object_list: list # List of objects combined from chest_list and item_list
-    room_list: list # List of objects representing all rooms
-    player_inventory: list # List of strings representing the player inventory
-    player_location: str # String representing which room the player is in
+    #! Does object_list cause problems when making changes? Which list is being changed?
+    chest_list: list[str] = field(default_factory=list) # List of objects representing all chests
+    item_list: list[str] = field(default_factory=list) # List of objects representing all items
+    object_list: list[str] = field(default_factory=list) # List of objects combined from chest_list and item_list
+    room_list: list[str] = field(default_factory=list) # List of objects representing all rooms
+    player_inventory: list[str] = field(default_factory=list) # List of strings representing the player inventory
+    player_location: str = field(default_factory=str) # String representing which room the player is in
 
     # Starts a new game
     def new_game(self):

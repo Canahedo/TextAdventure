@@ -38,27 +38,7 @@ class look(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)
         
-            
-        
-             
-        # def help(self, game):
-        #     pass
-        # def look(self, object, game):
-        #     pass
-        # def check(self, object, game):
-        #     pass
-        # def take(self, object, game):
-        #     pass
-        # def walk(self, object, game):
-        #     pass
-        # def speak(self, object, game):
-        #     pass
-        # def use(self, object, game):
-        #     pass
-        # def move(self, object, game):
-        #     pass
-        # def place(self, object, game):
-        #     pass
+
         
 # Represents the player command "look"
 def look(game):
@@ -200,3 +180,23 @@ p - 2 = (simliar to use. likely always iteom on chest)
 #TODO:
 #TODO:
 '''
+
+            
+        
+             
+        # def help(self, game):
+        #     pass
+        # def look(self, object, game):
+        #     pass
+        # def check(self, object, game):
+        #     pass
+        # def take(self, object, game):
+        #     pass
+        # def walk(self, object, game):
+        #     pass
+        # def speak(self, object, game):
+        #     pass
+        # def use(self, object, game):
+        #     pass
+        # def place(self, object, game):
+        #     pass

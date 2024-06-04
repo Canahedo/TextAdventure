@@ -19,9 +19,7 @@ This file contains the primary functions which run the game
 
 from commands import *
 
-
-game = Game([], [], [], [], [], "")
-
+game = Game()
 
 #*########################
 #*##  Tutorial Prompt  ###
