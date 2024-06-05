@@ -35,10 +35,14 @@ class Game:
     room_list: list[str] = field(default_factory=list) # List of objects representing all rooms
     player_inventory: list[str] = field(default_factory=list) # List of strings representing the player inventory
     player_location: str = field(default_factory=str) # String representing which room the player is in
-
-    # Starts a new game
-    def new_game(self):
-        
+    
+    # Sets starting values for game lists and player data.
+    def new_game(self): 
+        """
+        Wipes player inventory, and adds starting item(s). Sets initial player location.
+        Runs function to set starting lists for items, chests, and rooms.
+        Combines item and chest list into object list.        
+        """        
         # Init Player - Sets initial inventory and location
         self.player_inventory.clear()
         self.player_inventory.append("letter")
@@ -52,7 +56,6 @@ class Game:
         for chest in self.chest_list: object_list.append(chest)
         for item in self.item_list:object_list.append(item)
         self.object_list = object_list
-        return self
 
 
 #*############
@@ -106,12 +109,24 @@ class Item(GameObject):
 #*### Init Game Lists ###
 #*#######################
 #Initializes object and room lists
-def init_game_lists(target_list):
-    temp_list = []
-    with open("assets/"+str(target_list)+".json", "r") as file:
+def init_game_lists(obj_type: str) -> list:
+    """
+    Initializes a blank list, then reads a json file containing data for either the game's items, chests,
+    or rooms (selected by obj_type), and copies that data to the list as objects of the respective type.
+    Finally, returns the list of objects.
+
+    Args:
+        obj_type (str): Will be either "items", "chests", or "rooms". Set by game.new_game().
+
+    Returns:
+        list: List of objects of either Class Item, Chest, or Room, depending on obj_type.
+    """    
+    list_builder = []
+    with open("assets/"+str(obj_type)+".json", "r") as file:
         data = json.load(file)
         for item in data: # Iterates over each object in json, appends to temp_list
-            if target_list == "items": temp_list.append(Item(**item))
-            if target_list == "chests": temp_list.append(Chest(**item))
-            if target_list == "rooms": temp_list.append(Room(**item))       
-    return temp_list
+            if obj_type == "items": list_builder.append(Item(**item))
+            if obj_type == "chests": list_builder.append(Chest(**item))
+            if obj_type == "rooms": list_builder.append(Room(**item))       
+    return list_builder
+

@@ -32,7 +32,7 @@ class Command:
         self.alias = alias
         self.num_mods = num_mods
         
-    def statebasedactions(): #check current status, make relevant changes, display update text 
+    def triggers(): #check current status, make relevant changes, display update text 
         pass
         
 
@@ -43,7 +43,7 @@ class Tutorial(Command):
         self.alias = alias
         self.num_mods = num_mods
         
-    def __call__(self, game, mod1, mod2):
+    def __call__(self, game: None, mod1: None, mod2: None):
         with open("assets/tutorial.md", "r") as file:
             file_contents = file.read()
         print(file_contents, "\n")
@@ -56,7 +56,7 @@ class Look(Command):
         self.alias = alias
         self.num_mods = num_mods     
         
-    def __call__(self, game, mod1, mod2):
+    def __call__(self, game: object, mod1: None, mod2: None):
         for room in game.room_list:
             if game.player_location == room.name:
                 print(room.look_text)
@@ -67,7 +67,7 @@ class Check(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)
     
-    def __call__(self, game, obj, mod2):
+    def __call__(self, game: None, obj: object, mod2: None):
         if obj == -1:
             print("Unrecognized object")
             return
@@ -83,7 +83,7 @@ class Take(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)
         
-    def __call__(self, game, obj, mod2):
+    def __call__(self, game: object, obj: object, mod2: None):
         if obj == -1:
             print("Unrecognized object")
             return
@@ -103,7 +103,7 @@ class Walk(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)        
         
-    def __call__(self, game, dir, mod2):
+    def __call__(self, game: object, dir: object, mod2: None):
         pass
             
 
@@ -111,7 +111,7 @@ class Speak(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)  
         
-    def __call__(self, game, targ, mod2):
+    def __call__(self, game: object, targ: object, mod2: None):
         pass  
             
         
@@ -119,7 +119,7 @@ class Use(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)    
         
-    def __call__(self, game, obj1, obj2):
+    def __call__(self, game: object, obj1: object, obj2: object):
         pass    
         
         
@@ -127,14 +127,12 @@ class Place(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)        
 
-    def __call__(self, game, obj1, obj2):
+    def __call__(self, game: object, obj1: object, obj2: object):
         pass
 
 
-
-
-
-#Command = Command(name, alias, num_mods)
+# Initializes instances of each command class in command_list
+#Command = Command("name", [alias], num_mods)
 command_list = [
 Tutorial("help", ["help", "h", "tutorial"], 0),
 Look("look", ["look", "l"], 0),

@@ -34,14 +34,22 @@ DEBUG = False
 #*## Draw UI ###
 #*##############
 # Displays header and formats/displays player inventory
-def draw_ui(game):
+def draw_ui(game) -> None:
+    """
+    Wipes the screen, displays the game_title, and displays
+    the player inventory without list formatting
+    Disables screen wipe if DEBUG == "verbose"
+
+    Args:
+        game (Game): The object containing all game lists and player data
+    """    
     if DEBUG:
         print("-------------------------")
         print("-------------------------")
         print("DEBUG MODE")
         print(DEBUG)
     if DEBUG != "verbose": #* DEBUG: Disables screen wipe when DEBUG     
-        clear() # Erases screen before redrawing UI, disabled in DEBUG
+        clear() # Erases screen before redrawing UI, disabled in verbose DEBUG
         print(game_title)
     print("You are carrying the following: ")
     # Formats inventory  
