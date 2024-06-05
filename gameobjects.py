@@ -51,8 +51,9 @@ class Game:
         self.chest_list = init_game_lists("chests") # Ties chest_list to game object   
         self.item_list = init_game_lists("items") # Ties item_list to game object   
         
-        # Init Objects - # Combines chest_list and item_list, ties to game object
+        # Init Objects - # Combines room_list, chest_list, and item_list, ties to game object
         object_list = []
+        for room in self.room_list: object_list.append(room)
         for chest in self.chest_list: object_list.append(chest)
         for item in self.item_list:object_list.append(item)
         self.object_list = object_list

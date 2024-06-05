@@ -104,6 +104,21 @@ class Walk(Command):
         super().__init__(name, alias, num_mods)        
         
     def __call__(self, game: object, dir: object, mod2: None):
+        if dir == -1:
+            print("I don't know where you're trying to go")
+            return
+        if dir.name == game.player_location:
+            print(f"You are already in the",dir.name)
+            return
+        if dir.name in ["north", "n","south", "s","east", "e","west", "w"]:
+            goto = gps(game, dir.name)        
+        else:
+            goto = dir.name
+        
+        game.player_location = goto
+        print(f"You walk to the",goto)
+        
+        
         pass
             
 
@@ -120,7 +135,11 @@ class Use(Command):
         super().__init__(name, alias, num_mods)    
         
     def __call__(self, game: object, obj1: object, obj2: object):
-        pass    
+        if obj1 == -1 or obj2 == -1:
+            print("Unrecognized object")
+            return
+        
+        pass
         
         
 class Place(Command):
@@ -129,6 +148,23 @@ class Place(Command):
 
     def __call__(self, game: object, obj1: object, obj2: object):
         pass
+
+
+
+def gps(game: object, dir: str):
+    raise NotImplementedError()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Initializes instances of each command class in command_list
@@ -217,8 +253,8 @@ p - 2 = (simliar to use. likely always iteom on chest)
 
 
 #TODO:  Tracking changes
-#TODO:
-#TODO:
+#TODO:  GPS and cardinals as class
+#TODO:  visibilty system
 #TODO:
 #TODO:
 #TODO:
