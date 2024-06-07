@@ -25,26 +25,26 @@ from commands import *
 #*#####################
 # Converts player input into usable form
 # Returns (command, [mods]) if input accepted or (-1, error) if not
-def input_handler(raw_input: str): # -> (object, list)
-    """
-    Takes in unmodified player input str from run_game, removes unneeded
-    whitespace, sets lower case, and splits words into list of str.
-    Removes first word and compares that word to system funtions and command_list alias field.
-    If command validated and the player entered the correct number of modifiers,
-    return command object and mods list of str.
-    
-    Will instead return -1 and an error if:
-        no input (empty input str)
-        command not recognized
-        incorrect number of mods for recognized command
+"""
+Takes in unmodified player input str from run_game, removes unneeded
+whitespace, sets lower case, and splits words into list of str.
+Removes first word and compares that word to system funtions and command_list alias field.
+If command validated and the player entered the correct number of modifiers,
+return command object and mods list of str.
 
-    Args:
-        raw_input (str): Accepts str of raw player input text
+Will instead return -1 and an error if:
+    no input (empty input str)
+    command not recognized
+    incorrect number of mods for recognized command
 
-    Returns:
-        tuple[object, list]: On Success: command object, mods list of str
-                            On fail: -1, error message str
-    """    
+Args:
+    raw_input (str): Accepts str of raw player input text
+
+Returns:
+    tuple[object, list]: On Success: command object, mods list of str
+                        On fail: -1, error message str
+"""    
+def input_handler(raw_input: str): # -> (object, list)    
     mods = raw_input.strip().lower().split()  # Turns player input into list of words
     if len(mods) == 0:
         return (-1,"Enter a valid command") # Prevents error if no text entered
@@ -69,21 +69,21 @@ def input_handler(raw_input: str): # -> (object, list)
 #*#####################        
 #*### locate Object ###        
 #*#####################       
-def locate_obj(game, obj): # -> object
-    """
-    Iterates through object_list checking if obj matches a name field.
-    Also checks obj with last letter removed (in case player pluralized a word).
-    Return object if found
-        else return -1
-    
-    Args:
-        game (object): Game file containing object/room lists, and player data
-        obj (str): Name of an item or chest, entered by player as a mod to a command
+"""
+Iterates through object_list checking if obj matches a name field.
+Also checks obj with last letter removed (in case player pluralized a word).
+Return object if found
+    else return -1
 
-    Returns:
-        object: Object representing an item or chest the player is interacting with
-                If no object is found, return -1
-    """    
+Args:
+    game (object): Game file containing object/room lists, and player data
+    obj (str): Name of an item or chest, entered by player as a mod to a command
+
+Returns:
+    object: Object representing an item or chest the player is interacting with
+            If no object is found, return -1
+"""    
+def locate_obj(game, obj): # -> object
     ob = obj[:-1]
     for thing in game.object_list:
         if thing.name == obj or thing.name == ob:
@@ -95,22 +95,22 @@ def locate_obj(game, obj): # -> object
 #*### Run Game ###        
 #*################      
 # Prompts for input, directs functions
-def run_game(game):
-    """
-    Primary game loop
-    Requests player input, and runs it through input_handler.
-    Checks for system commands or returned errors.
-    Refreshes screen.
-    Runs player-entered mod strings through locate_obj to retrieve object for relevant item or chest.
-    Calls relevant command function, passing three objects representing the game, 
-    and any items or chests the player is interacting with
-    
-    Args:
-        game (Game): Game file containing object/room lists, and player data
+"""
+Primary game loop
+Requests player input, and runs it through input_handler.
+Checks for system commands or returned errors.
+Refreshes screen.
+Runs player-entered mod strings through locate_obj to retrieve object for relevant item or chest.
+Calls relevant command function, passing three objects representing the game, 
+and any items or chests the player is interacting with
 
-    Returns:
-        bool:  
-    """    
+Args:
+    game (Game): Game file containing object/room lists, and player data
+
+Returns:
+    bool:  
+"""    
+def run_game(game):    
     while True:
         time.sleep(.5)
         player_input = input_handler(input("What do you do next?\n")) # Request input, convert to (command, ["mods"])   
@@ -122,14 +122,15 @@ def run_game(game):
         draw_ui(game) # Refresh screen
         #? How to impliment Previous Command for commands which require a screen refresh (ie take)? Disabled for now.
         #print(f"Previous Command:",str(player_input[0].name),str(player_input[1][0]),str(player_input[1][1]))
-        player_input[0]( # Uses Command object call function to run player command after locating item/chest objects being referenced
+        player_turn = player_input[0]( # Uses Command object call function to run player command after locating item/chest objects being referenced
             game, # Game object
             locate_obj(game, player_input[1][0]), # Object representing player mod 1
             locate_obj(game, player_input[1][1])  # Object representing player mod 2
             )
+        print(player_turn[1])
         #! Currently no way to end game, just keeps looping forever until player quits
         #! Needs to end by returning bool
-                        
+        
 
 #*################
 #*### End Game ###
