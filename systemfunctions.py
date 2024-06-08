@@ -13,7 +13,7 @@ import json
 from icecream import ic
 from dataclasses import dataclass, field
 
-from gametext import *
+from assets.gametext import *
 
 
 # Creates clear() to erase the board
@@ -60,3 +60,5 @@ def draw_ui(game) -> None:
                 print(", ", end="")
     print("\n\n-------------------------\n")
     
+
+

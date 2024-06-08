@@ -21,11 +21,11 @@ A chest is a location within a room which can hold items
 from systemfunctions import *
 
 
-#*############
-#*### Game ###
-#*############
+#*#################
+#*### Game Data ###
+#*#################
 @dataclass(slots=True)
-class Game:
+class Game_Data:
     chest_list: list[str] = field(default_factory=list) # List of objects representing all chests
     item_list: list[str] = field(default_factory=list) # List of objects representing all items
     object_list: list[str] = field(default_factory=list) # List of objects combined from chest_list and item_list
@@ -34,7 +34,7 @@ class Game:
     player_location: str = field(default_factory=str) # String representing which room the player is in
     
     # Sets starting values for game lists and player data.
-    def new_game(self): 
+    def reset(self): 
         """
         Wipes player inventory, and adds starting item(s). Sets initial player location.
         Runs function to set starting lists for items, chests, and rooms.
@@ -44,9 +44,9 @@ class Game:
         self.player_inventory.clear()
         self.player_inventory.append("letter")
         self.player_location = "driveway"
-        self.room_list = init_game_lists("rooms") # Ties room_list to game object
-        self.chest_list = init_game_lists("chests") # Ties chest_list to game object   
-        self.item_list = init_game_lists("items") # Ties item_list to game object   
+        self.room_list = list_builder("rooms") # Ties room_list to game object
+        self.chest_list = list_builder("chests") # Ties chest_list to game object   
+        self.item_list = list_builder("items") # Ties item_list to game object   
         
         # Init Objects - # Combines room_list, chest_list, and item_list, ties to game object
         object_list = []
@@ -54,7 +54,20 @@ class Game:
         for chest in self.chest_list: object_list.append(chest)
         for item in self.item_list:object_list.append(item)
         self.object_list = object_list
-
+   
+    #Finds objects called on by player or triggers
+    def locate_object(self,obj): # -> object
+        """
+        Iterates through object_list checking if obj matches a name field.
+        Also checks obj with last letter removed (in case player pluralized a word).
+        Return object if found, else return -1
+        """  
+        ob = obj[:-1]
+        for thing in self.object_list:
+            if thing.name == obj or thing.name == ob:
+                return thing
+        return -1
+        
 
 #*############
 #*### Room ###
@@ -100,14 +113,12 @@ class Item(GameObject):
         super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
         self.takeable = takeable # Can the item be put in the player inventory
         
-    
 
-
-#*#######################
-#*### Init Game Lists ###
-#*#######################
+#*####################
+#*### List Builder ###
+#*####################
 #Initializes object and room lists
-def init_game_lists(obj_type: str) -> list:
+def list_builder(obj_type: str) -> list:
     """
     Initializes a blank list, then reads a json file containing data for either the game's items, chests,
     or rooms (selected by obj_type), and copies that data to the list as objects of the respective type.

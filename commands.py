@@ -57,10 +57,11 @@ class Look(Command):
         self.num_mods = num_mods     
         
     def __call__(self, game: object, mod1: None, mod2: None):
+        draw_ui(game)
         for room in game.room_list:
             if game.player_location == room.name:
-                print(room.look_text)
-                break
+                return(0, room.look_text)
+
         
         
 class Check(Command):
@@ -70,6 +71,7 @@ class Check(Command):
     def __call__(self, game: None, obj: object, mod2: None):
         if obj == -1:
             return(-1,"Unrecognized object")
+        draw_ui(game)
         print(obj.checktext_dict[obj.state]) # Displays current checktext according to state
         if ("gameobjects.Chest" in str(obj.__class__) # Only considers triggers if obj is a chest
             and "check" in obj.key # Check is a valid key for some chests
@@ -86,12 +88,12 @@ class Take(Command):
         if obj == -1:
             return(-1,"Unrecognized object")
         if obj.name in game.player_inventory:
-            return(-1,f"You already have the"+obj.name)
+            return(-1,f"You already have the "+obj.name)
         if obj.takeable == False:
-            return(-1,f"You can't take the"+obj.name)
+            return(-1,f"You can't take the "+obj.name)
         game.player_inventory.append(obj.name)
         draw_ui(game)
-        return(0,f"You take the"+obj.name)
+        return(0,f"You take the "+obj.name)
        
 
 
@@ -101,21 +103,18 @@ class Walk(Command):
         
     def __call__(self, game: object, dir: object, mod2: None):
         if dir == -1:
-            print(-1,"I don't know where you're trying to go")
-            return
+            return(-1,"I don't know where you're trying to go")
         if dir.name == game.player_location:
-            print(-1,f"You are already in the"+dir.name)
-            return
+            return(-1,f"You are already in the "+dir.name)
+        draw_ui(game)
         if dir.name in ["north", "n","south", "s","east", "e","west", "w"]:
             goto = gps(game, dir.name)        
         else:
             goto = dir.name
         
         game.player_location = goto
-        return(0,f"You walk to the"+goto)
+        return(0,f"You walk to the "+goto)
         
-        
-        pass
             
 
 class Speak(Command):
@@ -133,9 +132,8 @@ class Use(Command):
     def __call__(self, game: object, obj1: object, obj2: object):
         if obj1 == -1 or obj2 == -1:
             return(-1,"Unrecognized object")
-            
-        
-        pass
+        draw_ui(game)
+        pass    
         
         
 class Place(Command):
@@ -143,8 +141,8 @@ class Place(Command):
         super().__init__(name, alias, num_mods)        
 
     def __call__(self, game: object, obj1: object, obj2: object):
+        draw_ui(game)
         pass
-
 
 
 def gps(game: object, dir: str):

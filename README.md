@@ -37,7 +37,6 @@ Set DEBUG value on systemfunctions page
 
 File import structure is as follows\
     main\
-    game functions\
     commands\
     gameobjects\
     systemfunctions\
