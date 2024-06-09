@@ -13,7 +13,7 @@ import json
 from icecream import ic
 from dataclasses import dataclass, field
 
-from assets.gametext import *
+from assets.text.misc_gametext import *
 
 
 # Creates clear() to erase the board

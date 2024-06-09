@@ -2,9 +2,11 @@
     {
         "name": "itemtemplate",
         "checkable": true,
-        "key": "n",
-        "state": "n",
-        "checktext_dict": {},
+        "key": "default",
+        "state": "default",
+        "checktext_dict": {
+            "default": "default_checktext"
+        },
         "useable": true,
         "visible": false,
         "takeable": true
@@ -12,9 +14,11 @@
     {
         "name": "key",
         "checkable": true,
-        "key": "n",
-        "state": "n",
-        "checktext_dict": {"n": "Key Description"},
+        "key": "default",
+        "state": "default",
+        "checktext_dict": {
+            "default": "default_checktext"
+        },
         "useable": true,
         "visible": false,
         "takeable": true
@@ -22,13 +26,25 @@
     {
         "name": "newspaper",
         "checkable": true,
-        "key": "n",
-        "state": "n",
-        "checktext_dict": {"n": "Newspaper Description"},
+        "key": "default",
+        "state": "default",
+        "checktext_dict": {
+            "default": "default_checktext"
+        },
+        "useable": false,
+        "visible": false,
+        "takeable": false
+    },
+    {
+        "name": "letter",
+        "checkable": true,
+        "key": "default",
+        "state": "default",
+        "checktext_dict": {
+            "default": "default_checktext"
+        },
         "useable": false,
         "visible": false,
         "takeable": false
     }
 ]
-
-

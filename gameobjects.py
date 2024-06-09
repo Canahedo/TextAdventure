@@ -16,7 +16,7 @@ A chest is a location within a room which can hold items
 # from icecream import ic
 # from dataclasses import dataclass
 
-# from gametext import *
+# from assets.text.misc_gametext import *
 
 from systemfunctions import *
 
@@ -66,17 +66,20 @@ class Game_Data:
         for thing in self.object_list:
             if thing.name == obj or thing.name == ob:
                 return thing
+        for room in self.room_list:
+            if room.name == obj:
+                return room
         return -1
         
 
 #*############
 #*### Room ###
 #*############
-#Room(name, look_text)
 @dataclass
 class Room:
     name: str
-    look_text: str
+    state: str
+    looktext_dict: dict
     
 #*####################
 #*### Game Objects ###
@@ -138,4 +141,8 @@ def list_builder(obj_type: str) -> list:
             if obj_type == "chests": list_builder.append(Chest(**item))
             if obj_type == "rooms": list_builder.append(Room(**item))       
     return list_builder
+
+
+
+    
 

@@ -17,10 +17,10 @@ LOOK - Look around, gather information about your general surroundings
 CHECK [THING] - Investigate something specific
 TAKE [THING] - Move an object into your inventory
 USE [THING] [THING] - Use the first object on the second object
-MOVE [THING] [PLACE] - Move an object to a nearby location
 PLACE [THING] [PLACE] - Remove an object from your inventory, and move it to a nearby location
 WALK [LOCATION] - Move the player to a location, accepts cardinal directions or room description
 SPEAK [PERSON] - Talk to someone
 HELP - Brings up this page
 END - Ends the current game, with the option to restart
+RESTART - Immediately restarts the game
 QUIT - Exits the game, closing the program

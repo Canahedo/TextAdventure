@@ -37,4 +37,4 @@ Written in Python 3
 # Lucky you.
 # """
 
-opening_crawl_text = "Opening Crawl Placeholder\n"
+opening_crawl_text = "Opening Crawl Placeholder"

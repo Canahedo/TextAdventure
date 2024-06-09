@@ -13,7 +13,7 @@ This is the main file for the program
 # from icecream import ic
 # from dataclasses import dataclass
 
-# from gametext import *
+# from assets.text.misc_gametext import *
 # from systemfunctions import *t
 # from gameobjects import *
 
@@ -79,7 +79,7 @@ def game_loop(game):
     """
     while True:
         time.sleep(.5)
-        command, mod1, mod2 = input_handler(game, input("What do you do next?\n"))
+        command, mod1, mod2 = input_handler(game, input("\nWhat do you do next?\n"))
         player_turn = command(game, mod1, mod2)
         try:
             print(player_turn[1])

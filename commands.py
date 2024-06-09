@@ -12,19 +12,10 @@ This file defines all commands accessible to the player
 # import json
 # from icecream import ic
 # from dataclasses import dataclass
-# from gametext import *
+# from assets.text.misc_gametext import *
 # from systemfunctions import *
 
 from gameobjects import *
-
-#command.check(obj, game)
-#comamnd.take(obj, game)
-#comamnd.walk(dir, game)
-#comamnd.speak(per, game)
-#comamnd.use(obj, che, game)
-#comamnd.move(obj, che, game)
-#comamnd.place(obj, che, game)
-
 
 class Command:
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
@@ -44,7 +35,7 @@ class Tutorial(Command):
         self.num_mods = num_mods
         
     def __call__(self, game: None, mod1: None, mod2: None):
-        with open("assets/tutorial.md", "r") as file:
+        with open("assets/text/tutorial.md", "r") as file:
             file_contents = file.read()
         print(file_contents, "\n")
         
@@ -60,9 +51,8 @@ class Look(Command):
         draw_ui(game)
         for room in game.room_list:
             if game.player_location == room.name:
-                return(0, room.look_text)
+                text_fetcher("look", room.name, room.looktext_dict[room.state])
 
-        
         
 class Check(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
@@ -72,7 +62,7 @@ class Check(Command):
         if obj == -1:
             return(-1,"Unrecognized object")
         draw_ui(game)
-        print(obj.checktext_dict[obj.state]) # Displays current checktext according to state
+        text_fetcher("check", obj.name, obj.checktext_dict[obj.state]) #Retrieves and prints check text for current "state"
         if ("gameobjects.Chest" in str(obj.__class__) # Only considers triggers if obj is a chest
             and "check" in obj.key # Check is a valid key for some chests
             and obj.key["check"] != obj.state): # Prevent unlocking open doors, etc
@@ -175,6 +165,33 @@ Place("place", ["place", "p"], 2)
 ]
 
 
+#*####################
+#*### Text Fetcher ###
+#*####################
+def text_fetcher(file_name: str, name: str, index: str) -> None:
+    """
+    Searches json files for text to display to the player.
+    Iterates over json data and prints to screen
+
+    Args:
+        file_name (str): Chooses which json file to search
+        name (str): Name of object to be found
+        index (str): Which line of text to use
+    """
+    text = []
+    with open("assets/text/"+str(file_name)+".json", "r") as file:
+        data = json.load(file)
+        for item in data:
+            if name == item["name"]:
+                text = item[index]
+                break
+    if len(text) > 1:
+        for line in text:
+            print(line)
+    else:
+        print(text[0])
+
+
 
 '''
 
@@ -185,7 +202,7 @@ e/q - 0 = system command
 c - 1 = is visible?
             is in player.room or player.inv?
         is checkable?
-        display chktext
+        display checktext
         triggers? > apply changes > Display text
         
 t - 1 = is visible?
