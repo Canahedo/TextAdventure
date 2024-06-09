@@ -202,9 +202,15 @@ def text_fetcher(file_name: str, name: str, index: str) -> None:
 #*### Keys ###
 #*############
 def key(game, prosp_key:str, obj: object):
-    if prosp_key in obj.key:
-        if obj.key[prosp_key] != obj.state:
-            obj.state = obj.key[prosp_key][0]
+    if prosp_key in obj.key: # Validates key
+        if obj.key[prosp_key] != obj.state: # Confirms not already set
+            obj.state = obj.key[prosp_key][0] # Sets state
+            if len(obj.key[prosp_key]) > 1: 
+                for i in range(1,len(obj.key[prosp_key])):
+                    if obj.key[prosp_key][i] in obj:
+                        obj.prosp_key[i] = not obj.prosp_key[i]
+            
+            
             new_obj = game.locate_object(obj.external_triggers[obj.state][0])
             try:
                 trigger(game, obj.external_triggers[obj.state][0], obj.external_triggers[obj.state][1])
@@ -213,10 +219,7 @@ def key(game, prosp_key:str, obj: object):
             key(game, obj.external_triggers[obj.state][0], new_obj)
             del obj.key[prosp_key]
     
-    
-    
-    
-    
+
 
 #*################
 #*### Triggers ###
