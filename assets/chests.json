@@ -4,54 +4,41 @@
         "checkable": false,
         "key": {},
         "state": "state_template",
-        "checktext_dict": {
-            "default": "default_checktext"
-        },
-        "trigger_dict": {},
+        "checktext_dict": {"default": "default_checktext"},
+        "triggertext_dict": {},
+        "external_triggers": {"None": ["trait","state(optional)"]},
         "useable": false,
         "visible": false,
-        "chest_inventory": [
-            ""
-        ]
+        "chest_inventory": []
     },
     {
         "name": "rock",
         "checkable": true,
-        "key": {
-            "check": "toppled"
-        },
+        "key": {"check": ["toppled"]},
         "state": "piled",
         "checktext_dict": {
             "piled": "default_checktext",
             "toppled": "toppled_checktext"
         },
-        "trigger_dict": {
-            "toppled": "The rocks fall over, revealing a key"
-        },
+        "triggertext_dict": {"toppled": "rock_toppled"},
+        "external_triggers": {"toppled":["key", "rock_toppled"]},
         "useable": false,
         "visible": true,
-        "chest_inventory": [
-            "key"
-        ]
+        "chest_inventory": ["key"]
     },
     {
         "name": "door",
         "checkable": true,
-        "key": {
-            "key": "unlocked"
-        },
+        "key": {"key": ["unlocked"]},
         "state": "locked",
         "checktext_dict": {
             "locked": "default_checktext",
             "unlocked": "unlocked_checktext"
         },
-        "trigger_dict": {
-            "unlocked": "The door is unlocked"
-        },
+        "triggertext_dict": {"unlocked": "The door is unlocked"},
+        "external_triggers": {},
         "useable": true,
         "visible": true,
-        "chest_inventory": [
-            ""
-        ]
+        "chest_inventory": []
     }
 ]

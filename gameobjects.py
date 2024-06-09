@@ -56,16 +56,16 @@ class Game_Data:
         self.object_list = object_list
    
     #Finds objects called on by player or triggers
-    def locate_object(self,obj): # -> object
+    def locate_object(self, obj: str): # -> object
         """
         Iterates through object_list checking if obj matches a name field.
         Also checks obj with last letter removed (in case player pluralized a word).
         Return object if found, else return -1
         """  
         ob = obj[:-1]
-        for thing in self.object_list:
-            if thing.name == obj or thing.name == ob:
-                return thing
+        for i in self.object_list:
+            if i.name == obj or i.name == ob:
+                return i
         for room in self.room_list:
             if room.name == obj:
                 return room
@@ -92,6 +92,8 @@ class GameObject:
     key: dict # What items/actions interact with the object
     state: str # What state the object is in
     checktext_dict: dict # Contains all text which might be used for the check command
+    triggertext_dict: dict
+    external_triggers: dict
     useable: bool # Does the object respond to the use command
     visible: bool # Is the object accessible to the player
    
@@ -99,12 +101,12 @@ class GameObject:
 #*##############
 #*### Chests ###
 #*##############
-#Chest(name, checkable, key, state, checktext_dict, trigger_dict, useable, visible, chest_inventory)
+#Chest(name, checkable, key, state, checktext_dict, useable, visible, chest_inventory)
 class Chest(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, trigger_dict, useable, visible, chest_inventory) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
+    def __init__(self, name, checkable, key, state, checktext_dict, triggertext_dict, external_triggers, useable, visible, chest_inventory) -> None:
+        super().__init__(name, checkable, key, state, checktext_dict, triggertext_dict, external_triggers, useable, visible)
         self.chest_inventory = chest_inventory # Items held in this chest
-        self.trigger_dict = trigger_dict # Contains list of items which react with the object, and the state this reaction puts the object in
+        
 
 
 #*#############
@@ -112,8 +114,8 @@ class Chest(GameObject):
 #*#############
 #Item(name, checkable, key, state, checktext_dict, useable, visible, takeable)
 class Item(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, takeable) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
+    def __init__(self, name, checkable, key, state, checktext_dict, triggertext_dict, external_triggers, useable, visible, takeable) -> None:
+        super().__init__(name, checkable, key, state, checktext_dict, triggertext_dict, external_triggers, useable, visible)
         self.takeable = takeable # Can the item be put in the player inventory
         
 

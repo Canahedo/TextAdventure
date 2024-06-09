@@ -63,11 +63,15 @@ class Check(Command):
             return(-1,"Unrecognized object")
         draw_ui(game)
         text_fetcher("check", obj.name, obj.checktext_dict[obj.state]) #Retrieves and prints check text for current "state"
-        if ("gameobjects.Chest" in str(obj.__class__) # Only considers triggers if obj is a chest
-            and "check" in obj.key # Check is a valid key for some chests
-            and obj.key["check"] != obj.state): # Prevent unlocking open doors, etc
-                obj.state = obj.key["check"] # Change obj state per key
-                return(0,obj.trigger_dict[obj.state]) # Display any text for the trigger per state
+        # if ("gameobjects.Chest" in str(obj.__class__) # Only considers triggers if obj is a chest
+        #     and "check" in obj.key # Check is a valid key for some chests
+        #     and obj.key["check"] != obj.state): # Prevent unlocking open doors, etc
+        #         obj.state = obj.key["check"] # Change obj state per key
+        #         return(0,obj.trigger_dict[obj.state]) # Display any text for the trigger per state
+        key(game, "check", obj)
+        text_fetcher("triggers", obj.name, obj.triggertext_dict[obj.state])
+        #return(0,obj.triggertext_dict[obj.state]) # Display any text for the trigger per state
+        
                 
 
 class Take(Command):
@@ -79,6 +83,8 @@ class Take(Command):
             return(-1,"Unrecognized object")
         if obj.name in game.player_inventory:
             return(-1,f"You already have the "+obj.name)
+        if obj.visible == False:
+            return(-1,f"You can't see the "+obj.name)        
         if obj.takeable == False:
             return(-1,f"You can't take the "+obj.name)
         game.player_inventory.append(obj.name)
@@ -190,6 +196,50 @@ def text_fetcher(file_name: str, name: str, index: str) -> None:
             print(line)
     else:
         print(text[0])
+
+
+#*############
+#*### Keys ###
+#*############
+def key(game, prosp_key:str, obj: object):
+    if prosp_key in obj.key:
+        if obj.key[prosp_key] != obj.state:
+            obj.state = obj.key[prosp_key][0]
+            new_obj = game.locate_object(obj.external_triggers[obj.state][0])
+            try:
+                trigger(game, obj.external_triggers[obj.state][0], obj.external_triggers[obj.state][1])
+            except:
+                pass
+            key(game, obj.external_triggers[obj.state][0], new_obj)
+            del obj.key[prosp_key]
+    
+    
+    
+    
+    
+
+#*################
+#*### Triggers ###
+#*################
+def trigger(game: object, targeted: str, trait: str) -> None:
+    obj = game.locate_object(targeted)
+    
+    
+    
+    
+    
+    # if trait in obj:
+    #     obj[trait] = not obj[trait]
+    
+    
+    
+    
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,26 @@
+[
+    {
+        "name": "key",
+        "key_visible": ["look_text template"]
+    },
+    {
+        "name": "door",
+        "door_unlocked": [
+            "The door unlocks.",
+            "You push it open and hear the hinges give out.",
+            "It doesn't look like the door is going to move again."       
+        ]
+    },
+    {
+        "name": "rock",
+        "rock_toppled": [
+            "The rocks fall over."       
+        ]
+    },
+    {
+        "name": "key",
+        "key_visible": [
+            "The key becomes visible."       
+        ]
+    }
+]

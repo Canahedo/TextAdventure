@@ -54,6 +54,12 @@ def input_handler(game,text):
         print("Enter a valid command\n") 
         game_loop(game) # Restarts game loop
     comm = player_input.pop(0)
+    
+    #! Remove this eventually, here for testing
+    if comm == "x":
+        ic(game.locate_object(player_input[0]))
+        game_loop(game)
+    
     # Checks for system commands
     if comm in ["quit", "q"]:
         exit() # Close program

@@ -4,9 +4,9 @@
         "checkable": true,
         "key": "default",
         "state": "default",
-        "checktext_dict": {
-            "default": "default_checktext"
-        },
+        "checktext_dict": {"default": "default_checktext"},
+        "triggertext_dict": {},
+        "external_triggers": {},
         "useable": true,
         "visible": false,
         "takeable": true
@@ -14,11 +14,11 @@
     {
         "name": "key",
         "checkable": true,
-        "key": "default",
+        "key": {"rock_toppled": ["visible","visible"]},
         "state": "default",
-        "checktext_dict": {
-            "default": "default_checktext"
-        },
+        "checktext_dict": {"default": "default_checktext"},
+        "triggertext_dict": {"visible": "key_visible"},
+        "external_triggers": {},
         "useable": true,
         "visible": false,
         "takeable": true
@@ -28,9 +28,9 @@
         "checkable": true,
         "key": "default",
         "state": "default",
-        "checktext_dict": {
-            "default": "default_checktext"
-        },
+        "checktext_dict": {"default": "default_checktext"},
+        "triggertext_dict": {},
+        "external_triggers": {},
         "useable": false,
         "visible": false,
         "takeable": false
@@ -40,9 +40,9 @@
         "checkable": true,
         "key": "default",
         "state": "default",
-        "checktext_dict": {
-            "default": "default_checktext"
-        },
+        "checktext_dict": {"default": "default_checktext"},
+        "triggertext_dict": {},
+        "external_triggers": {},
         "useable": false,
         "visible": false,
         "takeable": false
