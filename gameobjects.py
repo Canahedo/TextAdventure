@@ -95,29 +95,32 @@ class GameObject:
     useable: bool # Does the object respond to the use command
     visible: bool # Is the object accessible to the player
     
+    # Takes in a prospective key and if that key is valid for the object, passes the trigger block into triggers function
     def try_key(self, prosp_key: str, game: object):
         if prosp_key in self.key:
             self.triggers(self.key[prosp_key],game)
         
+    # Parses trigger block and executes changes, running prospect ext triggers through try_key
     def triggers(self, trigger: dict, game: object):
-        self.state = trigger["state"]
-        text_fetcher("triggers", self.name, trigger["trigger_text"])
-        self.update_attrs(trigger["attr_changes"])
-        for prosp in trigger["ext_triggers"]:
-            if prosp != "none" and prosp != "player_inv":
+        self.state = trigger["state"] # Set state of object
+        text_fetcher("triggers", self.name, trigger["trigger_text"]) # Display any text for this trigger
+        self.update_attrs(trigger["attr_changes"]) # Run function to update object attributes ie visible, takeable
+        for prosp in trigger["ext_triggers"]: # Checks for external triggers
+            if prosp != "none" and prosp != "player_inv": 
                 obj = game.locate_object(prosp)
-                obj.try_key(trigger["ext_triggers"][prosp], game)
-            if prosp == "player_inv":
+                obj.try_key(trigger["ext_triggers"][prosp], game) # Runs prospect ext triggers through try_key
+            if prosp == "player_inv": # Modifies player inv when called for by an ext trigger
                 for line in prosp:
                     if line == "add":
                         game.player_inventory.append(prosp[line])
                     if line == "del":
                         game.player_inventory.remove(prosp[line])
             
+    # Sets object attributes according to triggers
     def update_attrs(self, attr_changes):
         for attr in attr_changes:
                 setattr(self, attr, attr_changes[attr])
-                self.attr = attr_changes[attr]
+                
                 
 
 #*##############
