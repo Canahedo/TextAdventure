@@ -2,22 +2,16 @@
     {
         "name": "room_template",
         "state": "default",
-        "looktext_dict": {
-            "default": "default_looktext"
-        } 
+        "looktext_dict": {"default": "default_looktext"} 
     },
     {
         "name": "driveway",
         "state": "default",
-        "looktext_dict": {
-            "default": "default_looktext"
-        }
+        "looktext_dict": {"default": "default_looktext"}
     },
     {
         "name": "porch",
         "state": "default",
-        "looktext_dict": {
-            "default": "default_looktext"
-        }
+        "looktext_dict": {"default": "default_looktext"}
     }
 ]

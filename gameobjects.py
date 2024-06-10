@@ -91,7 +91,6 @@ class GameObject:
     key: dict # What items/actions interact with the object
     state: str # What state the object is in
     checktext_dict: dict # Contains all text which might be used for the check command
-    external_triggers: dict
     useable: bool # Does the object respond to the use command
     visible: bool # Is the object accessible to the player
     
@@ -127,8 +126,8 @@ class GameObject:
 #*### Chests ###
 #*##############
 class Chest(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, external_triggers, useable, visible, chest_inventory) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, external_triggers, useable, visible)
+    def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, chest_inventory) -> None:
+        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
         self.chest_inventory = chest_inventory # Items held in this chest
         
 
@@ -137,8 +136,8 @@ class Chest(GameObject):
 #*### Items ###
 #*#############
 class Item(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, external_triggers, useable, visible, takeable) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, external_triggers, useable, visible)
+    def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, takeable) -> None:
+        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
         self.takeable = takeable # Can the item be put in the player inventory
         
 

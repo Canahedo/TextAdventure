@@ -61,6 +61,8 @@ class Check(Command):
     def __call__(self, game: None, obj: object, mod2: None):
         if obj == -1:
             return(-1,"Unrecognized object")
+        if obj.visible == False:
+            return(-1,f"You can't see the "+obj.name)
         draw_ui(game)
         text_fetcher("check", obj.name, obj.checktext_dict[obj.state]) #Retrieves and prints check text for current "state"
         if "none" not in obj.key:    
