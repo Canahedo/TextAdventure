@@ -63,14 +63,9 @@ class Check(Command):
             return(-1,"Unrecognized object")
         draw_ui(game)
         text_fetcher("check", obj.name, obj.checktext_dict[obj.state]) #Retrieves and prints check text for current "state"
-        # if ("gameobjects.Chest" in str(obj.__class__) # Only considers triggers if obj is a chest
-        #     and "check" in obj.key # Check is a valid key for some chests
-        #     and obj.key["check"] != obj.state): # Prevent unlocking open doors, etc
-        #         obj.state = obj.key["check"] # Change obj state per key
-        #         return(0,obj.trigger_dict[obj.state]) # Display any text for the trigger per state
-        key(game, "check", obj)
-        text_fetcher("triggers", obj.name, obj.triggertext_dict[obj.state])
-        #return(0,obj.triggertext_dict[obj.state]) # Display any text for the trigger per state
+        if "none" not in obj.key:    
+            obj.try_key("check", game)
+
         
                 
 
@@ -126,12 +121,18 @@ class Use(Command):
         super().__init__(name, alias, num_mods)    
         
     def __call__(self, game: object, obj1: object, obj2: object):
-        if obj1 == -1 or obj2 == -1:
-            return(-1,"Unrecognized object")
+        if obj1 == -1:
+            return(-1,"Object 1 unrecognized")
+        if obj2 == -1:
+            return(-1,"Object 2 unrecognized")
         draw_ui(game)
-        pass    
+        if "none" not in obj2.key:    
+             obj2.try_key(obj1.name, game)
         
         
+
+
+
 class Place(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)        
@@ -171,72 +172,8 @@ Place("place", ["place", "p"], 2)
 ]
 
 
-#*####################
-#*### Text Fetcher ###
-#*####################
-def text_fetcher(file_name: str, name: str, index: str) -> None:
-    """
-    Searches json files for text to display to the player.
-    Iterates over json data and prints to screen
-
-    Args:
-        file_name (str): Chooses which json file to search
-        name (str): Name of object to be found
-        index (str): Which line of text to use
-    """
-    text = []
-    with open("assets/text/"+str(file_name)+".json", "r") as file:
-        data = json.load(file)
-        for item in data:
-            if name == item["name"]:
-                text = item[index]
-                break
-    if len(text) > 1:
-        for line in text:
-            print(line)
-    else:
-        print(text[0])
 
 
-#*############
-#*### Keys ###
-#*############
-def key(game, prosp_key:str, obj: object):
-    if prosp_key in obj.key: # Validates key
-        if obj.key[prosp_key] != obj.state: # Confirms not already set
-            obj.state = obj.key[prosp_key][0] # Sets state
-            if len(obj.key[prosp_key]) > 1: 
-                for i in range(1,len(obj.key[prosp_key])):
-                    if obj.key[prosp_key][i] in obj:
-                        obj.prosp_key[i] = not obj.prosp_key[i]
-            
-            
-            new_obj = game.locate_object(obj.external_triggers[obj.state][0])
-            try:
-                trigger(game, obj.external_triggers[obj.state][0], obj.external_triggers[obj.state][1])
-            except:
-                pass
-            key(game, obj.external_triggers[obj.state][0], new_obj)
-            del obj.key[prosp_key]
-    
-
-
-#*################
-#*### Triggers ###
-#*################
-def trigger(game: object, targeted: str, trait: str) -> None:
-    obj = game.locate_object(targeted)
-    
-    
-    
-    
-    
-    # if trait in obj:
-    #     obj[trait] = not obj[trait]
-    
-    
-    
-    
 
 
 

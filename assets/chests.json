@@ -2,11 +2,16 @@
     {
         "name": "chest_template",
         "checkable": false,
-        "key": {},
+        "key": {"desc": {
+            "state":"new state",
+            "trigger_text":"text to be displayed",                  
+            "attr_changes":{"none":"none"},
+            "ext_triggers":{"object":"prosp key"}
+                        }
+                },
         "state": "state_template",
         "checktext_dict": {"default": "default_checktext"},
-        "triggertext_dict": {},
-        "external_triggers": {"None": ["trait","state(optional)"]},
+        "external_triggers": {"desc": ["object","key"]},
         "useable": false,
         "visible": false,
         "chest_inventory": []
@@ -14,13 +19,18 @@
     {
         "name": "rock",
         "checkable": true,
-        "key": {"check": ["toppled"]},
+        "key": {"check": {
+                        "state":"toppled",
+                        "trigger_text":"rock_toppled",                  
+                        "attr_changes":{"none":"none"},
+                        "ext_triggers":{"key":"rock_toppled"}
+                        }
+                },
         "state": "piled",
         "checktext_dict": {
             "piled": "default_checktext",
             "toppled": "toppled_checktext"
         },
-        "triggertext_dict": {"toppled": "rock_toppled"},
         "external_triggers": {"toppled":["key", "rock_toppled"]},
         "useable": false,
         "visible": true,
@@ -29,14 +39,19 @@
     {
         "name": "door",
         "checkable": true,
-        "key": {"key": ["unlocked"]},
+        "key": {"key": {
+            "state":"unlocked",
+            "trigger_text":"door_unlocked",                  
+            "attr_changes":{"none":"none"},
+            "ext_triggers":{"key":"remove"}
+                        }
+                },
         "state": "locked",
         "checktext_dict": {
             "locked": "default_checktext",
             "unlocked": "unlocked_checktext"
         },
-        "triggertext_dict": {"unlocked": "The door is unlocked"},
-        "external_triggers": {},
+        "external_triggers": {"none":"none"},
         "useable": true,
         "visible": true,
         "chest_inventory": []

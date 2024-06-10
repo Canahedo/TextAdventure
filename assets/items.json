@@ -2,11 +2,16 @@
     {
         "name": "itemtemplate",
         "checkable": true,
-        "key": "default",
+        "key": {"desc": {
+            "state":"new state",
+            "trigger_text":"text to be displayed",                  
+            "attr_changes":{"none":"none"},
+            "ext_triggers":{"object":"prosp key"}
+                        }
+                },
         "state": "default",
         "checktext_dict": {"default": "default_checktext"},
-        "triggertext_dict": {},
-        "external_triggers": {},
+        "external_triggers": {"desc": ["object","key"]},
         "useable": true,
         "visible": false,
         "takeable": true
@@ -14,11 +19,22 @@
     {
         "name": "key",
         "checkable": true,
-        "key": {"rock_toppled": ["visible","visible"]},
+        "key": {"rock_toppled": {
+            "state":"default",
+            "trigger_text":"key_visible",                  
+            "attr_changes":{"visible":"True"},
+            "ext_triggers":{"none":"none"}
+                        },
+                "remove": {
+            "state":"removed",
+            "trigger_text":"key_removed",                  
+            "attr_changes":{"visible":"false"},
+            "ext_triggers":{"player_inv":{"del":"key"}}
+                        }
+                },
         "state": "default",
         "checktext_dict": {"default": "default_checktext"},
-        "triggertext_dict": {"visible": "key_visible"},
-        "external_triggers": {},
+        "external_triggers": {"none":"none"},
         "useable": true,
         "visible": false,
         "takeable": true
@@ -26,25 +42,23 @@
     {
         "name": "newspaper",
         "checkable": true,
-        "key": "default",
+        "key": {"none":"none"},
         "state": "default",
         "checktext_dict": {"default": "default_checktext"},
-        "triggertext_dict": {},
-        "external_triggers": {},
+        "external_triggers": {"none":"none"},
         "useable": false,
-        "visible": false,
+        "visible": true,
         "takeable": false
     },
     {
         "name": "letter",
         "checkable": true,
-        "key": "default",
+        "key": {"none":"none"},
         "state": "default",
         "checktext_dict": {"default": "default_checktext"},
-        "triggertext_dict": {},
-        "external_triggers": {},
+        "external_triggers": {"none":"none"},
         "useable": false,
-        "visible": false,
+        "visible": true,
         "takeable": false
     }
 ]

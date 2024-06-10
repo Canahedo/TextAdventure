@@ -1,7 +1,7 @@
 [
     {
-        "name": "key",
-        "key_visible": ["look_text template"]
+        "name": "trigger_template",
+        "trigger_desc": ["trigger text template"]
     },
     {
         "name": "door",
@@ -13,14 +13,11 @@
     },
     {
         "name": "rock",
-        "rock_toppled": [
-            "The rocks fall over."       
-        ]
+        "rock_toppled": ["The rocks fall over."]
     },
     {
         "name": "key",
-        "key_visible": [
-            "The key becomes visible."       
-        ]
+        "key_visible": ["The key becomes visible."],
+        "key_removed": ["The key is stuck in the lock."]
     }
 ]
