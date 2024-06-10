@@ -104,15 +104,15 @@ class GameObject:
         text_fetcher("triggers", self.name, trigger["trigger_text"])
         self.update_attrs(trigger["attr_changes"])
         for prosp in trigger["ext_triggers"]:
+            if prosp != "none" and prosp != "player_inv":
+                obj = game.locate_object(prosp)
+                obj.try_key(trigger["ext_triggers"][prosp], game)
             if prosp == "player_inv":
                 for line in prosp:
                     if line == "add":
                         game.player_inventory.append(prosp[line])
                     if line == "del":
                         game.player_inventory.remove(prosp[line])
-            if prosp != "none":
-                obj = game.locate_object(prosp)
-                obj.try_key(trigger["ext_triggers"][prosp], game)
             
     def update_attrs(self, attr_changes):
         for attr in attr_changes:
