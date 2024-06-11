@@ -61,4 +61,24 @@ def draw_ui(game) -> None:
     print("\n\n-------------------------\n")
     
 
+#*####################
+#*### Text Fetcher ###
+#*####################
+def text_fetcher(file_name: str, name: str, index: str) -> None:
+    """
+    Searches json files for text to display to the player.
+    Returns that text.
 
+    Args:
+        file_name (str): Chooses which json file to search
+        name (str): Name of object to be found
+        index (str): Which line of text to use
+    """
+    text = []
+    with open("assets/text/"+str(file_name)+".json", "r") as file:
+        data = json.load(file)
+        for item in data:
+            if name == item["name"]:
+                text = item[index]
+                break
+    return text

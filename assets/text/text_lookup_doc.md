@@ -3,7 +3,7 @@ Documentation on text retrieval
 
 text_fetcher(file_name: str, name: str, index: str) -> None
 
-Running this command will display the requested text on screen
+Running this command will return the requested text
 -file_name will typically be hard coded and will be the name of a file in assets/text
 -name will be the name of the object
 -index is a descriptor of which chunk of text to use
@@ -39,4 +39,4 @@ Calling text_fetcher example
 
 text_fetcher("text_lookup_doc", object.name, object.template_text["state_a"])
 
->>As a songle line..
+returns "As a songle line.."

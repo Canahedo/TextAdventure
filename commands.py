@@ -23,9 +23,6 @@ class Command:
         self.alias = alias
         self.num_mods = num_mods
         
-    def triggers(): #check current status, make relevant changes, display update text 
-        pass
-        
 
 class Tutorial(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
@@ -35,6 +32,8 @@ class Tutorial(Command):
         self.num_mods = num_mods
         
     def __call__(self, game: None, mod1: None, mod2: None):
+        # Display help text
+        draw_ui(game)
         with open("assets/text/tutorial.md", "r") as file:
             file_contents = file.read()
         print(file_contents, "\n")
@@ -48,10 +47,11 @@ class Look(Command):
         self.num_mods = num_mods     
         
     def __call__(self, game: object, mod1: None, mod2: None):
+        # Add room looktext to turn_text
         draw_ui(game)
         for room in game.room_list:
             if game.player_location == room.name:
-                text_fetcher("look", room.name, room.looktext_dict[room.state])
+                game.turn_text.extend(text_fetcher("look", room.name, room.looktext_dict[room.state]))
 
         
 class Check(Command):
@@ -61,13 +61,12 @@ class Check(Command):
     def __call__(self, game: None, obj: object, mod2: None):
         if obj == -1:
             return(-1,"Unrecognized object")
+        if obj.visible == False:
+            return(-1,f"You can't see the "+obj.name)
         draw_ui(game)
-        text_fetcher("check", obj.name, obj.checktext_dict[obj.state]) #Retrieves and prints check text for current "state"
-        if ("gameobjects.Chest" in str(obj.__class__) # Only considers triggers if obj is a chest
-            and "check" in obj.key # Check is a valid key for some chests
-            and obj.key["check"] != obj.state): # Prevent unlocking open doors, etc
-                obj.state = obj.key["check"] # Change obj state per key
-                return(0,obj.trigger_dict[obj.state]) # Display any text for the trigger per state
+        game.turn_text.extend(text_fetcher("check", obj.name, obj.checktext_dict[obj.state])) #Retrieves and prints check text for current "state"
+        if "none" not in obj.key:    
+            obj.try_key("check", game)        
                 
 
 class Take(Command):
@@ -79,11 +78,13 @@ class Take(Command):
             return(-1,"Unrecognized object")
         if obj.name in game.player_inventory:
             return(-1,f"You already have the "+obj.name)
+        if obj.visible == False:
+            return(-1,f"You can't see the "+obj.name)        
         if obj.takeable == False:
             return(-1,f"You can't take the "+obj.name)
         game.player_inventory.append(obj.name)
         draw_ui(game)
-        return(0,f"You take the "+obj.name)
+        game.turn_text.append(f"You take the "+obj.name)
        
 
 
@@ -112,7 +113,7 @@ class Speak(Command):
         super().__init__(name, alias, num_mods)  
         
     def __call__(self, game: object, targ: object, mod2: None):
-        pass  
+        draw_ui(game)  
             
         
 class Use(Command):
@@ -120,19 +121,24 @@ class Use(Command):
         super().__init__(name, alias, num_mods)    
         
     def __call__(self, game: object, obj1: object, obj2: object):
-        if obj1 == -1 or obj2 == -1:
-            return(-1,"Unrecognized object")
+        if obj1 == -1:
+            return(-1,"Object 1 unrecognized")
+        if obj2 == -1:
+            return(-1,"Object 2 unrecognized")
+        if "none" not in obj2.key:    
+             obj2.try_key(obj1.name, game)
         draw_ui(game)
-        pass    
         
-        
+
+
+
 class Place(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)        
 
     def __call__(self, game: object, obj1: object, obj2: object):
         draw_ui(game)
-        pass
+        
 
 
 def gps(game: object, dir: str):
@@ -165,31 +171,14 @@ Place("place", ["place", "p"], 2)
 ]
 
 
-#*####################
-#*### Text Fetcher ###
-#*####################
-def text_fetcher(file_name: str, name: str, index: str) -> None:
-    """
-    Searches json files for text to display to the player.
-    Iterates over json data and prints to screen
 
-    Args:
-        file_name (str): Chooses which json file to search
-        name (str): Name of object to be found
-        index (str): Which line of text to use
-    """
-    text = []
-    with open("assets/text/"+str(file_name)+".json", "r") as file:
-        data = json.load(file)
-        for item in data:
-            if name == item["name"]:
-                text = item[index]
-                break
-    if len(text) > 1:
-        for line in text:
-            print(line)
-    else:
-        print(text[0])
+
+
+
+
+
+
+
 
 
 
