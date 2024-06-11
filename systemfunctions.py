@@ -81,8 +81,4 @@ def text_fetcher(file_name: str, name: str, index: str) -> None:
             if name == item["name"]:
                 text = item[index]
                 break
-    if len(text) > 1:
-        for line in text:
-            print(line)
-    else:
-        print(text[0])
+    return text

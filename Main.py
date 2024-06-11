@@ -86,11 +86,10 @@ def game_loop(game):
     while True:
         time.sleep(.5)
         command, mod1, mod2 = input_handler(game, input("\nWhat do you do next?\n"))
-        player_turn = command(game, mod1, mod2)
-        try:
-            print(player_turn[1])
-        except:
-            pass
+        game.turn_text.clear()
+        command(game, mod1, mod2)
+        game.display_turn_text()
+        
         
         
 #*###########

@@ -32,6 +32,7 @@ class Game_Data:
     room_list: list[str] = field(default_factory=list) # List of objects representing all rooms
     player_inventory: list[str] = field(default_factory=list) # List of strings representing the player inventory
     player_location: str = field(default_factory=str) # String representing which room the player is in
+    turn_text: list[str] =  field(default_factory=list) # Collects text as turn is processing, displays to player afterwards
     
     # Sets starting values for game lists and player data.
     def reset(self): 
@@ -70,6 +71,10 @@ class Game_Data:
             if room.name == obj:
                 return room
         return -1
+    
+    def display_turn_text(self):
+        for line in self.turn_text:
+            print(line)
         
 
 #*############
@@ -102,19 +107,18 @@ class GameObject:
     # Parses trigger block and executes changes, running prospect ext triggers through try_key
     def triggers(self, trigger: dict, game: object):
         self.state = trigger["state"] # Set state of object
-        text_fetcher("triggers", self.name, trigger["trigger_text"]) # Display any text for this trigger
+        game.turn_text.extend(text_fetcher("triggers", self.name, trigger["trigger_text"])) # Display any text for this trigger
         self.update_attrs(trigger["attr_changes"]) # Run function to update object attributes ie visible, takeable
         for prosp in trigger["ext_triggers"]: # Checks for external triggers
             if prosp != "none" and prosp != "player_inv": 
                 obj = game.locate_object(prosp)
                 obj.try_key(trigger["ext_triggers"][prosp], game) # Runs prospect ext triggers through try_key
             if prosp == "player_inv": # Modifies player inv when called for by an ext trigger
-                for line in prosp:
-                    if line == "add":
-                        game.player_inventory.append(prosp[line])
-                    if line == "del":
-                        game.player_inventory.remove(prosp[line])
-            
+                for line in trigger["ext_triggers"][prosp]:
+                    if line == 'add':
+                        game.player_inventory.append(trigger["ext_triggers"][prosp][line])
+                    if line == 'del':
+                        game.player_inventory.remove(trigger["ext_triggers"][prosp][line])
     # Sets object attributes according to triggers
     def update_attrs(self, attr_changes):
         for attr in attr_changes:

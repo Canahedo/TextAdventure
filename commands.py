@@ -23,9 +23,6 @@ class Command:
         self.alias = alias
         self.num_mods = num_mods
         
-    def triggers(): #check current status, make relevant changes, display update text 
-        pass
-        
 
 class Tutorial(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
@@ -51,7 +48,7 @@ class Look(Command):
         draw_ui(game)
         for room in game.room_list:
             if game.player_location == room.name:
-                text_fetcher("look", room.name, room.looktext_dict[room.state])
+                game.turn_text.extend(text_fetcher("look", room.name, room.looktext_dict[room.state]))
 
         
 class Check(Command):
@@ -64,7 +61,7 @@ class Check(Command):
         if obj.visible == False:
             return(-1,f"You can't see the "+obj.name)
         draw_ui(game)
-        text_fetcher("check", obj.name, obj.checktext_dict[obj.state]) #Retrieves and prints check text for current "state"
+        game.turn_text.extend(text_fetcher("check", obj.name, obj.checktext_dict[obj.state])) #Retrieves and prints check text for current "state"
         if "none" not in obj.key:    
             obj.try_key("check", game)
 
@@ -86,7 +83,7 @@ class Take(Command):
             return(-1,f"You can't take the "+obj.name)
         game.player_inventory.append(obj.name)
         draw_ui(game)
-        return(0,f"You take the "+obj.name)
+        game.turn_text.append(f"You take the "+obj.name)
        
 
 
@@ -127,10 +124,9 @@ class Use(Command):
             return(-1,"Object 1 unrecognized")
         if obj2 == -1:
             return(-1,"Object 2 unrecognized")
-        draw_ui(game)
         if "none" not in obj2.key:    
              obj2.try_key(obj1.name, game)
-        
+        draw_ui(game)
         
 
 
