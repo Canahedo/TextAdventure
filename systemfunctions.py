@@ -67,7 +67,7 @@ def draw_ui(game) -> None:
 def text_fetcher(file_name: str, name: str, index: str) -> None:
     """
     Searches json files for text to display to the player.
-    Iterates over json data and prints to screen
+    Returns that text.
 
     Args:
         file_name (str): Chooses which json file to search

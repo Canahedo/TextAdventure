@@ -125,7 +125,6 @@ class GameObject:
                 setattr(self, attr, attr_changes[attr])
                 
                 
-
 #*##############
 #*### Chests ###
 #*##############

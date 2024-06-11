@@ -32,6 +32,8 @@ class Tutorial(Command):
         self.num_mods = num_mods
         
     def __call__(self, game: None, mod1: None, mod2: None):
+        # Display help text
+        draw_ui(game)
         with open("assets/text/tutorial.md", "r") as file:
             file_contents = file.read()
         print(file_contents, "\n")
@@ -45,6 +47,7 @@ class Look(Command):
         self.num_mods = num_mods     
         
     def __call__(self, game: object, mod1: None, mod2: None):
+        # Add room looktext to turn_text
         draw_ui(game)
         for room in game.room_list:
             if game.player_location == room.name:
@@ -63,9 +66,7 @@ class Check(Command):
         draw_ui(game)
         game.turn_text.extend(text_fetcher("check", obj.name, obj.checktext_dict[obj.state])) #Retrieves and prints check text for current "state"
         if "none" not in obj.key:    
-            obj.try_key("check", game)
-
-        
+            obj.try_key("check", game)        
                 
 
 class Take(Command):
@@ -112,7 +113,7 @@ class Speak(Command):
         super().__init__(name, alias, num_mods)  
         
     def __call__(self, game: object, targ: object, mod2: None):
-        pass  
+        draw_ui(game)  
             
         
 class Use(Command):
@@ -137,7 +138,7 @@ class Place(Command):
 
     def __call__(self, game: object, obj1: object, obj2: object):
         draw_ui(game)
-        pass
+        
 
 
 def gps(game: object, dir: str):

@@ -14,7 +14,7 @@ This is the main file for the program
 # from dataclasses import dataclass
 
 # from assets.text.misc_gametext import *
-# from systemfunctions import *t
+# from systemfunctions import *
 # from gameobjects import *
 
 from commands import *
@@ -29,7 +29,7 @@ def locate_command(game: object, comm: str, player_input: list):
     Checks that correct number of mods were supplied.
     If no matches, an error message will be returned as a str.
     """
-    for obj in command_list: # Compare input to list of accepted commands
+    for obj in command_list: # Compare input to list of accepted commands (located on commands.py)
         if comm in obj.alias:
             if len(player_input) == obj.num_mods: # Confirms if correct number of mods were entered
                 return obj
@@ -50,13 +50,13 @@ def input_handler(game,text):
     Validates command and if found, returns command and mod objects
     """
     player_input = text.strip().lower().split()  # Turns player input into list of words
-    if len(player_input) == 0: # Prevents error if no text entered
+    if len(player_input) == 0: # Restarts game loop if no text entered
         print("Enter a valid command\n") 
-        game_loop(game) # Restarts game loop
+        game_loop(game) 
     comm = player_input.pop(0)
     
     #! Remove this eventually, here for testing
-    if comm == "x":
+    if comm == "x": #if x entered as a command, display object for mod1
         ic(game.locate_object(player_input[0]))
         game_loop(game)
     
@@ -68,9 +68,9 @@ def input_handler(game,text):
     if comm in ["r", "restart", "reboot"]:
         run(game) # Restart game
     comm_obj = locate_command(game, comm, player_input) #find command object which corresponds with player input
-    if not isinstance(comm_obj, Command):
+    if not isinstance(comm_obj, Command):# if command not valid, restart game loop
             print(comm_obj)
-            game_loop(game) # if command not valid, restart game loop
+            game_loop(game) 
     while len(player_input) < 2:
         player_input.append("none") # Fills mods slots for commands with < 2 mods so downstream functions get enough args
     return comm_obj, game.locate_object(player_input[0]), game.locate_object(player_input[1])
@@ -81,14 +81,14 @@ def input_handler(game,text):
 #*#################
 def game_loop(game):
     """
-    Primary game loop. Requests input, runs it through handler, and executes command
+    Primary game loop. Requests input, runs it through handler, executes command, and displays text
     """
     while True:
         time.sleep(.5)
         command, mod1, mod2 = input_handler(game, input("\nWhat do you do next?\n"))
-        game.turn_text.clear()
+        game.turn_text.clear() # Reset turn text
         command(game, mod1, mod2)
-        game.display_turn_text()
+        game.display_turn_text() # iterate through text accumulated during turn
         
         
         
