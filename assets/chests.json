@@ -13,7 +13,7 @@
         "checktext_dict": {"default": "default_checktext"},
         "useable": false,
         "visible": false,
-        "chest_inventory": []
+        "inventory": {"template":"replaced in setup"}
     },
     {
         "name": "rock",
@@ -32,7 +32,7 @@
         },
         "useable": false,
         "visible": true,
-        "chest_inventory": ["key"]
+        "inventory": {"key":""}
     },
     {
         "name": "door",
@@ -51,6 +51,6 @@
         },
         "useable": true,
         "visible": true,
-        "chest_inventory": []
+        "inventory": {"none":""}
     }
 ]

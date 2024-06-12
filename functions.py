@@ -40,7 +40,7 @@ class Game_Functions():
     #* Start of new game. Resets values for game and player data and runs game loop
     #*####################
     def run(self) -> None:
-        self.data.reset()
+        self.data.reset(self)
         self.player.reset(self)
         self.draw_ui()
         print(opening_crawl_text)
@@ -58,7 +58,7 @@ class Game_Functions():
             print("DEBUG MODE")
             print(DEBUG)
         if DEBUG != "verbose": #* DEBUG: Disables screen wipe when DEBUG     
-            #!  clear() # Erases screen before redrawing UI, disabled in verbose DEBUG
+            clear() # Erases screen before redrawing UI, disabled in verbose DEBUG
             print(game_title)
         print("You are carrying the following: ")
         # Formats inventory  
@@ -108,8 +108,12 @@ class Game_Functions():
         
         #! Remove this eventually, here for testing
         if comm == "x": #if x entered as a command, display object for mod1
-            ic(self.data.locate_object(player_input[0]))
+            ic(self.locate_object(player_input[0]))
             self.game_loop()
+        if comm == "g": #if g entered as a command, display whole game object
+            ic(self.data)
+            ic(self.player)
+            self.game_loop()    
         
         # Checks for system commands
         if comm in ["quit", "q"] and self.double_check("quit and close the program? y/n"):
