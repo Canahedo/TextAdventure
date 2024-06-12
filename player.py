@@ -10,6 +10,7 @@ This file contains a class which records info about a player turn
 from icecream import ic
 from dataclasses import dataclass, field
 
+
 @dataclass
 class Player:
     inventory: list[object] = field(default_factory=list)

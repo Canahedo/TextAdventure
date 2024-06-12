@@ -133,20 +133,6 @@ class GameObject:
 class Chest(GameObject):
     inventory: dict # Items held in this chest
         
-# #* Chests
-# #*####################
-# class Chest(GameObject):
-#     def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, inventory) -> None:
-#         super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
-# #    def __post_init__(self, inventory):    
-#         self.inventory = inventory # Items held in this chest
-
-
-
-
-
-
-
 
 #* Items
 #*####################
@@ -154,10 +140,3 @@ class Chest(GameObject):
 class Item(GameObject):
     takeable: bool
         
-#         #* Items
-# #*####################
-# @dataclass(kw_only=True)
-# class Item(GameObject):
-#     def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, takeable) -> None:
-#         super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
-#         self.takeable = takeable # Can the item be put in the player inventory
