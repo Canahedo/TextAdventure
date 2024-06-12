@@ -26,7 +26,7 @@ class Look(Command):
         
     def __call__(self, game: object, mod1: None, mod2: None):
         room = game.player.location
-        game.player.turn_text.extend(game.text_fetcher("look", room, room.looktext_dict[room.state]))
+        game.player.turn_text.extend(game.text_fetcher("look", room.name, room.looktext_dict[room.state]))
         return (0,"Look")
 
 
@@ -83,14 +83,14 @@ class Walk(Command):
     def __call__(self, game: object, room: object, mod2: None):
         if room == -1:
             return(-1,"I don't know where you're trying to go")
-        if room.name == game.player.location:
+        if room == game.player.location:
             return(-1,f"You are already in the "+room.name)
-        if room.name in ["north", "n","south", "s","east", "e","west", "w"]:
+        if room.name in ["north","south","east","west"]:
             goto = gps(game, room)        
         else:
-            goto = room.name
+            goto = room
         game.player.location = goto
-        game.player.turn_text.append("You walk to the "+goto)
+        game.player.turn_text.append("You walk to the "+goto.name)
         return(0,"Walk")
  
         

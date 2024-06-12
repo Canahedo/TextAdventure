@@ -55,6 +55,6 @@
         "checktext_dict": {"default": "default_checktext"},
         "useable": false,
         "visible": true,
-        "takeable": false
+        "takeable": true
     }
 ]

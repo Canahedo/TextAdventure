@@ -17,7 +17,7 @@ from commands import Look, Check, Take, Walk, Speak, Use, Place
 #* Game Data
 #* Holds lists of objects representing objects (items/chests), rooms, and commands
 #*####################
-@dataclass(slots=True)
+@dataclass
 class Game_Data:
     object_list: list[str] = field(default_factory=list) # List of objects representing all items and chests
     room_list: list[str] = field(default_factory=list) # List of objects representing all rooms
@@ -34,28 +34,40 @@ class Game_Data:
     
     #* Reset
     #* Sets starting values for new game
-    #* ####################
-    def reset(self) -> None:      
-        self.room_list = self.list_builder("rooms")
+    #* self.object list is set twice because chest list needs to see item list while initializing 
+    #*####################
+    def reset(self, game) -> None:      
         object_list = []
-        for chest in self.list_builder("chests"): object_list.append(chest)
-        for item in self.list_builder("items") :object_list.append(item)
-        self.object_list = object_list     
+        for item in self.list_builder("items", game) :object_list.append(item)
+        self.object_list = object_list
+        for chest in self.list_builder("chests", game): object_list.append(chest)
+        self.object_list = object_list
+        self.room_list = self.list_builder("rooms", game)     
     
     
     #* List Builder
     #* Accesses json file and returns list of objects
+    #* Chest and Room lists are configured to have the appropriate objects in their inventory
     #*####################
-    def list_builder(self, obj_type: str) -> list:
+    def list_builder(self, obj_type: str, game: object) -> list:
         #* obj_type (str): Will be either "items", "chests"
    
         list_builder = []
         with open("assets/"+str(obj_type)+".json", "r") as file:
             data = json.load(file)
-            for item in data: # Iterates over each object in json, appends to temp_list
-                if obj_type == "items": list_builder.append(Item(**item))
-                if obj_type == "chests": list_builder.append(Chest(**item))
-                if obj_type == "rooms": list_builder.append(Room(**item))       
+        if obj_type == "items":
+            for item in data: list_builder.append(Item(**item)) # Create an Item in list_builder for each json object
+            return list_builder
+        for item in data:
+            if obj_type == "chests":
+                list_builder.append(Chest(**item)) # Create a Chest in list_builder for each json object
+            if obj_type == "rooms":
+                list_builder.append(Room(**item)) # Create a Room in list_builder for each json object
+            outer_obj = list_builder[-1] # Reference last object created
+            for name in outer_obj.inventory: # Iterate throught "Inventory" dict for each chest/item listed in object inventory
+                inner_obj = game.locate_object(name) # Fetch all relevant objects
+                if inner_obj != -1:
+                    outer_obj.inventory[name] = inner_obj # If object found, add to dict
         return list_builder   
 
 
@@ -66,11 +78,12 @@ class Room:
     name: str
     state: str
     looktext_dict: dict
+    inventory: dict
     
 
 #* Game Objects
 #*####################
-@dataclass(slots=True)
+@dataclass(kw_only=True)
 class GameObject:
     name: str # Name of the object
     checkable: bool # Does the object respond to the check command
@@ -116,15 +129,35 @@ class GameObject:
                 
 #* Chests
 #*####################
+@dataclass(kw_only=True)
 class Chest(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, chest_inventory) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
-        self.chest_inventory = chest_inventory # Items held in this chest
+    inventory: dict # Items held in this chest
         
+# #* Chests
+# #*####################
+# class Chest(GameObject):
+#     def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, inventory) -> None:
+#         super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
+# #    def __post_init__(self, inventory):    
+#         self.inventory = inventory # Items held in this chest
+
+
+
+
+
+
+
 
 #* Items
 #*####################
+@dataclass(kw_only=True)
 class Item(GameObject):
-    def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, takeable) -> None:
-        super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
-        self.takeable = takeable # Can the item be put in the player inventory
+    takeable: bool
+        
+#         #* Items
+# #*####################
+# @dataclass(kw_only=True)
+# class Item(GameObject):
+#     def __init__(self, name, checkable, key, state, checktext_dict, useable, visible, takeable) -> None:
+#         super().__init__(name, checkable, key, state, checktext_dict, useable, visible)
+#         self.takeable = takeable # Can the item be put in the player inventory
