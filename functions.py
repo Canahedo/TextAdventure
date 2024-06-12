@@ -41,7 +41,7 @@ class Game_Functions():
     #*####################
     def run(self) -> None:
         self.data.reset()
-        self.player.reset()
+        self.player.reset(self)
         self.draw_ui()
         print(opening_crawl_text)
         while True:
@@ -58,13 +58,13 @@ class Game_Functions():
             print("DEBUG MODE")
             print(DEBUG)
         if DEBUG != "verbose": #* DEBUG: Disables screen wipe when DEBUG     
-            clear() # Erases screen before redrawing UI, disabled in verbose DEBUG
+            #!  clear() # Erases screen before redrawing UI, disabled in verbose DEBUG
             print(game_title)
         print("You are carrying the following: ")
         # Formats inventory  
         if len(self.player.inventory) != 0:
             for item in self.player.inventory:
-                print(str(item), end=" ")
+                print(str(item.name), end=" ")
                 if len(self.player.inventory) != self.player.inventory.index(item) + 1:
                     print(", ", end="")
         print("\n\n-------------------------\n")
@@ -112,15 +112,12 @@ class Game_Functions():
             self.game_loop()
         
         # Checks for system commands
-        if comm in ["quit", "q"]: # Close program
-            if self.double_check("quit and close the program? y/n"):
-                exit() 
-        if comm in ["end", "e"]: # End current game, offer replay
-            if self.double_check("end the current game? y/n"):
-                self.replay() 
-        if comm in ["r", "restart", "reboot"]: # Restart game
-            if self.double_check("restart the game? y/n"):
-                self.run() 
+        if comm in ["quit", "q"] and self.double_check("quit and close the program? y/n"):
+                exit() # Close program
+        if comm in ["end", "e"] and self.double_check("end the current game? y/n"):
+                self.replay() # End current game, offer replay
+        if comm in ["r", "restart", "reboot"] and self.double_check("restart the game? y/n"):
+                self.run() # Restart game
         if comm in ["h", "help", "tutorial"]: # Displays help screen
             self.draw_ui()
             with open("assets/text/tutorial.md", "r") as file:
