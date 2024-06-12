@@ -32,17 +32,4 @@ DEV NOTES:
 DEBUG system utilizes icecream\
 pip3 install icecream
 
-Set DEBUG value on systemfunctions page
-
-
-File import structure is as follows\
-    main\
-    commands\
-    gameobjects\
-    systemfunctions\
-    assets.text.misc_gametext
-
-Upper files can access all data and functions represented by lower files
-
-
-
+Set DEBUG value on functions page

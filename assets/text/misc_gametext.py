@@ -7,16 +7,12 @@ Python3
 This file contains all game text not associated with an object covered by another file
 """
 
-
-
 game_title = """
 Untitled Text Adventure
 Created by Canahedo and WingusInbound, 2024
 Written in Python 3
 -------------------------
 """
-
-
 
 # Displayed at start of game
 # opening_crawl_text = """
