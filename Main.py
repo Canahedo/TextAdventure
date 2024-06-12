@@ -7,18 +7,12 @@ Python3
 This is the main file for the program, which initializes the game object and runs the game
 """
 
-import os  # Used in clear() to erase the board
 from icecream import ic
 
-from functions import Game_Functions
+from functions import Game_Functions, clear
 from objects import Game_Data
 from player import Player
 
-         
-# Creates clear() to erase the board
-def clear():
-    os.system("cls")            
-    
         
 #* Main
 #* Initializes game object, and game/player data, then starts a new game
