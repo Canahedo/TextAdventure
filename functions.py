@@ -113,11 +113,14 @@ class Game_Functions():
         
         # Checks for system commands
         if comm in ["quit", "q"]: # Close program
-            exit() 
+            if self.double_check("quit and close the program? y/n"):
+                exit() 
         if comm in ["end", "e"]: # End current game, offer replay
-            self.replay() 
+            if self.double_check("end the current game? y/n"):
+                self.replay() 
         if comm in ["r", "restart", "reboot"]: # Restart game
-            self.run() 
+            if self.double_check("restart the game? y/n"):
+                self.run() 
         if comm in ["h", "help", "tutorial"]: # Displays help screen
             self.draw_ui()
             with open("assets/text/tutorial.md", "r") as file:
@@ -203,12 +206,26 @@ class Game_Functions():
     def replay(self) -> None:
         while True:
             time.sleep(0.5)
-            response = input("Would you like to play again? y/n\n\n").lower()
+            response = input("\nWould you like to play again? y/n\n").lower()
             if response in ['y', 'yes']:
                 self.run()
             elif response in ['n', 'no']:
                 exit()
             else:
-                clear()
+                print('Sorry, "', response, '" is an invalid response.')
+                
+
+    #* Double Check
+    #* Confirms system commands before running (quit, end, restart)                           
+    #*####################
+    def double_check(self, string: str) -> bool:
+        while True:
+            time.sleep(0.5)
+            response = input(f"\nAre you sure you want to "+string+"\n").lower()
+            if response in ['y', 'yes']:
+                return True
+            elif response in ['n', 'no']:
+                self.game_loop()
+            else:
                 print('Sorry, "', response, '" is an invalid response.')
                 
