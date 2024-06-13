@@ -1,6 +1,7 @@
 [
     {
         "name": "itemtemplate",
+        "type": "item",
         "checkable": true,
         "key": {"desc": {
             "state":"new state",
@@ -17,6 +18,7 @@
     },
     {
         "name": "key",
+        "type": "item",
         "checkable": true,
         "key": {"rock_toppled": {
             "state":"default",
@@ -39,6 +41,7 @@
     },
     {
         "name": "newspaper",
+        "type": "item",
         "checkable": true,
         "key": {"none":"none"},
         "state": "default",
@@ -49,6 +52,7 @@
     },
     {
         "name": "letter",
+        "type": "item",
         "checkable": true,
         "key": {"none":"none"},
         "state": "default",

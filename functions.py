@@ -34,7 +34,7 @@ class Game_Functions():
     def __init__(self, game_data: object, player: object):
         self.data = game_data
         self.player = player
-    
+
     
     #* Run
     #* Start of new game. Resets values for game and player data and runs game loop
@@ -75,14 +75,14 @@ class Game_Functions():
     #*####################
     def game_loop(self) -> None:
         while True:
+            
             time.sleep(.5)
             command, mod1, mod2, mod_strs = self.input_handler(input("\nWhat do you do next?\n")) # Request input
-            self.player.turn_text.clear() # Reset turn text
-            turn_result = command(self, mod1, mod2) # Run command
-            if turn_result[0] == -1: # If command returns error, print message
-                print(turn_result[1])
-                continue
-            if turn_result[0] == 0: # If command returns normal, redraw screen and display turn text
+            try:
+                self.player.take_turn(command, mod1, mod2, self)
+            # except Exception as e:
+            #     print(e)    
+            # else:    
                 self.draw_ui()
                 print(f"PREV COMMAND:",command.name, end="")
                 for mod in mod_strs:
@@ -91,8 +91,10 @@ class Game_Functions():
                 print("\n")
                 for line in self.player.turn_text:
                     print(line)                
-    
-    
+            finally:
+                pass
+            
+ 
     #* Input Handler
     #* Cleans player input, checks for and runs system commands, and locates/returns objects for commands and mods
     #* Returns command object, mod objects (if found, returns -1 if not), and player_input list
@@ -134,7 +136,9 @@ class Game_Functions():
                 self.game_loop() 
         while len(player_input) < 2: # Fills mods slots for commands with < 2 mods so downstream functions get enough args
             player_input.append("none") 
-        return comm_obj, self.locate_object(player_input[0]), self.locate_object(player_input[1]), player_input
+        mod1_obj = self.locate_object(player_input[0])
+        mod2_obj = self.locate_object(player_input[1])        
+        return comm_obj, mod1_obj, mod2_obj, player_input
     
     
     #* Locate Object
@@ -162,7 +166,7 @@ class Game_Functions():
         #* comm (str): Name of command to be located
         #* player_input (list[str]): List of player-entered mods
         
-        for obj in self.data.command_list: # Compare input to list of accepted commands
+        for obj in self.player.command_list: # Compare input to list of accepted commands
             if comm in obj.alias:
                 if len(player_input) == obj.num_mods: # Confirms if correct number of mods were entered
                     return obj
@@ -190,7 +194,31 @@ class Game_Functions():
                     break
         return text
     
-    
+   
+    #* You see a...
+    #* Accepts either local chest or item list, and tells the player what they see
+    #*#################### 
+    def you_see_a(self, local_list: list[object]) -> list[str]:
+        counter = 0
+        uca = "Nearby, you see "
+        ic(local_list)
+        for obj in local_list:
+            ic(local_list)
+            if obj.name[0] in ["a","e","i","o","u"]:
+                uca += "an "    
+            else:
+                uca += "a "
+            uca += obj.name
+            counter += 1
+            if counter < len(local_list):
+                uca +=", "
+            if counter == len(local_list) - 1:
+                uca += "and "
+            if counter == len(local_list):
+                uca += "\n"
+        return [uca]
+                
+
     #* End Game
     #* Displays end of game text and triggers replay()
     #! Not currently in use

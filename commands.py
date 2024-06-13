@@ -27,7 +27,9 @@ class Look(Command):
     def __call__(self, game: object, mod1: None, mod2: None):
         room = game.player.location
         game.player.turn_text.extend(game.text_fetcher("look", room.name, room.looktext_dict[room.state]))
-        return (0,"Look")
+        game.player.get_local_chests()
+        game.player.turn_text.extend(game.you_see_a(game.player.local_chests))
+
 
 
 #* Check
@@ -38,15 +40,13 @@ class Check(Command):
         super().__init__(name, alias, num_mods)
     
     def __call__(self, game: object, obj, mod2: None):
-        if obj == -1:
-            return(-1,"Unrecognized object")
-        if obj.visible == False:
-            return(-1,f"You can't see the "+obj.name)
-        if obj.checkable == False:
-            return(-1,f"You can't check the "+obj.name)
         game.player.turn_text.extend(game.text_fetcher("check", obj.name, obj.checktext_dict[obj.state])) #Retrieves check text for current state
         if "none" not in obj.key:    
             obj.try_key("check", game)
+        if obj.type == "chest":   
+            game.player.get_local_items(obj)
+        if len(game.player.local_chests) > 0:
+            game.player.turn_text.extend(game.you_see_a(game.player.local_chests))    
         return (0,"Check")        
 
                 
@@ -66,7 +66,7 @@ class Take(Command):
             return(-1,f"You can't see the "+obj.name)        
         if obj.takeable == False:
             return(-1,f"You can't take the "+obj.name)
-        game.player.inventory.append(obj.name)
+        game.player.inventory.append(obj)
         game.player.turn_text.append(f"You take the "+obj.name)
         if "none" not in obj.key:    
             obj.try_key("take", game)
