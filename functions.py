@@ -28,7 +28,7 @@ def clear():
 #*###################
 #*
 DEBUG = False
-DEBUG = True
+#DEBUG = True
 #DEBUG = "verbose"
 
 
