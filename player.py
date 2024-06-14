@@ -48,6 +48,7 @@ class Player:
         self.local_items = item_list
     
     
+    #! Unused, needs to be folded into turn validator
     def take_turn(self, command, mod1, mod2, game):
         self.turn_text.clear()
         

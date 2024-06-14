@@ -54,8 +54,8 @@ class Game_Data:
                 list_builder.append(Room(**item)) # Create a Room in list_builder for each json object
             outer_obj = list_builder[-1] # Reference last object created
             for name in outer_obj.inventory: # Iterate throught "Inventory" dict for each chest/item listed in object inventory
-                inner_obj = game.locate_object(name) # Fetch all relevant objects
-                if inner_obj != -1:
+                if name != None:
+                    inner_obj = game.locate_object(name) # Fetch all relevant objects
                     outer_obj.inventory[name] = inner_obj # If object found, add to dict
         return list_builder   
 

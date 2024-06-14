@@ -1,6 +1,6 @@
 [
     {
-        "name": "itemtemplate",
+        "name": "template",
         "type": "item",
         "checkable": true,
         "key": {"desc": {

@@ -24,12 +24,11 @@ class Look(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)     
         
-    def __call__(self, game: object, mod1: None, mod2: None):
+    def __call__(self, mods: list[object], game: object):
         room = game.player.location
         game.player.turn_text.extend(game.text_fetcher("look", room.name, room.looktext_dict[room.state]))
         game.player.get_local_chests()
         game.player.turn_text.extend(game.you_see_a(game.player.local_chests))
-
 
 
 #* Check
@@ -39,7 +38,8 @@ class Check(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)
     
-    def __call__(self, game: object, obj, mod2: None):
+    def __call__(self, mods: list[object], game: object):
+        obj = mods[0]
         game.player.turn_text.extend(game.text_fetcher("check", obj.name, obj.checktext_dict[obj.state])) #Retrieves check text for current state
         if "none" not in obj.key:    
             obj.try_key("check", game)
@@ -57,7 +57,8 @@ class Take(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)
         
-    def __call__(self, game: object, obj: object, mod2: None):
+    def __call__(self, mods: list[object], game: object):
+        obj = mods[0]
         if obj == -1:
             return(-1,"Unrecognized object")
         if obj.name in game.player.inventory:
@@ -75,12 +76,14 @@ class Take(Command):
 
 #* Walk
 #* Moves the player to an adjacent room
+#! BUG: Because all objects are checked, walk can be used on a chest or item
 #*####################
 class Walk(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)        
         
-    def __call__(self, game: object, room: object, mod2: None):
+    def __call__(self, mods: list[object], game: object):
+        room = mods[0]
         if room == -1:
             return(-1,"I don't know where you're trying to go")
         if room == game.player.location:
@@ -101,8 +104,8 @@ class Speak(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)  
         
-    def __call__(self, game: object, targ: object, mod2: None): 
-            return(-1,"Speak not implimented")
+    def __call__(self, mods: list[object], game: object): 
+            game.player.turn_text.append("Speak not implimented yet")
    
         
 #* Use
@@ -112,7 +115,8 @@ class Use(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)    
         
-    def __call__(self, game: object, obj1: object, obj2: object):
+    def __call__(self, mods: list[object], game: object):
+        obj1, obj2 = mods[0], mods[1]
         if obj1 == -1:
             return(-1,"Object 1 unrecognized")
         if obj2 == -1:
@@ -129,8 +133,8 @@ class Place(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
         super().__init__(name, alias, num_mods)        
 
-    def __call__(self, game: object, obj1: object, obj2: object):
-        return(-1,"Place not implimented")
+    def __call__(self, mods: list[object], game: object):
+        game.player.turn_text.append("Place not implimented yet")
 
 
 #* GPS

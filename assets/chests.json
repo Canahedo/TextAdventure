@@ -1,6 +1,6 @@
 [
     {
-        "name": "chest_template",
+        "name": "template",
         "type": "chest",
         "checkable": false,
         "key": {"desc": {
