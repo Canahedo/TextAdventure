@@ -1,6 +1,7 @@
 [
     {
         "name": "chest_template",
+        "type": "chest",
         "checkable": false,
         "key": {"desc": {
             "state":"new state",
@@ -17,6 +18,7 @@
     },
     {
         "name": "rock",
+        "type": "chest",
         "checkable": true,
         "key": {"check": {
                         "state":"toppled",
@@ -35,7 +37,19 @@
         "inventory": {"key":""}
     },
     {
+        "name": "newspaper",
+        "type": "chest",
+        "checkable": true,
+        "key": {"none":"none"},
+        "state": "default",
+        "checktext_dict": {"default": "default_checktext"},
+        "useable": false,
+        "visible": true,
+        "inventory": {"none":""}
+    },
+    {
         "name": "door",
+        "type": "chest",
         "checkable": true,
         "key": {"key": {
             "state":"unlocked",

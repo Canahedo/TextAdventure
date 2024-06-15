@@ -11,8 +11,6 @@ from icecream import ic
 from dataclasses import dataclass, field
 import json
 
-from commands import Look, Check, Take, Walk, Speak, Use, Place
-
 
 #* Game Data
 #* Holds lists of objects representing objects (items/chests), rooms, and commands
@@ -20,17 +18,7 @@ from commands import Look, Check, Take, Walk, Speak, Use, Place
 @dataclass
 class Game_Data:
     object_list: list[str] = field(default_factory=list) # List of objects representing all items and chests
-    room_list: list[str] = field(default_factory=list) # List of objects representing all rooms
-    command_list: list[object] = ( # List of objects representing the player commands
-        Look("look", ["look", "l"], 0),
-        Check("check", ["check", "c"], 1),
-        Take("take", ["take", "t"], 1),
-        Walk("walk", ["walk", "w", "move", "m"], 1),
-        Speak("speak", ["speak", "s"], 1),
-        Use("use", ["use", "u"], 2),
-        Place("place", ["place", "p"], 2)
-        ) 
-    
+    room_list: list[str] = field(default_factory=list) # List of objects representing all rooms 
     
     #* Reset
     #* Sets starting values for new game
@@ -43,7 +31,6 @@ class Game_Data:
         for chest in self.list_builder("chests", game): object_list.append(chest)
         self.object_list = object_list
         self.room_list = self.list_builder("rooms", game)     
-    
     
     #* List Builder
     #* Accesses json file and returns list of objects
@@ -65,8 +52,8 @@ class Game_Data:
                 list_builder.append(Room(**item)) # Create a Room in list_builder for each json object
             outer_obj = list_builder[-1] # Reference last object created
             for name in outer_obj.inventory: # Iterate throught "Inventory" dict for each chest/item listed in object inventory
-                inner_obj = game.locate_object(name) # Fetch all relevant objects
-                if inner_obj != -1:
+                if name != None:
+                    inner_obj = game.locate_object(name) # Fetch all relevant objects
                     outer_obj.inventory[name] = inner_obj # If object found, add to dict
         return list_builder   
 
@@ -86,13 +73,13 @@ class Room:
 @dataclass(kw_only=True)
 class GameObject:
     name: str # Name of the object
+    type: str # Type of object (chest or item)
     checkable: bool # Does the object respond to the check command
     key: dict # What items/actions interact with the object
     state: str # What state the object is in
     checktext_dict: dict # Contains all text which might be used for the check command
     useable: bool # Does the object respond to the use command
     visible: bool # Is the object accessible to the player
-    
     
     #* Try Key
     #* Takes in a prospective key and if that key is valid for the object, passes the trigger block into triggers function
@@ -103,8 +90,7 @@ class GameObject:
         if prosp_key in self.key:
             self.triggers(self.key[prosp_key],game)
             del self.key[prosp_key] # Removes key from list after triggering
-            
-   
+         
     #* Triggers
     #* Parses trigger block and executes changes, running prospect ext triggers through try_key
     #*####################
@@ -122,9 +108,9 @@ class GameObject:
             if prosp == "player_inv": # Modifies player inv when called for by an ext trigger
                 for line in trigger["ext_triggers"][prosp]:
                     if line == 'add':
-                        game.player.inventory.append(trigger["ext_triggers"][prosp][line])
+                        game.player.inventory.append(game.locate_object(trigger["ext_triggers"][prosp][line]))
                     if line == 'del':
-                        game.player.inventory.remove(trigger["ext_triggers"][prosp][line])
+                        game.player.inventory.remove(game.locate_object(trigger["ext_triggers"][prosp][line]))
     
                 
 #* Chests

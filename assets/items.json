@@ -1,6 +1,7 @@
 [
     {
-        "name": "itemtemplate",
+        "name": "item_template",
+        "type": "item",
         "checkable": true,
         "key": {"desc": {
             "state":"new state",
@@ -17,6 +18,7 @@
     },
     {
         "name": "key",
+        "type": "item",
         "checkable": true,
         "key": {"rock_toppled": {
             "state":"default",
@@ -38,17 +40,8 @@
         "takeable": true
     },
     {
-        "name": "newspaper",
-        "checkable": true,
-        "key": {"none":"none"},
-        "state": "default",
-        "checktext_dict": {"default": "default_checktext"},
-        "useable": false,
-        "visible": true,
-        "takeable": false
-    },
-    {
         "name": "letter",
+        "type": "item",
         "checkable": true,
         "key": {"none":"none"},
         "state": "default",
