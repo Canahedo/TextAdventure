@@ -4,125 +4,125 @@ Written by Canahedo and WingusInbound
 Python3
 2024
 
-This file represents the game data, including lists of all items, chests, and rooms
+This file represents the game data, including lists
+of all items, chests, and rooms
 """
 
-from icecream import ic
 from dataclasses import dataclass, field
 import json
 
 
-#* Game Data
-#* Holds lists of objects representing objects (items/chests), rooms, and commands
-#*####################
+# * Game Data
+# * Lists containing game objects
+# *####################
 @dataclass
 class Game_Data:
-    object_list: list[str] = field(default_factory=list) # List of objects representing all items and chests
-    room_list: list[str] = field(default_factory=list) # List of objects representing all rooms 
-    
-    #* Reset
-    #* Sets starting values for new game
-    #* self.object list is set twice because chest list needs to see item list while initializing 
-    #*####################
-    def reset(self, game) -> None:      
+    object_list: list[str] = field(default_factory=list)
+    room_list: list[str] = field(default_factory=list)
+
+    # * Reset
+    # * Sets starting values for new game
+    # *####################
+    def reset(self, game) -> None:
         object_list = []
-        for item in self.list_builder("items", game) :object_list.append(item)
+        for item in self.list_builder("items", game):
+            object_list.append(item)
         self.object_list = object_list
-        for chest in self.list_builder("chests", game): object_list.append(chest)
+        for chest in self.list_builder("chests", game):
+            object_list.append(chest)
         self.object_list = object_list
-        self.room_list = self.list_builder("rooms", game)     
-    
-    #* List Builder
-    #* Accesses json file and returns list of objects
-    #* Chest and Room lists are configured to have the appropriate objects in their inventory
-    #*####################
+        self.room_list = self.list_builder("rooms", game)
+
+    # * List Builder
+    # * Accesses json file and returns list of objects
+    # *####################
     def list_builder(self, obj_type: str, game: object) -> list:
-        #* obj_type (str): Will be either "items", "chests"
-   
+        # * obj_type (str): Will be either "items", "chests"
+
         list_builder = []
-        with open("assets/"+str(obj_type)+".json", "r") as file:
+        with open("assets/" + str(obj_type) + ".json", "r") as file:
             data = json.load(file)
         if obj_type == "items":
-            for item in data: list_builder.append(Item(**item)) # Create an Item in list_builder for each json object
+            for item in data:
+                list_builder.append(Item(**item))
             return list_builder
         for item in data:
             if obj_type == "chests":
-                list_builder.append(Chest(**item)) # Create a Chest in list_builder for each json object
+                list_builder.append(Chest(**item))
             if obj_type == "rooms":
-                list_builder.append(Room(**item)) # Create a Room in list_builder for each json object
-            outer_obj = list_builder[-1] # Reference last object created
-            for name in outer_obj.inventory: # Iterate throught "Inventory" dict for each chest/item listed in object inventory
-                if name != None:
-                    inner_obj = game.locate_object(name) # Fetch all relevant objects
-                    outer_obj.inventory[name] = inner_obj # If object found, add to dict
-        return list_builder   
+                list_builder.append(Room(**item))
+            outer_obj = list_builder[-1]  # Reference last object created
+            for name in outer_obj.inventory:
+                if name is not None:
+                    inner_obj = game.locate_object(name)
+                    outer_obj.inventory[name] = inner_obj
+        return list_builder
 
 
-#* Room
-#*####################
+# * Room
+# *####################
 @dataclass
 class Room:
     name: str
     state: str
     looktext_dict: dict
     inventory: dict
-    
 
-#* Game Objects
-#*####################
+
+# * Game Objects
+# *####################
 @dataclass(kw_only=True)
 class GameObject:
-    name: str # Name of the object
-    type: str # Type of object (chest or item)
-    checkable: bool # Does the object respond to the check command
-    key: dict # What items/actions interact with the object
-    state: str # What state the object is in
-    checktext_dict: dict # Contains all text which might be used for the check command
-    useable: bool # Does the object respond to the use command
-    visible: bool # Is the object accessible to the player
-    
-    #* Try Key
-    #* Takes in a prospective key and if that key is valid for the object, passes the trigger block into triggers function
-    #*####################
+    name: str  # Name of the object
+    type: str  # Type of object (chest or item)
+    checkable: bool  # Does the object respond to the check command
+    key: dict  # What items/actions interact with the object
+    state: str  # What state the object is in
+    checktext_dict: dict  # Contains all text used for the check command
+    useable: bool  # Does the object respond to the use command
+    visible: bool  # Is the object accessible to the player
+
+    # * Try Key
+    # *####################
     def try_key(self, prosp_key: str, game: object) -> None:
-        #* prosp_key (str): Name of an object/action to be checked against list of keys
-        
+
         if prosp_key in self.key:
-            self.triggers(self.key[prosp_key],game)
-            del self.key[prosp_key] # Removes key from list after triggering
-         
-    #* Triggers
-    #* Parses trigger block and executes changes, running prospect ext triggers through try_key
-    #*####################
+            self.triggers(self.key[prosp_key], game)
+            del self.key[prosp_key]  # Removes key from list after triggering
+
+    # * Triggers
+    # *####################
     def triggers(self, trigger: dict, game: object) -> None:
-        #* trigger (dict): Block of triggers to be executed
-        
-        self.state = trigger["state"] # Set state of object
-        game.player.turn_text.extend(game.text_fetcher("triggers", self.name, trigger["trigger_text"])) # Display any text for this trigger
-        for attr in trigger["attr_changes"]: # update object attributes ie visible, takeable
-            setattr(self, attr, trigger["attr_changes"][attr]) 
-        for prosp in trigger["ext_triggers"]: # Checks for external triggers
-            if prosp != "none" and prosp != "player_inv": 
+        # * trigger (dict): Block of triggers to be executed
+
+        self.state = trigger["state"]  # Set state of object
+        txt = game.text_fetcher("triggers", self.name, trigger["trigger_text"])
+        game.player.turn_text.extend(txt)
+        for attr in trigger["attr_changes"]:
+            setattr(self, attr, trigger["attr_changes"][attr])
+        for prosp in trigger["ext_triggers"]:  # Checks for external triggers
+            if prosp != "none" and prosp != "player_inv":
                 obj = game.locate_object(prosp)
-                obj.try_key(trigger["ext_triggers"][prosp], game) # Runs prospect ext triggers through try_key
-            if prosp == "player_inv": # Modifies player inv when called for by an ext trigger
+                obj.try_key(trigger["ext_triggers"][prosp], game)
+            if prosp == "player_inv":
                 for line in trigger["ext_triggers"][prosp]:
-                    if line == 'add':
-                        game.player.inventory.append(game.locate_object(trigger["ext_triggers"][prosp][line]))
-                    if line == 'del':
-                        game.player.inventory.remove(game.locate_object(trigger["ext_triggers"][prosp][line]))
-    
-                
-#* Chests
-#*####################
+                    new_item = trigger["ext_triggers"][prosp][line]
+                    new_obj = game.locate_object(new_item)
+                    if line == "add":
+                        game.player.inventory.append(new_obj)
+                    if line == "del":
+                        game.player.inventory.remove(new_obj)
+
+
+# * Chests
+# *####################
 @dataclass(kw_only=True)
 class Chest(GameObject):
-    inventory: dict # Items held in this chest
-        
+    inventory: dict  # Items held in this chest
 
-#* Items
-#*####################
+
+# * Items
+# *####################
 @dataclass(kw_only=True)
 class Item(GameObject):
     takeable: bool
-        

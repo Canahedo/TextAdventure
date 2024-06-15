@@ -7,21 +7,25 @@ Python3
 This file represents custom exception classes used by the game
 """
 
-from icecream import ic
 
 class CommandNotFound(Exception):
-    def __init__(self, command:str):
+    def __init__(self, command: str):
         self.command = command
-        self.message = f'{command} is not a recognized command.\nEnter "Help" for more info.'
+        self.message = (
+            f'{command} is not a recognized command.',
+            '\nEnter "Help" for more info.'
+        )
         super().__init__(self.message)
-        
+
+
 class ObjectNotFound(Exception):
-    def __init__(self, obj:str):
+    def __init__(self, obj: str):
         self.object = obj
-        self.message = f'"',{obj},'" was not recognized.'
+        self.message = f'" {obj} " was not recognized.'
         super().__init__(self.message)
-            
-class NumberOfMods(Exception):   
+
+
+class NumberOfMods(Exception):
     def __init__(self, command: str, expected: int):
         """
         Raised when a player-entered command is recognized,
@@ -34,10 +38,13 @@ class NumberOfMods(Exception):
         self.command = command
         self.expected = expected
         s = ""
-        if expected != 1: s = "s" 
-        self.message = f"{str(command).capitalize()} requires exactly {expected} modifier{s}"
+        if expected != 1:
+            s = "s"
+        self.message = str(command).capitalize()
+        self.message.append(f"requires exactly {expected} modifier{s}")
         super().__init__(self.message)
-        
+
+
 class InvalidTurn(Exception):
     def __init__(self):
-        pass 
+        pass

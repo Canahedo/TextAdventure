@@ -4,7 +4,8 @@ Written by Canahedo and WingusInbound
 Python3
 2024
 
-This file contains all game text not associated with an object covered by another file
+This file contains all game text not associated
+with an object covered by another file
 """
 
 game_title = """
@@ -17,7 +18,7 @@ Written in Python 3
 # Displayed at start of game
 # opening_crawl_text = """
 # You find yourself standing in front of a house, long since abandoned,
-# and nudge a pile of rolled up newspapers with your foot. 
+# and nudge a pile of rolled up newspapers with your foot.
 # They stopped delivering about a year ago.
 
 # In your hand you hold a letter. Fancy stationary, the kind

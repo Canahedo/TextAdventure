@@ -1,6 +1,6 @@
+# ! This is just some just to make pytest happy
 
-#! This is just some just to make pytest happy
-    
+
 def func(x):
     return x + 1
 

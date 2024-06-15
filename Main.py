@@ -4,21 +4,20 @@ Written by Canahedo and WingusInbound
 Python3
 2024
 
-This is the main file for the program, which initializes the game object and runs the game
+This is the main file for the program,
+which initializes the game object and runs the game
 """
 
-from icecream import ic
+from functions import Game_Functions, clear
+from objects import Game_Data
+from player import Player
 
-from program.functions import Game_Functions, clear
-from program.objects import Game_Data
-from program.player import Player
 
-        
-#* Main
-#* Initializes game object, and game/player data, then starts a new game
-#*####################
+# * Main
+# * Initializes game object, and game/player data, then starts a new game
+# *####################
 def main():
-    clear() # Clears text VSCode terminal starts with
+    clear()  # Clears text VSCode terminal starts with
     game = Game_Functions(Game_Data(), Player())
     game.run()
 
