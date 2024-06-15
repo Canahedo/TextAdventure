@@ -9,9 +9,9 @@ This is the main file for the program, which initializes the game object and run
 
 from icecream import ic
 
-from functions import Game_Functions, clear
-from objects import Game_Data
-from player import Player
+from program.functions import Game_Functions, clear
+from program.objects import Game_Data
+from program.player import Player
 
         
 #* Main

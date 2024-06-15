@@ -12,8 +12,8 @@ import os  # Used in clear() to erase the board
 import time  # Used in sleep() to create a delay
 import json
 
-from commands import Command
-from errors import CommandNotFound, ObjectNotFound, NumberOfMods, InvalidTurn
+from program.commands import Command
+from program.errors import CommandNotFound, ObjectNotFound, NumberOfMods, InvalidTurn
 from assets.text.misc_gametext import *
 
 

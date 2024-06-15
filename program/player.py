@@ -10,7 +10,7 @@ This file contains a class which records info about a player turn
 from icecream import ic
 from dataclasses import dataclass, field
 
-from commands import Command, Look, Check, Take, Walk, Speak, Use, Place
+from program.commands import Command, Look, Check, Take, Walk, Speak, Use, Place
 
 
 @dataclass
