@@ -22,5 +22,5 @@ WALK [LOCATION] - Move the player to a location, accepts cardinal directions or 
 SPEAK [PERSON] - Talk to someone
 HELP - Brings up this page
 END - Ends the current game, with the option to restart
-RESTART - Immediately restarts the game
+RESTART - Restarts the game
 QUIT - Exits the game, closing the program

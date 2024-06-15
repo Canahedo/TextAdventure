@@ -20,7 +20,6 @@ class Game_Data:
     object_list: list[str] = field(default_factory=list) # List of objects representing all items and chests
     room_list: list[str] = field(default_factory=list) # List of objects representing all rooms 
     
-    
     #* Reset
     #* Sets starting values for new game
     #* self.object list is set twice because chest list needs to see item list while initializing 
@@ -32,7 +31,6 @@ class Game_Data:
         for chest in self.list_builder("chests", game): object_list.append(chest)
         self.object_list = object_list
         self.room_list = self.list_builder("rooms", game)     
-    
     
     #* List Builder
     #* Accesses json file and returns list of objects
@@ -83,7 +81,6 @@ class GameObject:
     useable: bool # Does the object respond to the use command
     visible: bool # Is the object accessible to the player
     
-    
     #* Try Key
     #* Takes in a prospective key and if that key is valid for the object, passes the trigger block into triggers function
     #*####################
@@ -93,8 +90,7 @@ class GameObject:
         if prosp_key in self.key:
             self.triggers(self.key[prosp_key],game)
             del self.key[prosp_key] # Removes key from list after triggering
-            
-   
+         
     #* Triggers
     #* Parses trigger block and executes changes, running prospect ext triggers through try_key
     #*####################

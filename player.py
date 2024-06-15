@@ -34,44 +34,19 @@ class Player:
         self.inventory.clear()
         self.inventory.append(game.locate_object("letter"))
         self.location = game.locate_object("driveway")
+        self.get_locals()
 
-    def get_local_chests(self):
-        chest_list = []
+    def get_locals(self):
+        self.local_chests.clear()
+        self.local_items.clear()
         for chest in self.location.inventory:
-            chest_list.append(self.location.inventory[chest])   
-        self.local_chests = chest_list
-        
-    def get_local_items(self, obj):
-        item_list = []
-        for item in obj.inventory:
-            item_list.append(obj.inventory[item])   
-        self.local_items = item_list
-    
-    
-    #! Unused, needs to be folded into turn validator
-    def take_turn(self, command, mod1, mod2, game):
-        self.turn_text.clear()
-        
-        if any([mod1,mod2]) == -1:
-            print("Unrecognized object")
-            
-        if isinstance(command, Look):
-            command(game, mod1, mod2)
-        if isinstance(command, Check):
-            if all([
-                mod1.checkable,
-                mod1.visible                
-            ]):
-                command(game, mod1, mod2)
-                return
-        if isinstance(command, Take):
-            command(game, mod1, mod2)
-        if isinstance(command, Walk):
-            command(game, mod1, mod2)
-        if isinstance(command, Speak):
-            command(game, mod1, mod2)
-        if isinstance(command, Use):
-            command(game, mod1, mod2)
-        if isinstance(command, Place):
-            command(game, mod1, mod2)
-        
+            if chest == "none":
+                continue
+            if self.location.inventory[chest].visible:
+                self.local_chests.append(self.location.inventory[chest])
+                for item in self.location.inventory[chest].inventory:
+                    if item == "none":
+                        continue
+                    if self.location.inventory[chest].inventory[item].visible:
+                        self.local_items.append(self.location.inventory[chest].inventory[item])   
+       

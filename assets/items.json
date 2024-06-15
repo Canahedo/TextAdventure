@@ -1,6 +1,6 @@
 [
     {
-        "name": "template",
+        "name": "item_template",
         "type": "item",
         "checkable": true,
         "key": {"desc": {
@@ -38,17 +38,6 @@
         "useable": true,
         "visible": false,
         "takeable": true
-    },
-    {
-        "name": "newspaper",
-        "type": "item",
-        "checkable": true,
-        "key": {"none":"none"},
-        "state": "default",
-        "checktext_dict": {"default": "default_checktext"},
-        "useable": false,
-        "visible": true,
-        "takeable": false
     },
     {
         "name": "letter",

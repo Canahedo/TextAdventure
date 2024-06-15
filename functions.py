@@ -13,7 +13,6 @@ import time  # Used in sleep() to create a delay
 import json
 
 from commands import Command
-from turnvalidator import TurnValidator
 from errors import CommandNotFound, ObjectNotFound, NumberOfMods, InvalidTurn
 from assets.text.misc_gametext import *
 
@@ -37,7 +36,7 @@ class Game_Functions():
         self.data = game_data
         self.player = player
 
-    
+  
     #* Run
     #* Start of new game. Resets values for game and player data and runs game loop
     #*####################
@@ -46,16 +45,19 @@ class Game_Functions():
         self.player.reset(self)
         self.draw_ui()
         print(opening_crawl_text)
+        print(self.you_see_a()[0])
         while True:
             self.game_loop()
           
-            
+   
     #* Draw UI
     #* Wipes screen, and displays title bar and player inventory
     #*####################
     def draw_ui(self) -> None:        
         if not DEBUG:
-            clear() # Erases screen before redrawing UI, disabled in verbose DEBUG
+            clear() # Erases screen before redrawing UI, disabled in DEBUG
+        if DEBUG:
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         print(game_title)
         print("You are carrying the following: ")
         # Formats inventory  
@@ -65,8 +67,8 @@ class Game_Functions():
                 if len(self.player.inventory) != self.player.inventory.index(item) + 1:
                     print(", ", end="")
         print("\n\n-------------------------\n")
-        
-    
+          
+   
     #* Game Loop
     #* Primary loop of the game
     #* Requests input, retrieves objects, executes command, and displays text
@@ -113,14 +115,21 @@ class Game_Functions():
                 continue
             
             #* Confirms that player turn can be executed
-            #! Temporarily bypassed
-            if not TurnValidator(comm_obj, mod_list, self.data, self.player).result:
-                raise InvalidTurn    
+            valid_turn, message = comm_obj.verify(mod_list, self)
+            if not valid_turn:
+                print(f"Invalid turn: {comm_obj.name}", end="")
+                for mod in mod_list:
+                    print(f" {mod.name}", end="")
+                print("")
+                print(message)
                 continue
             
             #* Processes turn and redraws screen
             self.player.turn_text.clear()
             comm_obj(mod_list, self) # Uses callable trait of objects in command_list
+            self.player.get_locals()
+            if len(self.player.local_chests) > 0:
+                self.player.turn_text.extend(self.you_see_a())
             self.draw_ui()
             print(f"PREV COMMAND:",comm_obj.name, end="")
             for mod in mod_list:
@@ -129,7 +138,7 @@ class Game_Functions():
             for line in self.player.turn_text:
                 print(line)                
                      
-    
+                     
     #* System Commands
     #* Looks for and runs game "system commands" ie quit, end, restart, and help
     #*####################
@@ -155,13 +164,14 @@ class Game_Functions():
         #* obj (str): Name of object or room to be located    
 
         ob = obj[:-1] # Also tests without last letter, in case of pluralization
-        for i in self.data.object_list:
-            if i.name == obj or i.name == ob:
-                return i
         for i in self.data.room_list:
             if i.name == obj:
                 return i        
-
+        for i in self.data.object_list:
+            if i.name == obj or i.name == ob:
+                return i
+            
+            
     #* Locate Command
     #* Finds command object, and verifies number of mods
     #* Returns object, or error string
@@ -197,14 +207,14 @@ class Game_Functions():
     
    
     #* You see a...
-    #* Accepts either local chest or item list, and tells the player what they see
+    #* Informs player of all chests and items in local lists
     #*#################### 
-    def you_see_a(self, local_list: list[object]) -> list[str]:
+    def you_see_a(self) -> list[str]:
         counter = 0
-        uca = "Nearby, you see "
-        ic(local_list)
+        uca = "\nNearby you see "
+        local_list = self.player.local_chests
+        local_list.extend(self.player.local_items)  
         for obj in local_list:
-            ic(local_list)
             if obj.name[0] in ["a","e","i","o","u"]:
                 uca += "an "    
             else:
@@ -215,8 +225,6 @@ class Game_Functions():
                 uca +=", "
             if counter == len(local_list) - 1:
                 uca += "and "
-            if counter == len(local_list):
-                uca += "\n"
         return [uca]
                 
 

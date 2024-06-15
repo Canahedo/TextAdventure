@@ -1,6 +1,6 @@
 [
     {
-        "name": "template",
+        "name": "chest_template",
         "type": "chest",
         "checkable": false,
         "key": {"desc": {
@@ -35,6 +35,17 @@
         "useable": false,
         "visible": true,
         "inventory": {"key":""}
+    },
+    {
+        "name": "newspaper",
+        "type": "chest",
+        "checkable": true,
+        "key": {"none":"none"},
+        "state": "default",
+        "checktext_dict": {"default": "default_checktext"},
+        "useable": false,
+        "visible": true,
+        "inventory": {"none":""}
     },
     {
         "name": "door",

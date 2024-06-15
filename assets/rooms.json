@@ -1,6 +1,6 @@
 [
     {
-        "name": "template",
+        "name": "room_template",
         "state": "default",
         "looktext_dict": {"default": "default_looktext"},
         "inventory": {"template":"replaced in setup"}
