@@ -102,7 +102,7 @@ class Game_Functions:
                 mod_obj = self.locate_object(mod)
                 if mod_obj is None:
                     print(f'"{mod}" is not a not recognized term')
-                    print('Try something else')
+                    print("Try something else")
                 else:
                     mod_list.append(mod_obj)
             if len(mod_list) == len(player_input):
@@ -186,9 +186,7 @@ class Game_Functions:
         # * comm (str): Name of command to be located
         # * player_input (list[str]): List of player-entered mods
 
-        for (
-            obj
-        ) in self.player.command_list:  # Compare input to list of commands
+        for obj in self.player.command_list:
             if comm_str in obj.alias:
                 if (
                     num_of_mods == obj.num_mods

@@ -94,7 +94,6 @@ class Take(Command):
 
 # * Walk
 # * Moves the player to an adjacent room
-# ! BUG: Because all objects are checked, walk can be used on a chest or item
 # *####################
 class Walk(Command):
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
@@ -104,7 +103,9 @@ class Walk(Command):
         room = mods[0]
         if room == game.player.location:
             return False, f"You are already in the {room.name}"
-        return True, "success"  # ! Replace with actual logic
+        if room.type != "room":
+            error = f"{room.name} is neither a room name, or a direction."
+            return False, error.capitalize()
 
     def __call__(self, mods: list[object], game: object):
         room = mods[0]
