@@ -8,8 +8,9 @@ This file contains a class which records info about a player turn
 """
 
 from dataclasses import dataclass, field
-
+from assets.text.misc_gametext import opening_crawl_text
 from commands import Look, Check, Take, Walk, Speak, Use, Place
+from commands import Quit, Restart, Tutorial, InspObj, InspGame
 
 
 @dataclass
@@ -17,6 +18,7 @@ class Player:
     inventory: list[object] = field(default_factory=list)
     location: object = field(default_factory=object)
     turn_text: list[str] = field(default_factory=list)
+    local_rooms: list[object] = field(default_factory=list)
     local_chests: list[object] = field(default_factory=list)
     local_items: list[object] = field(default_factory=list)
     comm_obj: object = field(default_factory=object)
@@ -29,12 +31,18 @@ class Player:
         Speak("speak", ["speak", "s"], 1),
         Use("use", ["use", "u"], 2),
         Place("place", ["place", "p"], 2),
+        Quit("quit", ["quit", "q"], 0),
+        Restart("restart", ["restart", "r"], 0),
+        Tutorial("help", ["tutorial", "help", "h"], 0),
+        InspObj("inspobj", ["inspobj", "i"], 1),
+        InspGame("inspgame", ["inspgame", "game", "g"], 0)
     )
 
     def reset(self, game):
         self.inventory.clear()
         self.inventory.append(game.locate_object("letter"))
         self.location = game.locate_object("driveway")
+        self.turn_text = [opening_crawl_text]
         self.get_locals()
 
     def get_locals(self):

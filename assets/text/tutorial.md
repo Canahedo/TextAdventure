@@ -17,7 +17,7 @@ LOOK - Look around, gather information about your general surroundings
 CHECK [THING] - Investigate something specific
 TAKE [THING] - Move an object into your inventory
 USE [THING] [THING] - Use the first object on the second object
-PLACE [THING] [PLACE] - Remove an object from your inventory, and move it to a nearby location
+PLACE [THING] [THING] - Remove an object from your inventory, and move it to a nearby location
 WALK [LOCATION] - Move the player to a location, accepts cardinal directions or room description
 SPEAK [PERSON] - Talk to someone
 HELP - Brings up this page

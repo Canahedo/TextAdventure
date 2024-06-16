@@ -11,10 +11,8 @@ This file represents custom exception classes used by the game
 class CommandNotFound(Exception):
     def __init__(self, command: str):
         self.command = command
-        self.message = (
-            f'{command} is not a recognized command.',
-            '\nEnter "Help" for more info.'
-        )
+        self.message = f'{command} is not a recognized command.'.capitalize()
+        self.message += '\nEnter "Help" for more info.'
         super().__init__(self.message)
 
 
@@ -41,7 +39,7 @@ class NumberOfMods(Exception):
         if expected != 1:
             s = "s"
         self.message = str(command).capitalize()
-        self.message.append(f"requires exactly {expected} modifier{s}")
+        self.message += f" requires exactly {expected} modifier{s}"
         super().__init__(self.message)
 
 

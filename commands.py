@@ -7,6 +7,10 @@ Python3
 This file defines all commands accessible to the player
 """
 
+import sys
+from icecream import ic
+from objects import Item
+
 
 class Command:
     def __init__(self, name: str, alias: list, num_mods: int) -> None:
@@ -27,8 +31,9 @@ class Look(Command):
 
     def __call__(self, mods: list[object], game: object):
         room = game.player.location
-        txt = "look", room.name, room.looktext_dict[room.state]
-        game.player.turn_text.extend(game.text_fetcher(txt))
+        txt = room.looktext_dict[room.state]
+        looktxt = game.text_fetcher("look", room.name, txt)
+        game.player.turn_text.extend(looktxt)
 
 
 # * Check
@@ -41,14 +46,14 @@ class Check(Command):
     def verify(self, mods: list[object], game: object):
         obj = mods[0]
         if not all([obj.checkable, obj.visible]):
-            return False, f"You don't see a {obj.name}"
+            return False, f"You don't see a {obj.name}\n"
         if obj.type == "chest":
             if obj not in game.player.local_chests:
-                return False, f"You don't see a {obj.name}"
+                return False, f"You don't see a {obj.name}\n"
         if obj.type == "item":
             if obj not in game.player.local_items:
                 if obj not in game.player.inventory:
-                    return False, f"You don't see a {obj.name}"
+                    return False, f"You don't see a {obj.name}\n"
         return True, "success"
 
     def __call__(self, mods: list[object], game: object):
@@ -69,13 +74,15 @@ class Take(Command):
 
     def verify(self, mods: list[object], game: object):
         obj = mods[0]
+        if not isinstance(obj, Item):
+            return False, f"You can't take the {obj.name}\n"
         if not all([obj.takeable, obj.visible]):
-            return False, f"There isn't a {obj.name} you can take"
+            return False, f"There isn't a {obj.name} you can take\n"
         if obj in game.player.inventory:
-            return False, f"You already have the {obj.name}"
+            return False, f"You already have the {obj.name}\n"
         if obj.type == "item":
             if obj not in game.player.local_items:
-                return False, f"You don't see a {obj.name}"
+                return False, f"You don't see a {obj.name}\n"
         return True, "success"
 
     def __call__(self, mods: list[object], game: object):
@@ -100,9 +107,9 @@ class Walk(Command):
     def verify(self, mods: list[object], game: object):
         room = mods[0]
         if room == game.player.location:
-            return False, f"You are already in the {room.name}"
+            return False, f"You are already in the {room.name}\n"
         if room.type != "room":
-            error = f"{room.name} is neither a room name, or a direction."
+            error = f"{room.name} is neither a room name, or a direction.\n"
             return False, error.capitalize()
         return True, "success"
 
@@ -140,16 +147,17 @@ class Use(Command):
     def verify(self, mods: list[object], game: object):
         for obj in mods:
             if not all([obj.useable, obj.visible]):
-                return False, f"There isn't a {obj.name} you can use right now"
+                error = f"There isn't a {obj.name} you can use right now\n"
+                return False, error
             if obj.type == "chest":
                 if obj not in game.player.local_chests:
-                    return False, f"There isn't a {obj.name} nearby"
+                    return False, f"There isn't a {obj.name} nearby\n"
             if obj.type == "item":
                 if (
                     obj not in game.player.local_items
                     and obj not in game.player.inventory
                 ):
-                    return False, f"You don't have a {obj.name} to use"
+                    return False, f"You don't have a {obj.name} to use\n"
         return True, "success"
 
     def __call__(self, mods: list[object], game: object):
@@ -170,6 +178,82 @@ class Place(Command):
 
     def __call__(self, mods: list[object], game: object):
         game.player.turn_text.append("Place not implimented yet")
+
+
+# * Quit
+# * Ends the game and closes the program
+# *####################
+class Quit(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
+
+    def verify(self, mods: list[object], game: object):
+        return game.services.double_check("quit"), "system"
+
+    def __call__(self, mods: list[object], game: object):
+        sys.exit()
+
+
+# * Restart
+# * Ends the game and offers replay
+# *####################
+class Restart(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
+
+    def verify(self, mods: list[object], game: object):
+        return game.services.double_check("restart"), "system"
+
+    def __call__(self, mods: list[object], game: object):
+        game.replay()
+
+
+# * Tutorial
+# * Displays the help screen
+# *####################
+class Tutorial(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
+
+    def verify(self, mods: list[object], game: object):
+        return True, "success"
+
+    def __call__(self, mods: list[object], game: object):
+        with open("assets/text/tutorial.md", "r") as file:
+            file_contents = file.read()
+        game.player.turn_text.append(file_contents)
+
+
+# * Inspect Object
+# * Displays a game object
+# ! DEBUG FEATURE
+# *####################
+class InspObj(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
+
+    def verify(self, mods: list[object], game: object):
+        return True, "success"
+
+    def __call__(self, mods: list[object], game: object):
+        ic(mods[0])
+
+
+# * Inspect Game
+# * Displays all game data
+# ! DEBUG FEATURE
+# *####################
+class InspGame(Command):
+    def __init__(self, name: str, alias: list, num_mods: int) -> None:
+        super().__init__(name, alias, num_mods)
+
+    def verify(self, mods: list[object], game: object):
+        return True, "success"
+
+    def __call__(self, mods: list[object], game: object):
+        ic(game.player)
+        ic(game.data)
+        pass
 
 
 # * GPS

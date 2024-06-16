@@ -11,9 +11,7 @@ with an object covered by another file
 game_title = """
 Untitled Text Adventure
 Created by Canahedo and WingusInbound, 2024
-Written in Python 3
--------------------------
-"""
+-------------------------"""
 
 # Displayed at start of game
 opening_crawl_text = """
@@ -31,6 +29,5 @@ everything he had is now yours.
 You look up at the cracked and grimy windows,
 and sigh to yourself as you continue up the path.
 
-Lucky you."""
-
-# opening_crawl_text = "Opening Crawl Placeholder"
+Lucky you.
+"""
