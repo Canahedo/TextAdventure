@@ -1,6 +1,7 @@
 [
     {
         "name": "room_template",
+        "type": "room",
         "state": "default",
         "looktext_dict": {"default": "default_looktext"},
         "inventory": {"template":"replaced in setup"}
@@ -8,12 +9,14 @@
     },
     {
         "name": "driveway",
+        "type": "room",
         "state": "default",
         "looktext_dict": {"default": "default_looktext"},
         "inventory": {"rock":""}
     },
     {
         "name": "porch",
+        "type": "room",
         "state": "default",
         "looktext_dict": {"default": "default_looktext"},
         "inventory": {

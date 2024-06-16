@@ -28,9 +28,7 @@ class Look(Command):
     def __call__(self, mods: list[object], game: object):
         room = game.player.location
         txt = "look", room.name, room.looktext_dict[room.state]
-        game.player.turn_text.extend(
-            game.text_fetcher(txt)
-        )
+        game.player.turn_text.extend(game.text_fetcher(txt))
 
 
 # * Check
@@ -55,9 +53,9 @@ class Check(Command):
 
     def __call__(self, mods: list[object], game: object):
         obj = mods[0]
-        game.player.turn_text.extend(
-            game.text_fetcher("check", obj.name, obj.checktext_dict[obj.state])
-        )  # Retrieves check text for current state
+        chk_target = obj.checktext_dict[obj.state]
+        chktxt = game.text_fetcher("check", obj.name, chk_target)
+        game.player.turn_text.extend(chktxt)  # Retrieves check text
         if "none" not in obj.key:
             obj.try_key("check", game)
 
@@ -106,6 +104,7 @@ class Walk(Command):
         if room.type != "room":
             error = f"{room.name} is neither a room name, or a direction."
             return False, error.capitalize()
+        return True, "success"
 
     def __call__(self, mods: list[object], game: object):
         room = mods[0]

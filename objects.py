@@ -64,6 +64,7 @@ class Game_Data:
 @dataclass
 class Room:
     name: str
+    type: str
     state: str
     looktext_dict: dict
     inventory: dict

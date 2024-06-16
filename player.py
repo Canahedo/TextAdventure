@@ -19,6 +19,8 @@ class Player:
     turn_text: list[str] = field(default_factory=list)
     local_chests: list[object] = field(default_factory=list)
     local_items: list[object] = field(default_factory=list)
+    comm_obj: object = field(default_factory=object)
+    mod_objs: list[object] = field(default_factory=list)
     command_list: list[object] = (
         Look("look", ["look", "l"], 0),
         Check("check", ["check", "c"], 1),

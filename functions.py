@@ -51,7 +51,7 @@ class Game_Functions:
     # * Draw UI
     # * Wipes screen, and displays title bar and player inventory
     # *####################
-    def draw_ui(self) -> None:
+    def draw_ui(self, **args) -> None:
         if not DEBUG:
             clear()  # Erases screen before redrawing UI, disabled in DEBUG
         if DEBUG:
@@ -65,7 +65,21 @@ class Game_Functions:
                 index_of_last = self.player.inventory.index(item) + 1
                 if len(self.player.inventory) != index_of_last:
                     print(", ", end="")
-        print("\n\n-------------------------\n")
+        print("\n\n-------------------------")
+
+    # * Input Handler
+    # * Requests player input
+    # * Formats input an attatches to player object
+    # *####################
+    def input_handler(self):
+        time.sleep(0.5)
+        raw_input = input("\nWhat do you do next?\n")
+        player_input = raw_input.strip().lower().split()
+        if len(player_input) == 0:  # Restarts game loop if no text entered
+            print("Enter a valid command\n")
+            self.game_loop()
+        comm_str = player_input.pop(0)
+        return comm_str, player_input
 
     # * Game Loop
     # * Primary loop of the game
@@ -74,48 +88,17 @@ class Game_Functions:
     def game_loop(self) -> None:
         while True:
 
-            # * Takes in player input
-            time.sleep(0.5)
-            player_input = (
-                input("\nWhat do you do next?\n").strip().lower().split()
-            )  # Turns player input into list of words
-            if len(player_input) == 0:  # Restarts game loop if no text entered
-                print("Enter a valid command\n")
-                continue
-            comm_str = player_input.pop(0)
-            self.system_commands(
-                comm_str
-            )  # Checks for and runs quit, end, restart, and help
+            comm_str, player_input = self.input_handler()
+            self.system_commands(comm_str)
 
             # ! Remove this eventually, here for testing
-            if comm_str == "x":  # Displays an object
-                ic(self.locate_object(player_input[0]))
-                continue
-            if comm_str == "g":  # Displays whole game
-                ic(self.data)
-                ic(self.player)
+            if self.debug_commands(comm_str, player_input):
                 continue
 
-            # * Attempts to retrieve objects for command and relevant mods
-            mod_list = []
-            for mod in player_input:
-                mod_obj = self.locate_object(mod)
-                if mod_obj is None:
-                    print(f'"{mod}" is not a not recognized term')
-                    print("Try something else")
-                else:
-                    mod_list.append(mod_obj)
-            if len(mod_list) == len(player_input):
-                try:
-                    comm_obj = self.locate_command(comm_str, len(mod_list))
-                except CommandNotFound as e:
-                    print(e.message)
-                    continue
-                except NumberOfMods as e:
-                    print(e.message)
-                    continue
-            else:
+            if not self.fetch_objects_for_turn(comm_str, player_input):
                 continue
+            comm_obj = self.player.comm_obj
+            mod_list = self.player.mod_objs
 
             # * Confirms that player turn can be executed
             valid_turn, message = comm_obj.verify(mod_list, self)
@@ -134,12 +117,25 @@ class Game_Functions:
             if len(self.player.local_chests) > 0:
                 self.player.turn_text.extend(self.you_see_a())
             self.draw_ui()
-            print(f"PREV COMMAND: {comm_obj.name}", end="")
+            print(f"\nPREV COMMAND: {comm_obj.name}", end="")
             for mod in mod_list:
                 print(f" {mod.name}", end="")
             print("\n")
             for line in self.player.turn_text:
                 print(line)
+
+    # * Debug Commands
+    # ! Remove this eventually, here for testing
+    # *####################
+    def debug_commands(self, comm_str, player_input):
+        if comm_str == "x":  # Displays an object
+            ic(self.locate_object(player_input[0]))
+            return True
+        if comm_str == "g":  # Displays whole game
+            ic(self.data)
+            ic(self.player)
+            return True
+        return False
 
     # * System Commands
     # * Looks for and runs game "system commands"
@@ -163,6 +159,33 @@ class Game_Functions:
                 file_contents = file.read()
             print(file_contents, "\n")
             self.game_loop()
+
+    # * Fetch Objects For Turn
+    # * Attempts to retrieve objects for command and relevant mods
+    # *####################
+    def fetch_objects_for_turn(self, comm_str, player_input):
+        mod_list = []
+        for mod in player_input:
+            mod_obj = self.locate_object(mod)
+            if mod_obj is None:
+                print(f'"{mod}" is not a not recognized term')
+                print("Try something else")
+            else:
+                mod_list.append(mod_obj)
+        if len(mod_list) != len(player_input):
+            return False
+        else:
+            try:
+                comm_obj = self.locate_command(comm_str, len(mod_list))
+            except CommandNotFound as e:
+                print(e.message)
+                return False
+            except NumberOfMods as e:
+                print(e.message)
+                return False
+            self.player.comm_obj = comm_obj
+            self.player.mod_objs = mod_list
+            return True
 
     # * Locate Object
     # * Finds and returns item, chest, or room objects
@@ -188,13 +211,11 @@ class Game_Functions:
 
         for obj in self.player.command_list:
             if comm_str in obj.alias:
-                if (
-                    num_of_mods == obj.num_mods
-                ):  # Confirms if correct number of mods were entered
+                # Confirms if correct number of mods were entered
+                if (num_of_mods == obj.num_mods):
                     return obj
-                raise NumberOfMods(
-                    obj.name, obj.num_mods
-                )  # Error if command accepted but wrong number of mods
+                # Error if command accepted but wrong number of mods
+                raise NumberOfMods(obj.name, obj.num_mods)
         raise CommandNotFound(comm_str)
 
     # * Text Fetcher
