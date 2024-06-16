@@ -5,34 +5,65 @@ from player import Player
 from services import Services
 
 
-success_string = "Turn Executed Successfully"
+success = ["Turn Executed Successfully"]
 
-handled_errors = [
+error = [
     "ERROR: Object Fetch Failed",
     "ERROR: System Command",
     "ERROR: Invalid Turn",
 ]
 
 
-def test_look() -> None:
-    game = Game_Functions(Services(), Game_Data(), Player())
-    game.data.reset(game)
-    game.player.reset(game)
+def complete(turn_list: list[str]) -> str:
+    """
+    For a "complete" test, turn list should be formatted as
+        a list of strings representing player inputs:
     turn_list = [
-        "look",
+        "turn1",
+        "turn2
     ]
-
-    for turn in turn_list:
-        raw_input = turn
-        comm_str, mod_strs = game.input_handler(raw_input)
-        test_output = game.game_loop(comm_str, mod_strs)
-    assert test_output == "Turn Executed Successfully"
-
-
-def test_open_door() -> None:
+    It is implied that this test will expect the final test to return:
+    "Turn Executed Successfully"
+    """
     game = Game_Functions(Services(), Game_Data(), Player())
     game.data.reset(game)
     game.player.reset(game)
+    for turn in turn_list:
+        comm_str, mod_strs = game.input_handler(turn)
+        test_output = game.game_loop(comm_str, mod_strs)
+        print(f"{turn} -> {test_output}")
+    if test_output in success:
+        return True
+
+
+def each(turn_list: list[list[str]]) -> str:
+    """
+    For an "each" test, turn list should be formatted as
+        a list of lists, representing player inputs and
+        either success or error, depending on expected result:
+    turn_list = [
+        ["turn1", success],
+        ["turn2", error]
+    ]
+    If any turn returns a result different than expected,
+        the test will fail
+    """
+    game = Game_Functions(Services(), Game_Data(), Player())
+    game.data.reset(game)
+    game.player.reset(game)
+    for turn in turn_list:
+        comm_str, mod_strs = game.input_handler(turn[0])
+        test_output = game.game_loop(comm_str, mod_strs)
+        print(f"{turn[0]} -> {test_output}")
+        if test_output not in turn[1]:
+            return False
+    return True
+
+
+def test_complete_open_door() -> None:
+    """
+    Tries to get key and open door
+    """
     turn_list = [
         "look",
         "check rock",
@@ -40,24 +71,12 @@ def test_open_door() -> None:
         "walk porch",
         "use key door",
     ]
-
-    for turn in turn_list:
-        raw_input = turn
-        comm_str, mod_strs = game.input_handler(raw_input)
-        test_output = game.game_loop(comm_str, mod_strs)
-        assert test_output == "Turn Executed Successfully"
+    assert complete(turn_list)
 
 
-def test_invalid_turn() -> None:
-    game = Game_Functions(Services(), Game_Data(), Player())
-    game.data.reset(game)
-    game.player.reset(game)
+def test_each_handled_errors() -> None:
     turn_list = [
-        "look dog",
+        ["look dog", error],
+        ["check door", error],
     ]
-
-    for turn in turn_list:
-        raw_input = turn
-        comm_str, mod_strs = game.input_handler(raw_input)
-        test_output = game.game_loop(comm_str, mod_strs)
-    assert test_output in handled_errors
+    assert each(turn_list)
