@@ -1,12 +1,12 @@
 Documentation on text retrieval
 ---------------------------------
 
-text_fetcher(file_name: str, name: str, index: str) -> None
+text_fetcher(file_name: str, obj_name: str, text_key: str) -> list
 
-Running this command will return the requested text
--file_name will typically be hard coded and will be the name of a file in assets/text
--name will be the name of the object
--index is a descriptor of which chunk of text to use
+Running this command will return the requested text as a list
+-file_name will typically be hard coded and will be the name of a json file in assets/text ex: "look"
+-obj_name will be the name of the object ex: "porch"
+-text_key is a descriptor of which chunk of text to use ex: "default_looktext"
 
 
 Object template
@@ -14,7 +14,7 @@ Object template
 
 {
     "name": "template",
-    "template_text": {
+    "template_dict": {
             "state_a": "text_1",
             "state_b": "text_2"
             },
@@ -37,6 +37,6 @@ Text template
 Calling text_fetcher example
 --------------------------------
 
-text_fetcher("text_lookup_doc", object.name, object.template_text["state_a"])
+text_fetcher("filename", object.name, object.template_dict["state_a"])
 
-returns "As a songle line.."
+returns ["Even a single line must be in a list"]

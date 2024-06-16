@@ -8,9 +8,9 @@ This file contains a class which records info about a player turn
 """
 
 from dataclasses import dataclass, field
-from assets.text.misc_gametext import opening_crawl_text
-from commands import Look, Check, Take, Walk, Speak, Use, Place
-from commands import Quit, Restart, Tutorial, InspObj, InspGame
+from gamefiles.assets.text.misc_gametext import opening_crawl_text
+from gamefiles.commands import Look, Check, Take, Walk, Speak, Use, Place
+from gamefiles.commands import Quit, Restart, Tutorial, InspObj, InspGame
 
 
 @dataclass
@@ -35,7 +35,7 @@ class Player:
         Restart("restart", ["restart", "r"], 0),
         Tutorial("help", ["tutorial", "help", "h"], 0),
         InspObj("inspobj", ["inspobj", "i"], 1),
-        InspGame("inspgame", ["inspgame", "game", "g"], 0)
+        InspGame("inspgame", ["inspgame", "game", "g"], 0),
     )
 
     def reset(self, game):

@@ -9,8 +9,8 @@ This file contains various subfunctions of the game
 
 import os
 import time
-from commands import Command
-from assets.text.misc_gametext import game_title  # , opening_crawl_text
+from gamefiles.commands import Command
+from gamefiles.assets.text.misc_gametext import game_title
 
 
 class Services:

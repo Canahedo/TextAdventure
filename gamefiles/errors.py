@@ -11,7 +11,7 @@ This file represents custom exception classes used by the game
 class CommandNotFound(Exception):
     def __init__(self, command: str):
         self.command = command
-        self.message = f'{command} is not a recognized command.'.capitalize()
+        self.message = f"{command} is not a recognized command.".capitalize()
         self.message += '\nEnter "Help" for more info.'
         super().__init__(self.message)
 

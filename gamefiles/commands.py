@@ -9,7 +9,6 @@ This file defines all commands accessible to the player
 
 import sys
 from icecream import ic
-from objects import Item
 
 
 class Command:
@@ -74,7 +73,7 @@ class Take(Command):
 
     def verify(self, mods: list[object], game: object):
         obj = mods[0]
-        if not isinstance(obj, Item):
+        if obj.type != "item":
             return False, f"You can't take the {obj.name}\n"
         if not all([obj.takeable, obj.visible]):
             return False, f"There isn't a {obj.name} you can take\n"
@@ -219,7 +218,7 @@ class Tutorial(Command):
         return True, "success"
 
     def __call__(self, mods: list[object], game: object):
-        with open("assets/text/tutorial.md", "r") as file:
+        with open("gamefiles/assets/text/tutorial.md", "r") as file:
             file_contents = file.read()
         game.player.turn_text.append(file_contents)
 

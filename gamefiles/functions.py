@@ -10,7 +10,7 @@ This file contains all primary functions for the game
 import sys
 import time  # Used in sleep() to create a delay
 import json
-from errors import CommandNotFound, NumberOfMods
+from gamefiles.errors import CommandNotFound, NumberOfMods
 
 
 class Game_Functions:
@@ -141,14 +141,14 @@ class Game_Functions:
     # * Text Fetcher
     # * Searches json files for text to display, and returns that text.
     # *####################
-    def text_fetcher(self, file_name: str, name: str, index: str) -> list:
+    def text_fetcher(self, file: str, name: str, index: str) -> list:
         # * file_name (str): Chooses which json file to search
         # * name (str): Name of object to be found
         # * index (str): Which line of text to use
 
         text = []
-        with open("assets/text/" + str(file_name) + ".json", "r") as file:
-            data = json.load(file)
+        with open("gamefiles/assets/text/" + str(file) + ".json", "r") as f:
+            data = json.load(f)
             for item in data:
                 if name == item["name"]:
                     text = item[index]

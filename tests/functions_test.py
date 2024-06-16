@@ -1,8 +1,8 @@
 # ! This is just to make pytest happy
-from functions import Game_Functions
-from objects import Game_Data
-from player import Player
-from services import Services
+from ..gamefiles.functions import Game_Functions
+from ..gamefiles.objects import Game_Data
+from ..gamefiles.player import Player
+from ..gamefiles.services import Services
 
 
 success = ["Turn Executed Successfully"]
@@ -22,13 +22,14 @@ def complete(turn_list: list[str]) -> str:
         "turn1",
         "turn2
     ]
-    It is implied that this test will expect the final test to return:
-    "Turn Executed Successfully"
+    This test expects no errors to occurr in the entire turn list,:
+        and checks that the final test returns "Turn Executed Successfully"
     """
     game = Game_Functions(Services(), Game_Data(), Player())
     game.data.reset(game)
     game.player.reset(game)
     for turn in turn_list:
+        print("##############################################################")
         comm_str, mod_strs = game.input_handler(turn)
         test_output = game.game_loop(comm_str, mod_strs)
         print(f"{turn} -> {test_output}")
@@ -52,6 +53,7 @@ def each(turn_list: list[list[str]]) -> str:
     game.data.reset(game)
     game.player.reset(game)
     for turn in turn_list:
+        print("##############################################################")
         comm_str, mod_strs = game.input_handler(turn[0])
         test_output = game.game_loop(comm_str, mod_strs)
         print(f"{turn[0]} -> {test_output}")

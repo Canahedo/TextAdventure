@@ -40,7 +40,7 @@ class Game_Data:
         # * obj_type (str): Will be either "items", "chests"
 
         list_builder = []
-        with open("assets/" + str(obj_type) + ".json", "r") as file:
+        with open("gamefiles/assets/" + str(obj_type) + ".json", "r") as file:
             data = json.load(file)
         if obj_type == "items":
             for item in data:
