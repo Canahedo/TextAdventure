@@ -9,6 +9,8 @@ This file contains various subfunctions of the game
 
 import os
 import time
+import json
+import sys
 from gamefiles.commands import Command
 from gamefiles.assets.text.misc_gametext import game_title
 
@@ -59,15 +61,13 @@ class Services:
                     string += "an "
                 else:
                     string += "a "
-                if counter == 0:
-                    string.capitalize()
                 string += obj.name
                 counter += 1
                 if counter < len(object_list):
                     string += ", "
                 if counter == len(object_list) - 1:
                     string += "and "
-            print(f"{string}\n")
+            print(f"{string}\n".capitalize())
 
     def double_check(self, string: str) -> bool:
         while True:
@@ -77,5 +77,44 @@ class Services:
                 return True
             elif response in ["n", "no"]:
                 return False
+            else:
+                print('Sorry, "', response, '" is an invalid response.')
+
+    def locate_object(self, obj: str, data: object) -> object:
+        # * obj (str): Name of object or room to be located
+        ob = obj[:-1]  # Also tests without last letter
+        for i in data.room_list:
+            if i.name == obj:
+                return i
+        for i in data.object_list:
+            if i.name == obj or i.name == ob:
+                return i
+
+    def text_fetcher(self, file: str, name: str, index: str) -> list:
+        # * file_name (str): Chooses which json file to search
+        # * name (str): Name of object to be found
+        # * index (str): Which line of text to use
+        text = []
+        with open("gamefiles/assets/text/" + str(file) + ".json", "r") as f:
+            data = json.load(f)
+            for item in data:
+                if name == item["name"]:
+                    text = item[index]
+                    break
+        return text
+
+    def end_game(self, game) -> None:
+        print("Congratulations!")
+        print("    You Win!    ")
+        return self.replay(game)
+
+    def replay(self, game) -> None:
+        while True:
+            time.sleep(0.5)
+            response = input("\nWould you like to play again? y/n\n").lower()
+            if response in ["y", "yes"]:
+                game.run()
+            elif response in ["n", "no"]:
+                sys.exit()
             else:
                 print('Sorry, "', response, '" is an invalid response.')

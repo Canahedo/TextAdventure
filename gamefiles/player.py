@@ -40,8 +40,8 @@ class Player:
 
     def reset(self, game):
         self.inventory.clear()
-        self.inventory.append(game.locate_object("letter"))
-        self.location = game.locate_object("driveway")
+        self.inventory.append(game.services.locate_object("letter", game.data))
+        self.location = game.services.locate_object("driveway", game.data)
         self.turn_text = [opening_crawl_text]
         self.get_locals()
 

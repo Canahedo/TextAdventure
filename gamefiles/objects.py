@@ -25,36 +25,35 @@ class Game_Data:
     # *####################
     def reset(self, game) -> None:
         object_list = []
-        for item in self.list_builder("items", game):
+        for item in self.list_builder("items", game.services):
             object_list.append(item)
         self.object_list = object_list
-        for chest in self.list_builder("chests", game):
+        for chest in self.list_builder("chests", game.services):
             object_list.append(chest)
         self.object_list = object_list
-        self.room_list = self.list_builder("rooms", game)
+        self.room_list = self.list_builder("rooms", game.services)
 
     # * List Builder
     # * Accesses json file and returns list of objects
     # *####################
-    def list_builder(self, obj_type: str, game: object) -> list:
-        # * obj_type (str): Will be either "items", "chests"
-
+    def list_builder(self, obj_type: str, services: object) -> list:
+        # * obj_type (str): Will be either "items", "chests", or "rooms"
         list_builder = []
         with open("gamefiles/assets/" + str(obj_type) + ".json", "r") as file:
-            data = json.load(file)
+            file_contents = json.load(file)
         if obj_type == "items":
-            for item in data:
+            for item in file_contents:
                 list_builder.append(Item(**item))
             return list_builder
-        for item in data:
+        for item in file_contents:
             if obj_type == "chests":
                 list_builder.append(Chest(**item))
             if obj_type == "rooms":
                 list_builder.append(Room(**item))
             outer_obj = list_builder[-1]  # Reference last object created
             for name in outer_obj.inventory:
-                if name is not None:
-                    inner_obj = game.locate_object(name)
+                if name is not None and name != "none":
+                    inner_obj = services.locate_object(name, self)
                     outer_obj.inventory[name] = inner_obj
         return list_builder
 
@@ -86,7 +85,6 @@ class GameObject:
     # * Try Key
     # *####################
     def try_key(self, prosp_key: str, game: object) -> None:
-
         if prosp_key in self.key:
             self.triggers(self.key[prosp_key], game)
             del self.key[prosp_key]  # Removes key from list after triggering
@@ -95,20 +93,20 @@ class GameObject:
     # *####################
     def triggers(self, trigger: dict, game: object) -> None:
         # * trigger (dict): Block of triggers to be executed
-
         self.state = trigger["state"]  # Set state of object
-        txt = game.text_fetcher("triggers", self.name, trigger["trigger_text"])
+        a, b, c = "triggers", self.name, trigger["trigger_text"]
+        txt = game.services.text_fetcher(a, b, c)
         game.player.turn_text.extend(txt)
         for attr in trigger["attr_changes"]:
             setattr(self, attr, trigger["attr_changes"][attr])
         for prosp in trigger["ext_triggers"]:  # Checks for external triggers
             if prosp != "none" and prosp != "player_inv":
-                obj = game.locate_object(prosp)
+                obj = game.services.locate_object(prosp, game.data)
                 obj.try_key(trigger["ext_triggers"][prosp], game)
             if prosp == "player_inv":
                 for line in trigger["ext_triggers"][prosp]:
                     new_item = trigger["ext_triggers"][prosp][line]
-                    new_obj = game.locate_object(new_item)
+                    new_obj = game.services.locate_object(new_item, game.data)
                     if line == "add":
                         game.player.inventory.append(new_obj)
                     if line == "del":
