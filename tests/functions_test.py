@@ -13,23 +13,23 @@ debug_line = "################################################################"
 success = ["Turn Executed Successfully"]
 
 error = [
-    "ERROR: Object Fetch Failed",
-    "ERROR: System Command",
-    "ERROR: Invalid Turn",
     "ERROR: No Input Entered",
+    "ERROR: Command Not Recognized",
     "ERROR: Incorrect Number Of Mods",
     "ERROR: Object Not Found",
-    "ERROR: Command Not Recognized",
-    "ERROR: Chest Not Local",
-    "ERROR: Item Not Local",
+    "ERROR: Object Not Visible",
     "ERROR: Object Not Checkable Or Not Visible",
     "ERROR: Object Not Takeable Or Not Visible",
-    "ERROR: Object Not Useable Or Not Visible" "ERROR: Object Not Visible",
+    "ERROR: Object Not Useable Or Not Visible",
+    "ERROR: Tried To Take Non-Item Object",
+    "ERROR: Tried To Check A Room",
+    "ERROR: Chest Not Local",
+    "ERROR: Item Not Local",
     "ERROR: Item Not Local And Not In Inv",
     "ERROR: Object Already In Inventory",
-    "ERROR: Already In That Room"
-    "ERROR: Object Not A Room"
-    "ERROR: Tried To Take Non-Item Object",
+    "ERROR: Already In That Room",
+    "ERROR: Object Not A Room",
+    "ERROR: No Way In"
     "System Command Canceled",
 ]
 
@@ -102,6 +102,7 @@ def test_complete_open_door() -> None:
         "check rock",
         "take key",
         "walk porch",
+        "look",
         "use key door",
     ]
     assert complete(turn_list)
@@ -117,4 +118,16 @@ def test_each_handled_errors() -> None:
         ["check door", error],
         [".", error],
     ]
+    assert each(turn_list)
+
+
+def test_each_walk_look() -> None:
+    """
+    Walks to each room, and tries to look
+    """
+    room_list = ["porch", "driveway", "porch", "foyer", "kitchen", "foyer"]
+    turn_list = [["look", success]]
+    for room in room_list:
+        turn_list.append([f"walk {room}", success])
+        turn_list.append(["look", success])
     assert each(turn_list)

@@ -37,20 +37,31 @@ class Services:
         for line in player.turn_text:
             print(line)
         print("-------------------------\n")
-
+        token = False
         # Player
-        print(f"You are in the {player.location.name}\n")
+        if player.location.visible:
+            print(f"You are in the {player.location.name}\n")
+            token = True
         if len(player.local_rooms) > 0:
             print("From here, you can get to:")
             self.print_list(player.local_rooms)
-        if len(player.inventory) > 0:
+            token = True
+        temp_list = []
+        for obj in player.inventory:
+            if obj.visible:
+                temp_list.append(obj)
+        if len(temp_list) > 0:
             print("You are carrying:")
-            self.print_list(player.inventory)
+            self.print_list(temp_list)
+            token = True
         local_objs = player.local_chests
         local_objs.extend(player.local_items)
         if len(local_objs) > 0:
             print("Nearby, you can see:")
             self.print_list(local_objs)
+            token = True
+        if not token:
+            self.intro_text()
 
     def print_list(self, object_list: list[str]):
         if len(object_list) > 0 and object_list != [None]:
@@ -89,6 +100,9 @@ class Services:
         for i in data.object_list:
             if i.name == obj or i.name == ob:
                 return i
+        for i in data.door_list:
+            if i.name == obj:
+                return i
 
     def text_fetcher(self, file: str, name: str, index: str) -> list:
         # * file_name (str): Chooses which json file to search
@@ -118,3 +132,6 @@ class Services:
                 sys.exit()
             else:
                 print('Sorry, "', response, '" is an invalid response.')
+
+    def intro_text(self):
+        print("INTRO TEXT\n")

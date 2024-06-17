@@ -3,25 +3,96 @@
         "name": "room_template",
         "type": "room",
         "state": "default",
+        "visible": false,
+        "key": {"unlock": {
+                        "state":"unlocked",
+                        "trigger_text":"none",                  
+                        "attr_changes":{"none":"none"},
+                        "ext_triggers":{"none":"none"}
+                        }
+                },
         "looktext_dict": {"default": "default_looktext"},
+        "adjoining": {"north": {"door":"none", "room":"porch"}},
         "inventory": {"template":"replaced in setup"}
-
+        
     },
     {
         "name": "driveway",
         "type": "room",
-        "state": "default",
-        "looktext_dict": {"default": "default_looktext"},
+        "state": "fogofwar",
+        "visible": false,
+        "key": {"look": {
+                        "state":"default",
+                        "trigger_text":"first_look",                  
+                        "attr_changes":{"visible":"True"},
+                        "ext_triggers":{"reveal":["letter", "rock"]
+                                        }
+                        }
+                },
+        "looktext_dict": {
+                        "default": "default_looktext",
+                        "fogofwar": "fogofwar"
+                        },
+        "adjoining": {"north": {"door":"none", "room":"porch"}},
         "inventory": {"rock":""}
     },
     {
         "name": "porch",
         "type": "room",
-        "state": "default",
+        "state": "fogofwar",
+        "visible": false,
+        "key": {"look": {
+                        "state":"default",
+                        "trigger_text":"first_look",                  
+                        "attr_changes":{"visible":"True"},
+                        "ext_triggers":{"reveal":["door", "newspaper"]}
+                        }
+                },
         "looktext_dict": {"default": "default_looktext"},
+        "adjoining": {
+            "north": {"door":"porch_door", "room":"foyer"},
+            "south": {"door":"none", "room":"driveway"}
+                },
         "inventory": {
-                "door":"",
-                "newspaper":""
+            "door":"",
+            "newspaper":""
                 }
+    },
+    {
+        "name": "foyer",
+        "type": "room",
+        "state": "default",
+        "visible": false,
+        "key": {"look": {
+                        "state":"default",
+                        "trigger_text":"none",                  
+                        "attr_changes":{"none":"none"},
+                        "ext_triggers":{"reveal":"kitchen"}
+                        }
+                },
+        "looktext_dict": {"default": "default_looktext"},
+        "adjoining": {
+            "north": {"door":"none", "room":"kitchen"},
+            "south": {"door":"porch_door", "room":"porch"}
+                },
+        "inventory": {"none":""}
+    },
+    {
+        "name": "kitchen",
+        "type": "room",
+        "state": "default",
+        "visible": false,
+        "key": {"unlock": {
+                        "state":"unlocked",
+                        "trigger_text":"none",                  
+                        "attr_changes":{"none":"none"},
+                        "ext_triggers":{"none":"none"}
+                        }
+                },
+        "looktext_dict": {"default": "default_looktext"},
+        "adjoining": {
+            "south": {"door":"none", "room":"foyer"}
+                },
+        "inventory": {"none":""}
     }
 ]

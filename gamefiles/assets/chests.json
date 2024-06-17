@@ -33,7 +33,7 @@
             "toppled": "toppled_checktext"
         },
         "useable": false,
-        "visible": true,
+        "visible": false,
         "inventory": {"key":""}
     },
     {
@@ -44,7 +44,7 @@
         "state": "default",
         "checktext_dict": {"default": "default_checktext"},
         "useable": false,
-        "visible": true,
+        "visible": false,
         "inventory": {"none":""}
     },
     {
@@ -52,10 +52,14 @@
         "type": "chest",
         "checkable": true,
         "key": {"key": {
-            "state":"unlocked",
-            "trigger_text":"door_unlocked",                  
-            "attr_changes":{"none":"none"},
-            "ext_triggers":{"key":"remove"}
+                        "state":"unlocked",
+                        "trigger_text":"door_unlocked",                  
+                        "attr_changes":{"none":"none"},
+                        "ext_triggers":{
+                            "key":"remove",
+                            "porch_door": "unlock",
+                            "reveal": "foyer"            
+                                        }
                         }
                 },
         "state": "locked",
@@ -64,7 +68,7 @@
             "unlocked": "unlocked_checktext"
         },
         "useable": true,
-        "visible": true,
+        "visible": false,
         "inventory": {"none":""}
     }
 ]

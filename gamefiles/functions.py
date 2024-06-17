@@ -60,7 +60,7 @@ class Game_Functions:
             # Execute Turn
             self.player.turn_text.clear()
             comm_obj(mod_list, self)  # Calls command object
-            self.player.get_locals()
+            self.player.get_locals(self)
             self.services.draw_ui(self.player)
             return "Turn Executed Successfully"
 

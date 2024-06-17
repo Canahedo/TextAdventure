@@ -31,9 +31,30 @@ class Look(Command):
 
     def __call__(self, mods: list[object], game: object):
         room = game.player.location
+        if not room.visible:
+            room.visible = True
         txt = room.looktext_dict[room.state]
         looktxt = game.services.text_fetcher("look", room.name, txt)
         game.player.turn_text.extend(looktxt)
+        for adj_room in room.adjoining:
+            self.reveal(room.adjoining[adj_room], game)
+        if "none" not in room.key:
+            room.try_key("look", game)
+
+    def reveal(self, foo: dict, game):
+        room_name = None
+        if foo["door"] == "none":
+            room_name = foo["room"]
+        else:
+            door_obj = game.services.locate_object(foo["door"], game.data)
+            if door_obj.state not in ["locked"]:
+                room_name = foo["room"]
+        if room_name is not None:
+            room_obj = game.services.locate_object(room_name, game.data)
+            if not room_obj.visible:
+                room_obj.visible = True
+            if "none" not in room_obj.key:
+                room_obj.try_key("look", game)
 
 
 # * Check
@@ -62,6 +83,13 @@ class Check(Command):
                     error = [f"You don't see a {obj.name}\n"]
                     error.append("ERROR: Item Not Local And Not In Inv")
                     raise InvalidTurn(error)
+
+        if obj.type == "room":
+            str = f"You can't check the {obj.name}\n"
+            str += "Try walking there and using Look"
+            error = [str]
+            error.append("ERROR: Tried To Check A Room")
+            raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         obj = mods[0]
@@ -130,6 +158,11 @@ class Walk(Command):
         if room.type != "room":
             error = [f"{room.name} is neither a room name, or a direction.\n"]
             error.append("ERROR: Object Not A Room")
+            raise InvalidTurn(error)
+
+        if not room.visible and room.state == "fogofwar":
+            error = [f"Can't find a way into the {room.name}\n"]
+            error.append("ERROR: No Way In")
             raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
@@ -259,7 +292,7 @@ class Restart(Command):
             raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
-        game.services.replay()
+        game.services.replay(game)
 
 
 # * Tutorial

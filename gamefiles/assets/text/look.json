@@ -11,7 +11,8 @@
             "A pile of newspapers lies near the porch.",
             "You're not sure why they kept delivering for so long if no one",
             "was reading them, but it looks like they stopped about a year ago."       
-        ]
+        ],
+        "fogofwar":["Diveway Revealed"]
     },
     {
         "name": "porch",

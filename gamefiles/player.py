@@ -18,7 +18,7 @@ class Player:
     inventory: list[object] = field(default_factory=list)
     location: object = field(default_factory=object)
     turn_text: list[str] = field(default_factory=list)
-    local_rooms: list[object] = field(default_factory=list)
+    local_rooms: list = field(default_factory=list)
     local_chests: list[object] = field(default_factory=list)
     local_items: list[object] = field(default_factory=list)
     comm_obj: object = field(default_factory=object)
@@ -34,8 +34,8 @@ class Player:
         Quit("quit", ["quit", "q"], 0),
         Restart("restart", ["restart", "r"], 0),
         Tutorial("help", ["tutorial", "help", "h"], 0),
-        InspObj("inspobj", ["inspobj", "i"], 1),
-        InspGame("inspgame", ["inspgame", "game", "g"], 0),
+        InspObj("inspobj", ["inspobj", "i"], 1),  # ! Debug command
+        InspGame("inspgame", ["inspgame", "game", "g"], 0),  # ! Debug command
     )
 
     def reset(self, game):
@@ -43,11 +43,12 @@ class Player:
         self.inventory.append(game.services.locate_object("letter", game.data))
         self.location = game.services.locate_object("driveway", game.data)
         self.turn_text = [opening_crawl_text]
-        self.get_locals()
+        self.get_locals(game)
 
-    def get_locals(self):
+    def get_locals(self, game):
         self.local_chests.clear()
         self.local_items.clear()
+        self.local_rooms.clear()
         for chest in self.location.inventory:
             if chest == "none":
                 continue
@@ -59,3 +60,17 @@ class Player:
                     prosp_item = self.location.inventory[chest].inventory[item]
                     if prosp_item.visible:
                         self.local_items.append(prosp_item)
+        for direction in self.location.adjoining:
+            room_name = None
+            foo = self.location.adjoining[direction]
+            if foo["door"] == "none":
+                room_name = foo["room"]
+            else:
+                door_obj = game.services.locate_object(foo["door"], game.data)
+                door_state = door_obj.state
+                if door_state not in ["locked"]:
+                    room_name = foo["room"]
+            if room_name is not None:
+                room_obj = game.services.locate_object(room_name, game.data)
+                if room_obj.visible:
+                    self.local_rooms.append(room_obj)

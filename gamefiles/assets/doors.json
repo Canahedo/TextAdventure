@@ -1,0 +1,15 @@
+[
+    {
+        "name": "porch_door",
+        "type": "door",
+        "state": "locked",
+        "visible": false,
+        "key": {"unlock": {
+                        "state":"unlocked",
+                        "trigger_text":"none",                  
+                        "attr_changes":{"none":"none"},
+                        "ext_triggers":{"none":"none"}
+                        }
+                }
+    }
+]
