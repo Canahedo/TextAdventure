@@ -7,10 +7,11 @@ Python3
 This is the main file for the program,
 which initializes the game object and runs the game
 """
-from functions import Game_Functions
-from objects import Game_Data
-from player import Player
-from services import Services
+
+from gamefiles.functions import Game_Functions
+from gamefiles.objects import Game_Data
+from gamefiles.player import Player
+from gamefiles.services import Services
 
 
 # * Main

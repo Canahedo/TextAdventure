@@ -9,7 +9,7 @@ This file defines all commands accessible to the player
 
 import sys
 from icecream import ic
-from objects import Item
+from gamefiles.errors import InvalidTurn
 
 
 class Command:
@@ -27,12 +27,12 @@ class Look(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return True, "success"  # ! Replace with actual logic
+        return  # Currently there are no conditions to Look
 
     def __call__(self, mods: list[object], game: object):
         room = game.player.location
         txt = room.looktext_dict[room.state]
-        looktxt = game.text_fetcher("look", room.name, txt)
+        looktxt = game.services.text_fetcher("look", room.name, txt)
         game.player.turn_text.extend(looktxt)
 
 
@@ -46,20 +46,27 @@ class Check(Command):
     def verify(self, mods: list[object], game: object):
         obj = mods[0]
         if not all([obj.checkable, obj.visible]):
-            return False, f"You don't see a {obj.name}\n"
+            error = [f"You don't see a {obj.name}\n"]
+            error.append("ERROR: Object Not Checkable Or Not Visible")
+            raise InvalidTurn(error)
+
         if obj.type == "chest":
             if obj not in game.player.local_chests:
-                return False, f"You don't see a {obj.name}\n"
+                error = [f"You don't see a {obj.name}\n"]
+                error.append("ERROR: Chest Not Local")
+                raise InvalidTurn(error)
+
         if obj.type == "item":
             if obj not in game.player.local_items:
                 if obj not in game.player.inventory:
-                    return False, f"You don't see a {obj.name}\n"
-        return True, "success"
+                    error = [f"You don't see a {obj.name}\n"]
+                    error.append("ERROR: Item Not Local And Not In Inv")
+                    raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         obj = mods[0]
         chk_target = obj.checktext_dict[obj.state]
-        chktxt = game.text_fetcher("check", obj.name, chk_target)
+        chktxt = game.services.text_fetcher("check", obj.name, chk_target)
         game.player.turn_text.extend(chktxt)  # Retrieves check text
         if "none" not in obj.key:
             obj.try_key("check", game)
@@ -74,16 +81,25 @@ class Take(Command):
 
     def verify(self, mods: list[object], game: object):
         obj = mods[0]
-        if not isinstance(obj, Item):
-            return False, f"You can't take the {obj.name}\n"
-        if not all([obj.takeable, obj.visible]):
-            return False, f"There isn't a {obj.name} you can take\n"
         if obj in game.player.inventory:
-            return False, f"You already have the {obj.name}\n"
-        if obj.type == "item":
-            if obj not in game.player.local_items:
-                return False, f"You don't see a {obj.name}\n"
-        return True, "success"
+            error = [f"You already have the {obj.name}\n"]
+            error.append("ERROR: Object Already In Inventory")
+            raise InvalidTurn(error)
+
+        if obj.type != "item":
+            error = [f"You can't take the {obj.name}\n"]
+            error.append("ERROR: Tried To Take Non-Item Object")
+            raise InvalidTurn(error)
+
+        if not all([obj.takeable, obj.visible]):
+            error = [f"There isn't a {obj.name} you can take\n"]
+            error.append("ERROR: Object Not Takeable Or Not Visible")
+            raise InvalidTurn(error)
+
+        if obj not in game.player.local_items:
+            error = [f"You don't see a {obj.name}\n"]
+            error.append("ERROR: Item Not Local")
+            raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         obj = mods[0]
@@ -107,11 +123,14 @@ class Walk(Command):
     def verify(self, mods: list[object], game: object):
         room = mods[0]
         if room == game.player.location:
-            return False, f"You are already in the {room.name}\n"
+            error = [f"You are already in the {room.name}\n"]
+            error.append("ERROR: Already In That Room")
+            raise InvalidTurn(error)
+
         if room.type != "room":
-            error = f"{room.name} is neither a room name, or a direction.\n"
-            return False, error.capitalize()
-        return True, "success"
+            error = [f"{room.name} is neither a room name, or a direction.\n"]
+            error.append("ERROR: Object Not A Room")
+            raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         room = mods[0]
@@ -131,7 +150,11 @@ class Speak(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return True, "success"  # ! Replace with actual logic
+        obj = mods[0]
+        if not all([obj.visible]):
+            error = [f"You don't see a {obj.name}\n"]
+            error.append("ERROR: Object Not Visible")
+            raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         game.player.turn_text.append("Speak not implimented yet")
@@ -147,18 +170,24 @@ class Use(Command):
     def verify(self, mods: list[object], game: object):
         for obj in mods:
             if not all([obj.useable, obj.visible]):
-                error = f"There isn't a {obj.name} you can use right now\n"
-                return False, error
+                error = [f"There isn't a {obj.name} you can use right now\n"]
+                error.append("ERROR: Object Not Useable Or Not Visible")
+                raise InvalidTurn(error)
+
             if obj.type == "chest":
                 if obj not in game.player.local_chests:
-                    return False, f"There isn't a {obj.name} nearby\n"
+                    error = [f"There isn't a {obj.name} nearby\n"]
+                    error.append("ERROR: Chest Not Local")
+                    raise InvalidTurn(error)
+
             if obj.type == "item":
                 if (
                     obj not in game.player.local_items
                     and obj not in game.player.inventory
                 ):
-                    return False, f"You don't have a {obj.name} to use\n"
-        return True, "success"
+                    error = [f"There isn't a {obj.name} nearby\n"]
+                    error.append("ERROR: Item Not Local And Not In Inv")
+                    raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         obj1, obj2 = mods[0], mods[1]
@@ -174,7 +203,26 @@ class Place(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return True, "success"  # ! Replace with actual logic
+        for obj in mods:
+            if not all([obj.visible]):
+                error = [f"You don't see a {obj.name} nearby\n"]
+                error.append("ERROR: Object Not Visible")
+                raise InvalidTurn(error)
+
+            if obj.type == "chest":
+                if obj not in game.player.local_chests:
+                    error = [f"There isn't a {obj.name} nearby\n"]
+                    error.append("ERROR: Chest Not Local")
+                    raise InvalidTurn(error)
+
+            if obj.type == "item":
+                if (
+                    obj not in game.player.local_items
+                    and obj not in game.player.inventory
+                ):
+                    error = [f"There isn't a {obj.name} nearby\n"]
+                    error.append("ERROR: Item Not Local And Not In Inv")
+                    raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         game.player.turn_text.append("Place not implimented yet")
@@ -188,7 +236,10 @@ class Quit(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return game.services.double_check("quit"), "system"
+        if game.services.double_check("quit") is False:
+            error = ["System Command Canceled"]
+            error.append("System Command Canceled")
+            raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
         sys.exit()
@@ -202,10 +253,13 @@ class Restart(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return game.services.double_check("restart"), "system"
+        if game.services.double_check("restart") is False:
+            error = ["System Command Canceled"]
+            error.append("System Command Canceled")
+            raise InvalidTurn(error)
 
     def __call__(self, mods: list[object], game: object):
-        game.replay()
+        game.services.replay()
 
 
 # * Tutorial
@@ -216,10 +270,10 @@ class Tutorial(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return True, "success"
+        return
 
     def __call__(self, mods: list[object], game: object):
-        with open("assets/text/tutorial.md", "r") as file:
+        with open("gamefiles/assets/text/tutorial.md", "r") as file:
             file_contents = file.read()
         game.player.turn_text.append(file_contents)
 
@@ -233,7 +287,7 @@ class InspObj(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return True, "success"
+        return
 
     def __call__(self, mods: list[object], game: object):
         ic(mods[0])
@@ -248,7 +302,7 @@ class InspGame(Command):
         super().__init__(name, alias, num_mods)
 
     def verify(self, mods: list[object], game: object):
-        return True, "success"
+        return
 
     def __call__(self, mods: list[object], game: object):
         ic(game.player)
