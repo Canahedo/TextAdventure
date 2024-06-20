@@ -4,34 +4,44 @@ Written by Canahedo and WingusInbound
 Python3
 2024
 
-This file contains all primary functions for the game
+Contains the primary functions for the game
 """
 
 import time  # Used in sleep() to create a delay
-from gamefiles.errors import CustomException, ObjectNotFound
+from gamefiles.subfunctions.setupwizard import SetupWizard
+
+from gamefiles.errors import CustomException, ModNotFound
 from gamefiles.errors import CommandNotFound, NumberOfMods, BlankInput
 
 
 class Game_Functions:
-    def __init__(self, services: object, game_data: object, player: object):
-        self.services = services
+    def __init__(self, game_data: object, player: object, services: object):
         self.data = game_data
         self.player = player
+        self.services = services
 
     # * Run
     # * Start of new game.
-    # * Resets values for game and player data and runs game loop
+    # * Resets values for data and player and runs game loop
     # *####################
     def run(self) -> None:
-        self.data.reset(self)
-        self.player.reset(self)
+        SetupWizard(self.data, self.player, self.services)
         self.services.draw_ui(self.player)
-        running = "New Game"
-        while running != "Game Over":
+        status = "New Game"
+        while status != "GAME OVER":
             time.sleep(0.5)
             player_input = input("What do you do next?\n")
-            running = self.game_loop(player_input)
-        self.services.end_game(self)
+            status = self.game_loop(player_input)
+
+            if "WIN" in status:
+                print("   Congratulations!   ")
+                print("       You Win!       \n")
+                input("Press Enter To Continue")
+                status = self.replay()
+
+            if "RESTART" in status:
+                self.run()
+                status = "GAME OVER"
 
     # * Game Loop
     # * Represents a single turn
@@ -46,10 +56,10 @@ class Game_Functions:
             # Store objects in game.player
             self.locate_command(comm_str, len(mod_strs))
             self.locate_mods(mod_strs)
-            comm_obj, mod_list = self.player.comm_obj, self.player.mod_objs
+            comm_obj, mod_objs = self.player.comm_obj, self.player.mod_objs
 
             # Verifies turn can be completed
-            comm_obj.verify(mod_list, self)
+            comm_obj.verify(mod_objs, self)
 
         except CustomException as e:
             print(f"\nInvalid Input: {raw_input}")
@@ -59,17 +69,19 @@ class Game_Functions:
         else:
             # Execute Turn
             self.player.turn_text.clear()
-            comm_obj(mod_list, self)  # Calls command object
-            self.player.get_locals(self)
+            turn_result = comm_obj(mod_objs, self)  # Calls command object
             self.services.draw_ui(self.player)
-            return "Turn Executed Successfully"
+
+            # "GAME OVER", "WIN", "RESTART" will trigger different outcomes
+            # Any other return will start another turn
+            return turn_result
 
     # * Input Handler
-    # * Formats raw player input and returns string, list[str]
+    # * Formats raw player input and returns (string, list[str])
     # *####################
-    def input_handler(self, raw_input: str) -> tuple[str, str]:
+    def input_handler(self, raw_input: str) -> tuple[str, list[str]]:
         player_input = raw_input.strip().lower().split()
-        if len(player_input) == 0:  # Restarts game loop if no text entered
+        if len(player_input) == 0:  # Error if no text entered
             raise BlankInput
         comm_str = player_input.pop(0)
         return comm_str, player_input
@@ -95,10 +107,52 @@ class Game_Functions:
     # *####################
     def locate_mods(self, mod_strs) -> None:
         mod_list = []
+        local_lists = [
+            self.player.local_rooms,
+            self.player.local_chests,
+            self.player.local_items,
+            self.player.inventory,
+        ]
         for mod in mod_strs:
-            mod_obj = self.services.locate_object(mod, self.data)
-            if mod_obj is not None:
-                mod_list.append(mod_obj)
-            else:
-                raise ObjectNotFound(mod)
+            # Hack used for if player wants to walk by dir
+            if mod in self.player.local_dirs:
+                self.player.mod_objs = mod
+
+            for lst in local_lists:
+                obj = self.services.findobj(mod, lst)
+                if obj is not None:
+                    break
+            if obj is None:
+                raise ModNotFound(mod)
+            mod_list.append(obj)
         self.player.mod_objs = mod_list
+
+    # * Win Con
+    # * Checks state of game each turn to see if player has won
+    # *####################
+    def win_con(self):
+        # ! Replace with actual functionality
+        # ! Returns true if player meets win con
+        return False
+
+    # * End Game
+    # * Announces end of game, offers replay
+    # *####################
+    def end_game(self) -> None:
+        print("Congratulations!")
+        print("    You Win!    ")
+        return self.replay()
+
+    # * Replay
+    # * Asks player if they want to play again
+    # *####################
+    def replay(self) -> None:
+        while True:
+            time.sleep(0.5)
+            response = input("\nWould you like to play again? y/n\n").lower()
+            if response in ["y", "yes"]:
+                return "RESTART"
+            elif response in ["n", "no"]:
+                return "GAME OVER"
+            else:
+                print('Sorry, "', response, '" is an invalid response.')

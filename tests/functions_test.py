@@ -1,8 +1,18 @@
-# ! This is just to make pytest happy
+"""
+Unnamed Text Adventure - Function Test
+Written by Canahedo and WingusInbound
+Python3
+2024
+
+Tests the game loop function by providing dummy inputs
+"""
+
+from gamefiles.subfunctions.setupwizard import SetupWizard
 from ..gamefiles.functions import Game_Functions
 from ..gamefiles.objects import Game_Data
 from ..gamefiles.player import Player
-from ..gamefiles.services import Services
+from gamefiles.services import Services
+
 
 # *
 # *  Variables
@@ -10,17 +20,16 @@ from ..gamefiles.services import Services
 
 debug_line = "################################################################"
 
-success = ["Turn Executed Successfully"]
+success = ["SUCCESS"]
 
 error = [
     "ERROR: No Input Entered",
     "ERROR: Command Not Recognized",
     "ERROR: Incorrect Number Of Mods",
     "ERROR: Object Not Found",
-    "ERROR: Object Not Visible",
-    "ERROR: Object Not Checkable Or Not Visible",
-    "ERROR: Object Not Takeable Or Not Visible",
-    "ERROR: Object Not Useable Or Not Visible",
+    "ERROR: Object Not Checkable",
+    "ERROR: Object Not Takeable",
+    "ERROR: Object Not Useable",
     "ERROR: Tried To Take Non-Item Object",
     "ERROR: Tried To Check A Room",
     "ERROR: Chest Not Local",
@@ -29,8 +38,7 @@ error = [
     "ERROR: Object Already In Inventory",
     "ERROR: Already In That Room",
     "ERROR: Object Not A Room",
-    "ERROR: No Way In"
-    "System Command Canceled",
+    "ERROR: No Way In" "System Command Canceled",
 ]
 
 
@@ -39,9 +47,8 @@ error = [
 # *####################
 def setup():
     # * Initializes new game for testing
-    game = Game_Functions(Services(), Game_Data(), Player())
-    game.data.reset(game)
-    game.player.reset(game)
+    game = Game_Functions(Game_Data(), Player(), Services())
+    SetupWizard(game.data, game.player, game.services)
     return game
 
 
@@ -64,7 +71,7 @@ def complete(turn_list: list[str]) -> str:
         print(debug_line)
         test_output = game.game_loop(turn)
         print(f"{turn} -> {test_output}")
-    if test_output == "Turn Executed Successfully":
+    if test_output in success:
         return True
 
 
@@ -93,6 +100,26 @@ def each(turn_list: list[list[str]]) -> str:
 # *
 # *  Tests
 # *####################
+def test_complete_just_boot() -> None:
+    """
+    Tries to launch game
+    """
+    game = setup()
+    print(game)
+    loc = game.player.location.name
+    assert loc == "driveway"
+
+
+def test_complete_just_look() -> None:
+    """
+    Tries to launch game and look
+    """
+    turn_list = [
+        "look",
+    ]
+    assert complete(turn_list)
+
+
 def test_complete_open_door() -> None:
     """
     Tries to get key and open door
@@ -106,6 +133,21 @@ def test_complete_open_door() -> None:
         "use key door",
     ]
     assert complete(turn_list)
+
+
+def test_each_open_door() -> None:
+    """
+    Tries to get key and open door
+    """
+    turn_list = [
+        ["look", success],
+        ["check rock", success],
+        ["take key", success],
+        ["walk porch", success],
+        ["look", success],
+        ["use key door", success],
+    ]
+    assert each(turn_list)
 
 
 def test_each_handled_errors() -> None:

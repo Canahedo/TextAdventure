@@ -16,6 +16,7 @@
     },
     {
         "name": "porch",
-        "default_looktext": ["You are on the porch"]
+        "default_looktext": ["You are on the porch"],
+        "fogofwar":["Porch Revealed"]
     }
 ]

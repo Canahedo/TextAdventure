@@ -33,7 +33,7 @@
             "toppled": "toppled_checktext"
         },
         "useable": false,
-        "visible": false,
+        "visible": true,
         "inventory": {"key":""}
     },
     {
@@ -44,7 +44,7 @@
         "state": "default",
         "checktext_dict": {"default": "default_checktext"},
         "useable": false,
-        "visible": false,
+        "visible": true,
         "inventory": {"none":""}
     },
     {
@@ -68,7 +68,7 @@
             "unlocked": "unlocked_checktext"
         },
         "useable": true,
-        "visible": false,
+        "visible": true,
         "inventory": {"none":""}
     }
 ]

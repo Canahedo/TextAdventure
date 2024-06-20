@@ -18,7 +18,7 @@ from gamefiles.services import Services
 # * Initializes game object, and game/player data, then starts a new game
 # *####################
 def main():
-    game = Game_Functions(Services(), Game_Data(), Player())
+    game = Game_Functions(Game_Data(), Player(), Services())
     game.run()
 
 
