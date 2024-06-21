@@ -8,8 +8,6 @@ This file contains classes which handle
 changes that result from the player turn
 """
 
-from icecream import ic
-
 
 class Triggers:
     def __init__(self, prospect: str, target: object, game: object) -> None:
