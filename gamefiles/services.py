@@ -69,7 +69,7 @@ class Services:
     def draw_ui(self, player):
 
         # Erase screen, print title
-        # os.system("clear||cls")
+        os.system("clear||cls")
         print(game_title)
 
         # Previous Command
