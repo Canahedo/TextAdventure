@@ -105,7 +105,7 @@ class Check(Command):
         for itm in obj.inventory:
             item = obj.inventory[itm]
             if item != "none":
-                if item.visible and item not in item.local:
+                if item.visible and item not in game.player.location.local:
                     game.player.location.local.append(item)
                     game.player.local_items.append(item)
 

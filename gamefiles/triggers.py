@@ -8,6 +8,8 @@ This file contains classes which handle
 changes that result from the player turn
 """
 
+from icecream import ic
+
 
 class Triggers:
     def __init__(self, prospect: str, target: object, game: object) -> None:
@@ -47,7 +49,7 @@ class Triggers:
             if prosp != "none" and prosp not in ["player_inv", "reveal"]:
                 obj = self.targ_findobj(prosp, self.game)
                 if obj is not None:
-                    Triggers(obj, "ext_triggers"[prosp], self.game)
+                    Triggers(trigger["ext_triggers"][prosp], obj, self.game)
 
             if prosp == "player_inv":
                 for line in trigger["ext_triggers"][prosp]:
