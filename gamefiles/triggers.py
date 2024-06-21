@@ -47,7 +47,7 @@ class Triggers:
             if prosp != "none" and prosp not in ["player_inv", "reveal"]:
                 obj = self.targ_findobj(prosp, self.game)
                 if obj is not None:
-                    obj.try_key(trigger["ext_triggers"][prosp], self.game)
+                    Triggers(obj, "ext_triggers"[prosp], self.game)
 
             if prosp == "player_inv":
                 for line in trigger["ext_triggers"][prosp]:
@@ -74,5 +74,4 @@ class Triggers:
             game.data.gate_list,
         ]:
             new_obj = game.services.findobj(prosp, lst)
-            if new_obj is not None:
-                return new_obj
+            return new_obj

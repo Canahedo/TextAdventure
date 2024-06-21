@@ -170,8 +170,8 @@ class Walk(Command):
             error = [f"You are already in the {room.name}\n"]
             error.append("ERROR: Already In That Room")
             raise InvalidTurn(error)
-
-        if room.type != any(["room", "gate"]):
+        ic(room.type)
+        if room.type not in ["room", "gate"]:
             error = [f"{room.name} is neither a room name, nor a direction.\n"]
             error[0].capitalize()
             error.append("ERROR: Object Not A Room")

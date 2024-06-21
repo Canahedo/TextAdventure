@@ -76,5 +76,5 @@ class Room(GameObject):
 # *####################
 @dataclass(kw_only=True)
 class Route:
-    routes: dict = field(default_factory=dict)
+    path: dict = field(default_factory=dict)
     gate: object = field(default_factory=object)
