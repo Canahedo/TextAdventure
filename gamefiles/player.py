@@ -18,7 +18,6 @@ class Player:
     local_rooms: list[object] = field(default_factory=list)
     local_chests: list[object] = field(default_factory=list)
     local_gates: list[object] = field(default_factory=list)
-    local_dirs: list[str] = field(default_factory=list)
     local_items: list[object] = field(default_factory=list)
     comm_obj: object = field(default_factory=object)
     mod_objs: list[object] = field(default_factory=list)

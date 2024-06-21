@@ -39,6 +39,7 @@ error = [
     "ERROR: Already In That Room",
     "ERROR: Object Not A Room",
     "ERROR: No Way In" "System Command Canceled",
+    "ERROR: Gate Locked",
 ]
 
 

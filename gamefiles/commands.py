@@ -42,9 +42,9 @@ class Look(Command):
             Triggers("look", room, game)
 
         # Add adjoining rooms and gates to local
-        for adj in room.adjoining:
-            gate = room.adjoining[adj]["gate"]
-            adj_room = room.adjoining[adj]["room"]
+        for adj in room.routes:
+            gate = room.routes[adj]["gate"]
+            adj_room = room.routes[adj]["room"]
             if gate != "none":
                 if gate.state == "locked":
                     if gate in room.local:
@@ -170,8 +170,12 @@ class Walk(Command):
             error = [f"You are already in the {room.name}\n"]
             error.append("ERROR: Already In That Room")
             raise InvalidTurn(error)
-        ic(room.type)
-        if room.type not in ["room", "gate"]:
+        if room.type == "gate" and room.state == "locked":
+            error = [f"You can't walk through the {room.name}.\n"]
+            error[0].capitalize()
+            error.append("ERROR: Gate Locked")
+            raise InvalidTurn(error)
+        if room.type != "room":
             error = [f"{room.name} is neither a room name, nor a direction.\n"]
             error[0].capitalize()
             error.append("ERROR: Object Not A Room")
@@ -180,15 +184,33 @@ class Walk(Command):
     def __call__(self, mods: list[object], game: object):
         room = mods[0]
 
-        if room.type == "gate":
+        # Clear player locals
+        game.player.local_rooms.clear()
+        game.player.local_chests.clear()
+        game.player.local_gates.clear()
+        game.player.local_items.clear()
 
-            goto = gps(game, room)
+        if room.type == "room":
+            game.player.location = room
+            game.player.turn_text.append("You walk to the " + room.name)
+            return "SUCCESS"
 
-        else:
-            goto = room
-        game.player.location = goto
-        game.player.turn_text.append("You walk to the " + goto.name)
-        return "SUCCESS"
+        for path in game.player.location.routes:
+            newroom = game.player.location.routes[path]
+            if newroom["cd"] == room.name:
+                self([newroom["room"]], game)
+
+        # Get new locals
+        newlocals = game.player.location.locals
+        for obj in newlocals:
+            if obj.type == "room":
+                game.player.local_rooms.append(obj)
+            if obj.type == "chest":
+                game.player.local_chests.append(obj)
+            if obj.type == "gate":
+                game.player.local_gates.append(obj)
+            if obj.type == "item":
+                game.player.local_items.append(obj)
 
 
 # * Speak

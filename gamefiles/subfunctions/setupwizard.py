@@ -34,17 +34,17 @@ class SetupWizard:
         self.data.gate_list = GateList("gates").load()
 
     def adjoin_rooms(self, room: object):
-        for direction in room.adjoining:
-            adj = room.adjoining[direction]
+        for direction in room.routes:
+            adj = room.routes[direction]
 
             # Connect rooms
             foo = self.serv.findobj(adj["room"], self.data.room_list)
-            room.adjoining[direction]["room"] = foo
+            room.routes[direction]["room"] = foo
 
             # Setup gates
             if adj["gate"] != "none":
                 foo = self.serv.findobj(adj["gate"], self.data.gate_list)
-                room.adjoining[direction]["gate"] = foo
+                room.routes[direction]["gate"] = foo
 
     def place_objects(self, room: object):
 

@@ -12,7 +12,7 @@
                         }
                 },
         "looktext_dict": {"default": "default_looktext"},
-        "adjoining": {"north": {"gate":"none", "room":"porch"}},
+        "routes": {"north": {"gate":"none", "room":"porch", "cd":"north"}},
         "inventory": {"template":"replaced in setup"},
         "local": []
         
@@ -33,7 +33,7 @@
                         "default": "default_looktext",
                         "fogofwar": "fogofwar"
                         },
-        "adjoining": {"north": {"gate":"none", "room":"porch"}},
+        "routes": {"north": {"gate":"none", "room":"porch", "cd":"north"}},
         "inventory": {"rock":""},
         "local": []
     },
@@ -53,9 +53,9 @@
                         "default": "default_looktext",
                         "fogofwar": "fogofwar"
                         },
-        "adjoining": {
-            "north": {"gate":"porch_door", "room":"foyer"},
-            "south": {"gate":"none", "room":"driveway"}
+        "routes": {
+            "north": {"gate":"porch_door", "room":"foyer", "cd":"north"},
+            "south": {"gate":"none", "room":"driveway", "cd":"south"}
                 },
         "inventory": {
             "door":"",
@@ -76,9 +76,9 @@
                         }
                 },
         "looktext_dict": {"default": "default_looktext"},
-        "adjoining": {
-            "north": {"gate":"none", "room":"kitchen"},
-            "south": {"gate":"porch_door", "room":"porch"}
+        "routes": {
+            "north": {"gate":"none", "room":"kitchen", "cd":"north"},
+            "south": {"gate":"porch_door", "room":"porch", "cd":"south"}
                 },
         "inventory": {"none":""},
         "local": []
@@ -96,8 +96,8 @@
                         }
                 },
         "looktext_dict": {"default": "default_looktext"},
-        "adjoining": {
-            "south": {"gate":"none", "room":"foyer"}
+        "routes": {
+            "south": {"gate":"none", "room":"foyer", "cd":"south"}
                 },
         "inventory": {"none":""},
         "local": []

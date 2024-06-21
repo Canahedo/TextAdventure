@@ -114,9 +114,6 @@ class Game_Functions:
             self.player.inventory,
         ]
         for mod in mod_strs:
-            # Hack used for if player wants to walk by dir
-            if mod in self.player.local_dirs:
-                self.player.mod_objs = mod
 
             for lst in local_lists:
                 obj = self.services.findobj(mod, lst)

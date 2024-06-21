@@ -26,9 +26,9 @@ def get_locals(self, game):
                 prosp_item = self.location.inventory[chest].inventory[item]
                 if prosp_item.visible:
                     self.local_items.append(prosp_item)
-    for direction in self.location.adjoining:
+    for direction in self.location.routes:
         room_name = None
-        foo = self.location.adjoining[direction]
+        foo = self.location.routes[direction]
         if foo["door"] == "none":
             room_name = foo["room"]
         else:

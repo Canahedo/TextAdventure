@@ -30,7 +30,8 @@ class Services:
                 string += obj.name
                 counter += 1
                 if counter < len(object_list) and counter > 1:
-                    string += ", "
+                    string += ","
+                string += " "
                 if counter == len(object_list) - 1:
                     string += "and "
             print(f"{string}\n".capitalize())

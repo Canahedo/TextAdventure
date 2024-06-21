@@ -67,14 +67,6 @@ class Gate(GameObject):
 @dataclass(kw_only=True)
 class Room(GameObject):
     looktext_dict: dict
-    adjoining: dict
+    routes: dict
     inventory: dict
     local: list[object]
-
-
-# * Routes
-# *####################
-@dataclass(kw_only=True)
-class Route:
-    path: dict = field(default_factory=dict)
-    gate: object = field(default_factory=object)
