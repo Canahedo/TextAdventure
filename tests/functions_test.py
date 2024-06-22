@@ -7,7 +7,7 @@ Python3
 Tests the game loop function by providing dummy inputs
 """
 
-from gamefiles.subfunctions.setupwizard import SetupWizard
+from gamefiles.setupwizard import SetupWizard
 from ..gamefiles.functions import Game_Functions
 from ..gamefiles.objects import Game_Data
 from ..gamefiles.player import Player

@@ -26,7 +26,7 @@ class Game_Data:
 @dataclass(kw_only=True)
 class GameObject:
     name: str  # Name of the object
-    type: str  # Type of object (chest or item)
+    type: str  # Type of object
     key: dict  # What items/actions interact with the object
     state: str  # What state the object is in
     visible: bool  # Is the object accessible to the player

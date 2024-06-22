@@ -8,7 +8,7 @@ Contains the primary functions for the game
 """
 
 import time  # Used in sleep() to create a delay
-from gamefiles.subfunctions.setupwizard import SetupWizard
+from gamefiles.setupwizard import SetupWizard
 
 from gamefiles.errors import CustomException, ModNotFound
 from gamefiles.errors import CommandNotFound, NumberOfMods, BlankInput
@@ -25,13 +25,16 @@ class Game_Functions:
     # * Resets values for data and player and runs game loop
     # *####################
     def run(self) -> None:
+        # Setup new game
         SetupWizard(self.data, self.player, self.services)
         self.services.draw_ui(self.player)
-        status = "New Game"
+
+        # Primary loop
+        status = "NEW GAME"
         while status != "GAME OVER":
             time.sleep(0.5)
             player_input = input("What do you do next?\n")
-            status = self.game_loop(player_input)
+            status = self.turn(player_input)
 
             if "WIN" in status:
                 print("   Congratulations!   ")
@@ -43,12 +46,19 @@ class Game_Functions:
                 self.run()
                 status = "GAME OVER"
 
-    # * Game Loop
+    # * Turn
     # * Represents a single turn
     # * Takes raw input, finds objects,
     # *     verifies turn, and runs player command
     # *####################
-    def game_loop(self, raw_input: str) -> str:
+    def turn(self, raw_input: str) -> str:
+        """
+        Args:
+            raw_input (str): Raw player input string
+
+        Returns:
+            str: String representing result of turn
+        """
         try:
             # Format player input
             comm_str, mod_strs = self.input_handler(raw_input)
@@ -80,6 +90,16 @@ class Game_Functions:
     # * Formats raw player input and returns (string, list[str])
     # *####################
     def input_handler(self, raw_input: str) -> tuple[str, list[str]]:
+        """
+        Args:
+            raw_input (str): Raw player input string
+
+        Raises:
+            BlankInput: If no text entered by player
+
+        Returns:
+            tuple[str, list[str]]: Command name, list of mod object names
+        """
         player_input = raw_input.strip().lower().split()
         if len(player_input) == 0:  # Error if no text entered
             raise BlankInput
@@ -87,11 +107,18 @@ class Game_Functions:
         return comm_str, player_input
 
     # * Locate Command
-    # * Finds command object, and verifies number of mods
+    # * Finds command object, and links to player object
     # *####################
     def locate_command(self, comm_str: str, num_of_mods: int) -> None:
-        # * comm_str (str): Name of command to be located
-        # * num_of_mods (int): Number of mods entered by player
+        """
+        Args:
+            comm_str (str): Name of command to be located
+            num_of_mods (int): Number of mods entered by player
+
+        Raises:
+            NumberOfMods: If num_of_mods != number command requires
+            CommandNotFound: If comm_str doesn't match a valid command
+        """
         for obj in self.player.command_list:
             if comm_str in obj.alias:
                 # Confirms if correct number of mods were entered
@@ -103,9 +130,16 @@ class Game_Functions:
         raise CommandNotFound(comm_str)
 
     # * Locate Mods
-    # * Retrieves objects related to player mods
+    # * Finds objects related to player mods, and links to player object
     # *####################
-    def locate_mods(self, mod_strs) -> None:
+    def locate_mods(self, mod_strs: list[str]) -> None:
+        """
+        Args:
+            mod_strs (list[str]): List of player mods
+
+        Raises:
+            ModNotFound: If a mod doesn't match a local object
+        """
         mod_list = []
         local_lists = [
             self.player.local_rooms,
@@ -114,14 +148,17 @@ class Game_Functions:
             self.player.inventory,
         ]
         for mod in mod_strs:
-
+            # Look for object
             for lst in local_lists:
                 obj = self.services.findobj(mod, lst)
                 if obj is not None:
                     break
+            # Error if object not found
             if obj is None:
                 raise ModNotFound(mod)
+            # Add object to list
             mod_list.append(obj)
+        # Link list of objects to player
         self.player.mod_objs = mod_list
 
     # * Win Con
