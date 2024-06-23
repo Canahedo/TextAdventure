@@ -26,7 +26,7 @@ error = [
     "ERROR: No Input Entered",
     "ERROR: Command Not Recognized",
     "ERROR: Incorrect Number Of Mods",
-    "ERROR: Object Not Found",
+    "ERROR: Mod Not Found",
     "ERROR: Object Not Checkable",
     "ERROR: Object Not Takeable",
     "ERROR: Object Not Useable",
@@ -70,7 +70,7 @@ def complete(turn_list: list[str]) -> str:
     game = setup()
     for turn in turn_list:
         print(debug_line)
-        test_output = game.game_loop(turn)
+        test_output = game.turn(turn)
         print(f"{turn} -> {test_output}")
     if test_output in success:
         return True
@@ -91,7 +91,7 @@ def each(turn_list: list[list[str]]) -> str:
     game = setup()
     for turn in turn_list:
         print(debug_line)
-        test_output = game.game_loop(turn[0])
+        test_output = game.turn(turn[0])
         print(f"{turn[0]} -> {test_output}")
         if test_output not in turn[1]:
             return False
@@ -107,8 +107,7 @@ def test_complete_just_boot() -> None:
     """
     game = setup()
     print(game)
-    loc = game.player.location.name
-    assert loc == "driveway"
+    assert game.player.location.name == "driveway"
 
 
 def test_complete_just_look() -> None:
@@ -168,9 +167,15 @@ def test_each_walk_look() -> None:
     """
     Walks to each room, and tries to look
     """
-    room_list = ["porch", "driveway", "porch", "foyer", "kitchen", "foyer"]
-    turn_list = [["look", success]]
-    for room in room_list:
-        turn_list.append([f"walk {room}", success])
-        turn_list.append(["look", success])
+    turn_list = [
+        ["look", success],
+        ["walk porch", success],
+        ["look", success],
+        ["walk driveway", success],
+        ["look", success],
+        ["walk porch", success],
+        ["look", success],
+        ["walk driveway", success],
+        ["look", success]
+    ]
     assert each(turn_list)

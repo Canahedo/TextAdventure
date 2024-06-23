@@ -148,7 +148,10 @@ class Take(Command):
             Triggers("take", obj, game)
 
         # Remove from locals and chest
+        ic()
+        ic(game.player.local_items)
         game.player.local_items.remove(obj)
+        ic(game.player.local_items)
         game.player.location.local.remove(obj)
         for chest in game.player.location.inventory:
             if obj.name in game.player.location.inventory[chest].inventory:
@@ -183,6 +186,8 @@ class Walk(Command):
 
     def __call__(self, mods: list[object], game: object):
         room = mods[0]
+        # Track where player came from
+        prev_room = game.player.location
 
         # Clear player locals
         game.player.local_rooms.clear()
@@ -193,15 +198,17 @@ class Walk(Command):
         if room.type == "room":
             game.player.location = room
             game.player.turn_text.append("You walk to the " + room.name)
-            return "SUCCESS"
 
-        for path in game.player.location.routes:
-            newroom = game.player.location.routes[path]
-            if newroom["cd"] == room.name:
-                self([newroom["room"]], game)
+        else:
+            for path in game.player.location.routes:
+                newroom = game.player.location.routes[path]
+                if newroom["cd"] == room.name:
+                    self([newroom["room"]], game)
 
         # Get new locals
-        newlocals = game.player.location.locals
+        newlocals = game.player.location.local
+        if prev_room not in newlocals:
+            newlocals.append(prev_room)
         for obj in newlocals:
             if obj.type == "room":
                 game.player.local_rooms.append(obj)
@@ -211,6 +218,7 @@ class Walk(Command):
                 game.player.local_gates.append(obj)
             if obj.type == "item":
                 game.player.local_items.append(obj)
+        return "SUCCESS"
 
 
 # * Speak
