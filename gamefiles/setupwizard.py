@@ -71,6 +71,10 @@ class SetupWizard:
         self.player.location = driveway
         self.player.turn_text = [opening_crawl_text]
         self.player.command_list = build_command_list()
+        self.player.local_rooms.clear()
+        self.player.local_chests.clear()
+        self.player.local_items.clear()
+        self.player.local_gates.clear()
 
 
 # *

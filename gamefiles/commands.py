@@ -49,8 +49,9 @@ class Look(Command):
                 if gate.state == "locked":
                     if gate in room.local:
                         continue
-                    room.local.append(gate)
-                    game.player.local_rooms.append(gate)
+                    # ! Disabled adding gates to local lost
+                    # room.local.append(gate)
+                    # game.player.local_rooms.append(gate)
                     continue
 
             if adj_room != "none" and adj_room not in room.local:
@@ -64,7 +65,6 @@ class Look(Command):
                 if chest.visible and chest not in room.local:
                     room.local.append(chest)
                     game.player.local_chests.append(chest)
-
         return "SUCCESS"
 
 
@@ -148,15 +148,11 @@ class Take(Command):
             Triggers("take", obj, game)
 
         # Remove from locals and chest
-        ic()
-        ic(game.player.local_items)
         game.player.local_items.remove(obj)
-        ic(game.player.local_items)
         game.player.location.local.remove(obj)
         for chest in game.player.location.inventory:
             if obj.name in game.player.location.inventory[chest].inventory:
                 del game.player.location.inventory[chest].inventory[obj.name]
-
         return "SUCCESS"
 
 

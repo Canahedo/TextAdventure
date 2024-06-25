@@ -11,7 +11,7 @@ import time
 import json
 import os
 from gamefiles.assets.text.misc_gametext import game_title
-from gamefiles.commands import Command
+from gamefiles.commands import Command, Restart
 
 
 class Services:
@@ -67,9 +67,8 @@ class Services:
         return text
 
     def draw_ui(self, player):
-
         # Erase screen, print title
-        os.system("clear||cls")
+        # os.system("clear||cls")
         print(game_title)
 
         # Previous Command
@@ -84,7 +83,6 @@ class Services:
         for line in player.turn_text:
             print(line)
         print("-------------------------\n")
-
         # You can see...
         if player.location.visible:
             print(f"You are in the {player.location.name}\n")
@@ -98,14 +96,17 @@ class Services:
         if len(temp_list) > 0:
             print("You are carrying:")
             self.print_list(temp_list)
-        local_objs = player.local_chests
+        local_objs = []
+        local_objs.extend(player.local_chests)
         local_objs.extend(player.local_items)
         if len(local_objs) > 0:
             print("Nearby, you can see:")
             self.print_list(local_objs)
 
-        # First turn text
-        if not isinstance(player.comm_obj, Command):
+        # Text displayed on first turn
+        if not isinstance(player.comm_obj, Command) or isinstance(
+            player.comm_obj, Restart
+        ):
             print("Welcome to the game!")
             print('Enter "Help" for instructions, or')
             print("feel free to just look around\n")
