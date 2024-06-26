@@ -61,7 +61,6 @@ class Look(Command):
         # Add chests to local
         for che in room.inventory:
             chest = room.inventory[che]
-            ic(chest)
             if chest not in ["none", ""]:
                 if chest.visible and chest not in room.local:
                     room.local.append(chest)
