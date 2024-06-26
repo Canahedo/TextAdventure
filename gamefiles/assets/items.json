@@ -47,7 +47,7 @@
         "state": "default",
         "checktext_dict": {"default": "default_checktext"},
         "useable": false,
-        "visible": true,
+        "visible": false,
         "takeable": true
     }
 ]

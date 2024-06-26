@@ -23,18 +23,16 @@ class BlankInput(CustomException):
 
 class CommandNotFound(CustomException):
     def __init__(self, command: str):
-        self.command = command
         self.return_string = "ERROR: Command Not Recognized"
         self.message = f"{command} is not a recognized command.\n".capitalize()
         self.message += 'Enter "Help" for more info.\n'
         super().__init__(self.message, self.return_string)
 
 
-class ObjectNotFound(CustomException):
-    def __init__(self, obj: str):
-        self.object = obj
-        self.return_string = "ERROR: Object Not Found"
-        self.message = f'" {obj} " is not a recognized word.\n'
+class ModNotFound(CustomException):
+    def __init__(self, mod: str):
+        self.return_string = "ERROR: Mod Not Found"
+        self.message = f"You don't see a {mod}\n"
         self.message += "Try something else\n"
         super().__init__(self.message, self.return_string)
 
@@ -49,8 +47,6 @@ class NumberOfMods(CustomException):
             command (str): name of player command
             exp_mods (int): expected number of mods of command
         """
-        self.command = command
-        self.expected = expected
         self.return_string = "ERROR: Incorrect Number Of Mods"
         s = ""
         if expected != 1:

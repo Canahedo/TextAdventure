@@ -2,26 +2,110 @@
     {
         "name": "room_template",
         "type": "room",
-        "state": "default",
+        "state": "fogofwar",
+        "visible": false,
+        "key": {"look": {
+                        "state":"default",
+                        "trigger_text":"fog_cleared",                  
+                        "attr_changes":{"visible":true},
+                        "ext_triggers":{"none":"none"}
+                        }
+                },
         "looktext_dict": {"default": "default_looktext"},
-        "inventory": {"template":"replaced in setup"}
-
+        "routes": {"north": {"gate":"none", "room":"porch", "cd":"north"}},
+        "inventory": {"template":"replaced in setup"},
+        "local": []
+        
     },
     {
         "name": "driveway",
         "type": "room",
-        "state": "default",
-        "looktext_dict": {"default": "default_looktext"},
-        "inventory": {"rock":""}
+        "state": "fogofwar",
+        "visible": false,
+        "key": {"look": {
+                        "state":"default",
+                        "trigger_text":"fog_cleared",                  
+                        "attr_changes":{"visible":true},
+                        "ext_triggers":{"reveal":["letter"]}
+                        }
+                },
+        "looktext_dict": {
+                        "default": "default_looktext",
+                        "fogofwar": "fogofwar"
+                        },
+        "routes": {"north": {"gate":"none", "room":"porch", "cd":"north"}},
+        "inventory": {"rock":""},
+        "local": []
     },
     {
         "name": "porch",
         "type": "room",
-        "state": "default",
-        "looktext_dict": {"default": "default_looktext"},
+        "state": "fogofwar",
+        "visible": false,
+        "key": {"look": {
+                        "state":"default",
+                        "trigger_text":"fog_cleared",                  
+                        "attr_changes":{"visible":true},
+                        "ext_triggers":{"none":"none"}
+                        }
+                },
+        "looktext_dict": {
+                        "default": "default_looktext",
+                        "fogofwar": "fogofwar"
+                        },
+        "routes": {
+            "north": {"gate":"porch_door", "room":"foyer", "cd":"north"},
+            "south": {"gate":"none", "room":"driveway", "cd":"south"}
+                },
         "inventory": {
-                "door":"",
-                "newspaper":""
-                }
+            "door":"",
+            "newspaper":""
+                },
+        "local": []
+    },
+    {
+        "name": "foyer",
+        "type": "room",
+        "state": "fogofwar",
+        "visible": false,
+        "key": {"look": {
+                        "state":"default",
+                        "trigger_text":"fog_cleared",                  
+                        "attr_changes":{"visible":true},
+                        "ext_triggers":{"none":"none"}
+                        }
+                },
+        "looktext_dict": {
+            "default": "default_looktext",
+            "fogofwar": "fogofwar"
+            },
+        "routes": {
+            "north": {"gate":"none", "room":"kitchen", "cd":"north"},
+            "south": {"gate":"porch_door", "room":"porch", "cd":"south"}
+                },
+        "inventory": {"none":""},
+        "local": []
+    },
+    {
+        "name": "kitchen",
+        "type": "room",
+        "state": "fogofwar",
+        "visible": false,
+        "key": {"unlock": {
+                        "state":"default",
+                        "trigger_text":"fog_cleared",                  
+                        "attr_changes":{"visible":true},
+                        "ext_triggers":{"none":"none"}
+                        }
+                },
+        "looktext_dict": {
+            "default": "default_looktext",
+            "fogofwar": "fogofwar"
+            },
+        "routes": {
+            "south": {"gate":"none", "room":"foyer", "cd":"south"}
+                },
+        "inventory": {"none":""},
+        "local": []
     }
 ]

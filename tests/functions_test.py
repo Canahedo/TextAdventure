@@ -1,8 +1,18 @@
-# ! This is just to make pytest happy
+"""
+Unnamed Text Adventure - Function Test
+Written by Canahedo and WingusInbound
+Python3
+2024
+
+Tests the game loop function by providing dummy inputs
+"""
+
+from gamefiles.setupwizard import SetupWizard
 from ..gamefiles.functions import Game_Functions
 from ..gamefiles.objects import Game_Data
 from ..gamefiles.player import Player
-from ..gamefiles.services import Services
+from gamefiles.services import Services
+
 
 # *
 # *  Variables
@@ -10,27 +20,26 @@ from ..gamefiles.services import Services
 
 debug_line = "################################################################"
 
-success = ["Turn Executed Successfully"]
+success = ["SUCCESS"]
 
 error = [
-    "ERROR: Object Fetch Failed",
-    "ERROR: System Command",
-    "ERROR: Invalid Turn",
     "ERROR: No Input Entered",
-    "ERROR: Incorrect Number Of Mods",
-    "ERROR: Object Not Found",
     "ERROR: Command Not Recognized",
+    "ERROR: Incorrect Number Of Mods",
+    "ERROR: Mod Not Found",
+    "ERROR: Object Not Checkable",
+    "ERROR: Object Not Takeable",
+    "ERROR: Object Not Useable",
+    "ERROR: Tried To Take Non-Item Object",
+    "ERROR: Tried To Check A Room",
     "ERROR: Chest Not Local",
     "ERROR: Item Not Local",
-    "ERROR: Object Not Checkable Or Not Visible",
-    "ERROR: Object Not Takeable Or Not Visible",
-    "ERROR: Object Not Useable Or Not Visible" "ERROR: Object Not Visible",
     "ERROR: Item Not Local And Not In Inv",
     "ERROR: Object Already In Inventory",
-    "ERROR: Already In That Room"
-    "ERROR: Object Not A Room"
-    "ERROR: Tried To Take Non-Item Object",
-    "System Command Canceled",
+    "ERROR: Already In That Room",
+    "ERROR: Object Not A Room",
+    "ERROR: No Way In" "System Command Canceled",
+    "ERROR: Gate Locked",
 ]
 
 
@@ -39,9 +48,8 @@ error = [
 # *####################
 def setup():
     # * Initializes new game for testing
-    game = Game_Functions(Services(), Game_Data(), Player())
-    game.data.reset(game)
-    game.player.reset(game)
+    game = Game_Functions(Game_Data(), Player(), Services())
+    SetupWizard(game.data, game.player, game.services)
     return game
 
 
@@ -62,9 +70,9 @@ def complete(turn_list: list[str]) -> str:
     game = setup()
     for turn in turn_list:
         print(debug_line)
-        test_output = game.game_loop(turn)
+        test_output = game.turn(turn)
         print(f"{turn} -> {test_output}")
-    if test_output == "Turn Executed Successfully":
+    if test_output in success:
         return True
 
 
@@ -83,7 +91,7 @@ def each(turn_list: list[list[str]]) -> str:
     game = setup()
     for turn in turn_list:
         print(debug_line)
-        test_output = game.game_loop(turn[0])
+        test_output = game.turn(turn[0])
         print(f"{turn[0]} -> {test_output}")
         if test_output not in turn[1]:
             return False
@@ -93,6 +101,25 @@ def each(turn_list: list[list[str]]) -> str:
 # *
 # *  Tests
 # *####################
+def test_complete_just_boot() -> None:
+    """
+    Tries to launch game
+    """
+    game = setup()
+    print(game)
+    assert game.player.location.name == "driveway"
+
+
+def test_complete_just_look() -> None:
+    """
+    Tries to launch game and look
+    """
+    turn_list = [
+        "look",
+    ]
+    assert complete(turn_list)
+
+
 def test_complete_open_door() -> None:
     """
     Tries to get key and open door
@@ -102,9 +129,33 @@ def test_complete_open_door() -> None:
         "check rock",
         "take key",
         "walk porch",
+        "look",
         "use key door",
+        "look",
+        "walk foyer",
+        "look",
+        "walk kitchen"
     ]
     assert complete(turn_list)
+
+
+def test_each_open_door() -> None:
+    """
+    Tries to get key and open door
+    """
+    turn_list = [
+        ["look", success],
+        ["check rock", success],
+        ["take key", success],
+        ["walk porch", success],
+        ["look", success],
+        ["use key door", success],
+        ["look", success],
+        ["walk foyer", success],
+        ["look", success],
+        ["walk kitchen", success],
+    ]
+    assert each(turn_list)
 
 
 def test_each_handled_errors() -> None:
@@ -116,5 +167,23 @@ def test_each_handled_errors() -> None:
         ["look dog", error],
         ["check door", error],
         [".", error],
+    ]
+    assert each(turn_list)
+
+
+def test_each_walk_look() -> None:
+    """
+    Walks to each room, and tries to look
+    """
+    turn_list = [
+        ["look", success],
+        ["walk porch", success],
+        ["look", success],
+        ["walk driveway", success],
+        ["look", success],
+        ["walk porch", success],
+        ["look", success],
+        ["walk driveway", success],
+        ["look", success]
     ]
     assert each(turn_list)

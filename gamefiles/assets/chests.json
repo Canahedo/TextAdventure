@@ -52,10 +52,14 @@
         "type": "chest",
         "checkable": true,
         "key": {"key": {
-            "state":"unlocked",
-            "trigger_text":"door_unlocked",                  
-            "attr_changes":{"none":"none"},
-            "ext_triggers":{"key":"remove"}
+                        "state":"unlocked",
+                        "trigger_text":"door_unlocked",                  
+                        "attr_changes":{"none":"none"},
+                        "ext_triggers":{
+                            "key":"remove",
+                            "porch_door": "unlock",
+                            "reveal":["foyer"]            
+                                        }
                         }
                 },
         "state": "locked",
