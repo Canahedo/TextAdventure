@@ -131,6 +131,10 @@ def test_complete_open_door() -> None:
         "walk porch",
         "look",
         "use key door",
+        "look",
+        "walk foyer",
+        "look",
+        "walk kitchen"
     ]
     assert complete(turn_list)
 
@@ -146,6 +150,10 @@ def test_each_open_door() -> None:
         ["walk porch", success],
         ["look", success],
         ["use key door", success],
+        ["look", success],
+        ["walk foyer", success],
+        ["look", success],
+        ["walk kitchen", success],
     ]
     assert each(turn_list)
 

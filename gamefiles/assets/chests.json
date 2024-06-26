@@ -58,7 +58,7 @@
                         "ext_triggers":{
                             "key":"remove",
                             "porch_door": "unlock",
-                            "reveal": ["foyer"]            
+                            "reveal":["foyer"]            
                                         }
                         }
                 },

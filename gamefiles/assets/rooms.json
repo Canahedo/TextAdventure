@@ -75,7 +75,10 @@
                         "ext_triggers":{"none":"none"}
                         }
                 },
-        "looktext_dict": {"default": "default_looktext"},
+        "looktext_dict": {
+            "default": "default_looktext",
+            "fogofwar": "fogofwar"
+            },
         "routes": {
             "north": {"gate":"none", "room":"kitchen", "cd":"north"},
             "south": {"gate":"porch_door", "room":"porch", "cd":"south"}
@@ -95,7 +98,10 @@
                         "ext_triggers":{"none":"none"}
                         }
                 },
-        "looktext_dict": {"default": "default_looktext"},
+        "looktext_dict": {
+            "default": "default_looktext",
+            "fogofwar": "fogofwar"
+            },
         "routes": {
             "south": {"gate":"none", "room":"foyer", "cd":"south"}
                 },

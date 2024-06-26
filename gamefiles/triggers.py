@@ -45,15 +45,20 @@ class Triggers:
                 setattr(obj, attr, trigger["attr_changes"][attr])
 
         # Ext Triggers
-        for prosp in trigger["ext_triggers"]:  # Checks for external triggers
-            if prosp != "none" and prosp not in ["player_inv", "reveal"]:
-                obj = self.targ_findobj(prosp, self.game)
+        for ext_prosp in trigger["ext_triggers"]:  # Checks for ext triggers
+            if ext_prosp != "none" and ext_prosp not in [
+                "player_inv",
+                "reveal",
+            ]:
+                obj = self.targ_findobj(ext_prosp, self.game)
                 if obj is not None:
-                    Triggers(trigger["ext_triggers"][prosp], obj, self.game)
+                    Triggers(
+                        trigger["ext_triggers"][ext_prosp], obj, self.game
+                    )
 
-            if prosp == "player_inv":
-                for line in trigger["ext_triggers"][prosp]:
-                    new_item = trigger["ext_triggers"][prosp][line]
+            if ext_prosp == "player_inv":
+                for line in trigger["ext_triggers"][ext_prosp]:
+                    new_item = trigger["ext_triggers"][ext_prosp][line]
                     new_obj = self.targ_findobj(new_item, self.game)
                     if new_obj is not None:
                         if line == "add":
@@ -61,12 +66,15 @@ class Triggers:
                         if line == "del":
                             self.player.inventory.remove(new_obj)
 
-            if prosp == "reveal":
-                for obj in trigger["ext_triggers"]["reveal"]:
-                    target = self.targ_findobj(obj, self.game)
-                    if target is not None:
-                        target.visible = True
-                        ic(obj)
+            if ext_prosp == "reveal":
+
+                for targ_str in trigger["ext_triggers"]["reveal"]:
+                    ic(targ_str)
+                    targ_obj = self.targ_findobj(targ_str, self.game)
+                    ic(targ_obj)
+                    if targ_obj is not None:
+                        targ_obj.visible = True
+                        ic(targ_obj)
 
     # Handler which acts as an interface between triggers code and findobj
     def targ_findobj(self, prosp, game):
@@ -77,4 +85,5 @@ class Triggers:
             game.data.gate_list,
         ]:
             new_obj = game.services.findobj(prosp, lst)
-            return new_obj
+            if new_obj is not None:
+                return new_obj

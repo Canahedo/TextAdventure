@@ -61,7 +61,8 @@ class Look(Command):
         # Add chests to local
         for che in room.inventory:
             chest = room.inventory[che]
-            if chest != "none":
+            ic(chest)
+            if chest not in ["none", ""]:
                 if chest.visible and chest not in room.local:
                     room.local.append(chest)
                     game.player.local_chests.append(chest)
@@ -248,7 +249,6 @@ class Use(Command):
 
     def __call__(self, mods: list[object], game: object):
         obj1, obj2 = mods[0], mods[1]
-
         if "none" not in obj2.key:
             Triggers(obj1.name, obj2, game)
 

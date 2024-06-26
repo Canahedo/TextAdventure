@@ -33,6 +33,7 @@ class Game_Functions:
         status = "NEW GAME"
         while status != "GAME OVER":
             time.sleep(0.5)
+
             player_input = input("What do you do next?\n")
             status = self.turn(player_input)
 
